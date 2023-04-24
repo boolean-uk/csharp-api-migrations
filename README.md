@@ -16,9 +16,9 @@
 
 5. In the Package Manager Console initiate the migraion:   PM>   Add-Migration InitialCreate
 
-Build started...
-Build succeeded.
-To undo this action, use Remove-Migration.
+Build started...     
+Build succeeded.     
+To undo this action, use Remove-Migration.    
 
 This should generate a Migrations folder with some details of what your db will look like in c#.     
 
