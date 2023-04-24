@@ -20,7 +20,7 @@ Build started...
 Build succeeded.     
 To undo this action, use Remove-Migration.    
 
-This should generate a Migrations folder with some details of what your db will look like in c#.     
+This should generate a Migrations folder with some c# to create the database.     
 
 
 6. In the Package Manager Console update the database  :   PM>  Update-Database

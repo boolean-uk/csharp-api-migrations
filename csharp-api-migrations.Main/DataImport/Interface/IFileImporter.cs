@@ -10,7 +10,9 @@ namespace csharp_api_migrations.Main.DataImport.Interface
 {
     public interface IFileImporter
     {
-        List<Customer> ProcessCustomerCsvFile(string path);
+        List<Customer> ProcessCustomersCsvFile(string path);
         List<Customer> ProcessProductsCsvFile(string path);
+
+        
     }
 }
