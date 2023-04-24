@@ -25,9 +25,10 @@ This should generate a Migrations folder with some details of what your db will 
 
 6. In the Package Manager Console update the database  :   PM>  Update-Database
 
-Build started...
-Build succeeded.
-Applying migration '20230424151917_InitialCreate'.      something like this should appear!
+Build started...     
+Build succeeded.     
+Applying migration '20230424151917_InitialCreate'.      
+                                                       something like this should appear!
 
 
 
