@@ -14,11 +14,12 @@ namespace csharp_api_migrations.Main.Data
 {
     public class PizzaContext : DbContext
     {
-       
-        public DbSet<Product> Courses { get; set; }
+
+        public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
