@@ -19,5 +19,7 @@ namespace exercise.pizzashopapi.Data
         }
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
     }
 }
