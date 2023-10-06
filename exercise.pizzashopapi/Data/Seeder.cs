@@ -14,18 +14,19 @@ namespace exercise.pizzashopapi.Data
                     db.Add(new Customer() { Name = "Dave" });
                     db.SaveChanges();
                 }
+
                 if(!db.Pizzas.Any())
                 {
                     db.Add(new Pizza() { Name = "Cheese & Pineapple" });
                     db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
                     db.SaveChanges();
-
                 }
 
-                //order data
-                if(1==1)
+                if (!db.Orders.Any())
                 {
-
+                    db.Add(new Order() { OrderDate = DateTime.Now, CustomerId = 2, PizzaId = 1 });
+                    db.Add(new Order() { OrderDate = DateTime.Now, CustomerId = 1, PizzaId = 2 });
+                    db.Add(new Order() { OrderDate = DateTime.Now, CustomerId = 3, PizzaId = 3 });
                     db.SaveChanges();
                 }
             }
