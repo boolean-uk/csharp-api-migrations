@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
-  <connectionStrings>
-    <add name="PostgreSQL"
-     providerName="Npgsql.EntityFrameworkCore.PostgreSQL"
-     connectionString="Server=servernamegoeshere;Port=5432;Database=dabaseusername;User Id=dabaseusername;Password=password;" />
-  </connectionStrings>
-</configuration>
-

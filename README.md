@@ -1,45 +1,21 @@
-# Database Migrations Exercise
+# C# Migrations Exercise
 
-## Learning Objectives
-- Use Entity Framework migrations to manage changes to table structures
+## Pizza Shop Api
 
+Pizza Shop needs a very simple ordering system with just just 3 tables:
 
-## Instructions
+-Customer 
+-Pizza  
+-Order  
 
-1. Fork this repository
-2. Clone your fork to your machine
-3. Open the project in Visual Studio
-4. I have restricted config from being uploaded to github (see the end of .gitignore)    
-   What you need to do now is change the PizzaContext.cs file to use your ElephantSql instance.    
-   If you Ctrl+c then  Ctrol+v on the App.config.fake file to create a duplicate of this.  Remove the extension    
-   .fake so the file name is App.config    Now you can look at the connection string and replace each item with your own Elephant credentials.
+```
+-Add an appsettings.json file and connect to your database.  
+-Run a migration to create the Customer / Pizza tables
+-Add an address to the Customer object then run another migration 
+-Complete the Order model with an Id, OrderDate and a foreign key to the Customer and Pizza (and include a Pizza/Customer property).  A single order only has 1 customer ordering 1 pizza.
+-Run another migration to add the latest updates to the database
+-Seed some data for the orders... Dave likes a Cheese & Pineapple pizza and Nigel likes Vegan ones.
+-Complete the only method in the Repository to GetOrders() being sure to include the customer and pizza in the results.
+```
 
-5. In the Package Manager Console initiate the migraion:   PM>   Add-Migration InitialCreate
-
-Build started...     
-Build succeeded.     
-To undo this action, use Remove-Migration.    
-
-This should generate a Migrations folder with some c# to create the database.     
-
-
-6. In the Package Manager Console update the database  :   PM>  Update-Database
-
-Build started...     
-Build succeeded.     
-Applying migration '20230424151917_InitialCreate'.      
-                                                       something like this should appear!
-
-
-7.  Now make a change.
-
-
-
-## FYI
-
-If you are using VSCode you can install EF using:   $ dotnet tool install -g dotnet-ef
-
-and run commands like this:  $ dotnet ef migrations add InitialCreate
-                             $ dotnet ef database update    
-
-from your console.
+Try and complete this exercise with at least 3 migrations
