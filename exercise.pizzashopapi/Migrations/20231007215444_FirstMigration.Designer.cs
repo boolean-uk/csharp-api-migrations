@@ -11,8 +11,8 @@ using exercise.pizzashopapi.Data;
 namespace exercise.pizzashopapi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231007191628_LastMigrationAfterAddingeverything")]
-    partial class LastMigrationAfterAddingeverything
+    [Migration("20231007215444_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
