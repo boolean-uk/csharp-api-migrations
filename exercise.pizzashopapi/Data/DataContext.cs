@@ -13,11 +13,12 @@ namespace exercise.pizzashopapi.Data
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {            
+        {
             optionsBuilder.UseNpgsql(connectionString);
 
         }
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }
