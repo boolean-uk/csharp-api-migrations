@@ -1,5 +1,6 @@
 ﻿using exercise.pizzashopapi.Data;
 using exercise.pizzashopapi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace exercise.pizzashopapi.Repository
 {
@@ -7,7 +8,10 @@ namespace exercise.pizzashopapi.Repository
     {
         public IEnumerable<Order> GetOrders()
         {
-            throw new NotImplementedException();
+            using (var db = new DataContext())
+            {
+                return db.Orders.Include(o => o.Customer).Include(o => o.Pizza).ToList();
+            }
         }
     }
 }
