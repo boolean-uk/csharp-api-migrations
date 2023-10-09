@@ -11,6 +11,12 @@ namespace exercise.pizzashopapi.Data
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
 
+            /** NOTE: fix error
+             * "InvalidCastException: Cannot write DateTime with Kind=Local to PostgreSQL type
+             * 'timestamp with time zone', only UTC is supported."
+             * as presented here: https://stackoverflow.com/a/73586129
+             */
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
