@@ -4,7 +4,7 @@ namespace exercise.pizzashopapi.Data
 {
     public static class Seeder
     {
-        public static void SeedPizzaShopApi(this WebApplication app)
+        public async static void SeedPizzaShopApi(this WebApplication app)
         {
             using(var db = new DataContext())
             {
@@ -18,7 +18,7 @@ namespace exercise.pizzashopapi.Data
                 {
                     db.Add(new Pizza() { Name = "Cheese & Pineapple" });
                     db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
 
                 }
 

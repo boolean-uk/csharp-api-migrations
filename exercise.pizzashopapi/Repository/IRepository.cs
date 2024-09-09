@@ -5,5 +5,6 @@ namespace exercise.pizzashopapi.Repository
     public interface IRepository
     {
         IEnumerable<Order> GetOrders();
+
     }
 }
