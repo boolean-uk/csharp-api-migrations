@@ -7,14 +7,9 @@ namespace exercise.pizzashopapi.EndPoints
     {
         public static void ConfigurePizzaShopApi(this WebApplication app)
         {
-            app.MapGet("/pizzas", GetPizzas);           
+                
         }
 
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetPizzas(IRepository repository)
-        {
-            return Results.Ok(repository.GetOrders());
-        }
+       
     }
 }

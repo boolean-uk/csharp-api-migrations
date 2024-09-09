@@ -16,8 +16,13 @@ namespace exercise.pizzashopapi.Data
         {            
             optionsBuilder.UseNpgsql(connectionString);
 
+            //set primary of order?
+
+            //seed data?
+
         }
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }

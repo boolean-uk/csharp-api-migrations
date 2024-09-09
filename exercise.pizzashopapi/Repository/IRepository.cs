@@ -4,7 +4,8 @@ namespace exercise.pizzashopapi.Repository
 {
     public interface IRepository
     {
-        IEnumerable<Order> GetOrders();
+        IEnumerable<Order> GetOrdersByCustomer();
+        
 
     }
 }

@@ -5,9 +5,10 @@ namespace exercise.pizzashopapi.Repository
 {
     public class Repository : IRepository
     {
-        public IEnumerable<Order> GetOrders()
+        private DataContext _db;
+        public IEnumerable<Order> GetOrdersByCustomer(int id)
         {
-            throw new NotImplementedException();
+            return _db.ord
         }
     }
 }

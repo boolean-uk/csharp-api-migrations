@@ -5,11 +5,12 @@
 Pizza Shop needs a very simple ordering system with just just 3 tables, Customer, Pizza and Order.
 
 ## Setup
-- Add your credentials to the appsettings.json file and connect to your [neon](https://neon.tech) database.  
+- Create, then add your credentials to the appsettings.json file and connect to your [neon](https://neon.tech) database.  
 
 ## Core
 
 - Write all endpoints in the PizzaShopApi.cs
+- Use your initiative to create relevant endpoints such as GetOrders, GetOrdersByCustomerId, GetPizzas etc..
 - Use Dependency Injection to instance the DbContext Repository
 - Inject the IRepository into the EndPoints in the PizzaShopApi
 - An order consists of 1 customer ordering 1 pizza.
