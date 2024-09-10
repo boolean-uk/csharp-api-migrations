@@ -14,7 +14,7 @@ namespace exercise.pizzashopapi.Data
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
-
+            this.Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
