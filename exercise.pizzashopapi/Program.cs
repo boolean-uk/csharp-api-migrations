@@ -31,8 +31,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.ConfigurePizzaShopApi();
-app.ConfigureOrderApi();
-app.ConfigureCustomerApi();
 
 app.SeedPizzaShopApi();
 
