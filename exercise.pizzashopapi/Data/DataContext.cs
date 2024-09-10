@@ -8,10 +8,15 @@ namespace exercise.pizzashopapi.Data
     public class DataContext : DbContext
     {
         private string connectionString;
-        public DataContext()
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
