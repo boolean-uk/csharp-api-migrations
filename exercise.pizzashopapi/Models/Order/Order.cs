@@ -4,9 +4,9 @@ namespace exercise.pizzashopapi.Models.Order
 {
     public class Order
     {
-        int Id { get; set; }
-        int CustomerId { get; set; }
-        int PizzaId { get; set; }
+        public int Id { get; set; }
+        public int CustomerId { get; set; }
+        public int PizzaId { get; set; }
 
 
     }
