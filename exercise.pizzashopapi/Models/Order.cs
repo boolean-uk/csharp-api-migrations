@@ -2,11 +2,17 @@
 
 namespace exercise.pizzashopapi.Models
 {
+    [Table("orders")]
     public class Order
     {
-        public DateTime Ordered { get; set; }
+        [Column("orderdate")]
+        public DateTime OrderDate { get; set; }
+        [ForeignKey("Pizza")]
+        [Column("pizzaid")]
         public int PizzaId { get; set; }
         public Pizza Pizza { get; set; }
+        [ForeignKey("Customer")]
+        [Column("customerid")]
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }
     }

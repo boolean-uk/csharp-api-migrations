@@ -13,74 +13,74 @@ namespace exercise.pizzashopapi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Customers",
+                name: "customers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.PrimaryKey("PK_customers", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pizzas",
+                name: "pizzas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false)
+                    name = table.Column<string>(type: "text", nullable: false),
+                    price = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pizzas", x => x.Id);
+                    table.PrimaryKey("PK_pizzas", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "orders",
                 columns: table => new
                 {
-                    PizzaId = table.Column<int>(type: "integer", nullable: false),
-                    CustomerId = table.Column<int>(type: "integer", nullable: false),
-                    Ordered = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    pizzaid = table.Column<int>(type: "integer", nullable: false),
+                    customerid = table.Column<int>(type: "integer", nullable: false),
+                    orderdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => new { x.PizzaId, x.CustomerId });
+                    table.PrimaryKey("PK_orders", x => new { x.pizzaid, x.customerid });
                     table.ForeignKey(
-                        name: "FK_Orders_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
+                        name: "FK_orders_customers_customerid",
+                        column: x => x.customerid,
+                        principalTable: "customers",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Pizzas_PizzaId",
-                        column: x => x.PizzaId,
-                        principalTable: "Pizzas",
-                        principalColumn: "Id",
+                        name: "FK_orders_pizzas_pizzaid",
+                        column: x => x.pizzaid,
+                        principalTable: "pizzas",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerId",
-                table: "Orders",
-                column: "CustomerId");
+                name: "IX_orders_customerid",
+                table: "orders",
+                column: "customerid");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "orders");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "customers");
 
             migrationBuilder.DropTable(
-                name: "Pizzas");
+                name: "pizzas");
         }
     }
 }

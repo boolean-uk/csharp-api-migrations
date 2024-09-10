@@ -7,6 +7,10 @@ namespace exercise.pizzashopapi.Repository
     public class Repository : IRepository
     {
         private DataContext _db;
+        public Repository(DataContext db)
+        {
+            _db = db;
+        }
 
         public async Task<Customer> CreateCustomer(Customer customer)
         {
@@ -38,9 +42,9 @@ namespace exercise.pizzashopapi.Repository
             return customer;
         }
 
-        public async Task<Order> DeleteOrder(int id)
+        public async Task<Order> DeleteOrder(int customerId, int pizzaId)
         {
-            var order = _db.Orders.Find(id);
+            var order = _db.Orders.Find(customerId, pizzaId);
             if (order is null) return null;
             _db.Orders.Remove(order);
             await _db.SaveChangesAsync();
@@ -66,6 +70,11 @@ namespace exercise.pizzashopapi.Repository
             return await _db.Customers.FindAsync(id);
         }
 
+        public async Task<Customer> GetCustomer(string name)
+        {
+            return await _db.Customers.FirstOrDefaultAsync(o => o.Name == name);
+        }
+
         public async Task<IEnumerable<Customer>> GetCustomers()
         {
             return await _db.Customers.ToListAsync();
@@ -79,6 +88,11 @@ namespace exercise.pizzashopapi.Repository
         public async Task<Pizza> GetPizza(int id)
         {
             return await _db.Pizzas.FindAsync(id);
+        }
+
+        public async Task<Pizza> GetPizza(string name)
+        {
+            return await _db.Pizzas.FirstOrDefaultAsync(p => p.Name == name);
         }
 
         public async Task<IEnumerable<Pizza>> GetPizzas()
