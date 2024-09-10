@@ -1,5 +1,7 @@
 ﻿using exercise.pizzashopapi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
+using System.Reflection.Emit;
 
 namespace exercise.pizzashopapi.Data
 {
@@ -15,12 +17,20 @@ namespace exercise.pizzashopapi.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
             optionsBuilder.UseNpgsql(connectionString);
-
-            //set primary of order?
-
-            //seed data?
-
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //relationships
+            modelBuilder.Entity<Order>().HasKey(i => new { i.CustomerId, i.PizzaId });
+
+
+            //seed data
+            Seeder seeder = new Seeder();
+            modelBuilder.Entity<Pizza>().HasData(seeder.Pizzas);
+            modelBuilder.Entity<Order>().HasData(seeder.Orders);
+            modelBuilder.Entity<Customer>().HasData(seeder.Customers);
+        }
+
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
