@@ -17,7 +17,8 @@ namespace exercise.pizzashopapi.Repository
         public CustomerDTO BecomeCustomer(string Name)
         {
             Customer customer = null;
-            _db.Customers.Add(customer = new Customer { Id = _db.Customers.Max(x => x.Id) ,Name = Name });
+            _db.Customers.Add(customer = new Customer { Id = _db.Customers.Max(x => x.Id) + 1 ,Name = Name });
+            _db.SaveChanges();
             return customer.MapToDTO();
         }
 
@@ -29,13 +30,15 @@ namespace exercise.pizzashopapi.Repository
         public PizzaDTO GetMenuItem(int id)
         {
             var pizza = _db.Pizzas.FirstOrDefault(x => x.Id == id);
-            return pizza.MapToDTO();
+            return pizza != null ? pizza.MapToDTO() : null;
+
         }
 
         public OrderDTO GetOrder(int orderId)
         {
             var order = _db.Orders.FirstOrDefault(x => x.Id == orderId);
-            return order.MapToDTO();
+            return order != null ? order.MapToDTO() : null;
+
         }
 
         public List<OrderDTO> GetOrders()
@@ -53,11 +56,18 @@ namespace exercise.pizzashopapi.Repository
         public OrderDTO OrderPizza(int pizzaId, int customerId)
         {
             Order order = null;
-            _db.Orders.Add(order = new Order() { Id = _db.Orders.Max(x => x.Id), CustomerId = customerId, PizzaId = pizzaId });
-            return order.MapToDTO();
+            if (_db.Orders.Count() != 0)
+            {
+                _db.Orders.Add(order = new Order() { Id = _db.Orders.Max(x => x.Id) + 1, CustomerId = customerId, PizzaId = pizzaId });
+            } else
+            {
+                _db.Orders.Add(order = new Order() { Id = 1, CustomerId = customerId, PizzaId = pizzaId });
+            }
+            _db.SaveChanges();
+            return order != null ? order.MapToDTO() : null;
         }
 
-        public OrderDTO UpdateOrder(int orderId, int pizzaId)
+        public OrderDTO UpdateOrder(int orderId, int pizzaId) //TODO: fix problem with updating pizza id due to it being a key
         {
             var order = _db.Orders.FirstOrDefault(o => o.Id == orderId);
             if (order != null)
@@ -66,7 +76,9 @@ namespace exercise.pizzashopapi.Repository
                 _db.SaveChanges();
                 return order.MapToDTO();
             }
-            return order.MapToDTO();
+            _db.SaveChanges();
+            return order != null ? order.MapToDTO() : null;
+
         }
     }
 }
