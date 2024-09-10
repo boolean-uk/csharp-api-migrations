@@ -14,25 +14,25 @@ namespace exercise.pizzashopapi.Repository
             _db = db;
         }
 
-        public CustomerDTO BecomeCustomer(IRepository repository, string Name)
+        public CustomerDTO BecomeCustomer(string Name)
         {
             Customer customer = null;
             _db.Customers.Add(customer = new Customer { Id = _db.Customers.Max(x => x.Id) ,Name = Name });
             return customer.MapToDTO();
         }
 
-        public List<PizzaDTO> GetMenu(IRepository repository)
+        public List<PizzaDTO> GetMenu()
         {
             return _db.Pizzas.ToList().MapListToDTO();
         }
 
-        public PizzaDTO GetMenuItem(IRepository repository, int id)
+        public PizzaDTO GetMenuItem(int id)
         {
             var pizza = _db.Pizzas.FirstOrDefault(x => x.Id == id);
             return pizza.MapToDTO();
         }
 
-        public OrderDTO GetOrder(IRepository repository,int orderId)
+        public OrderDTO GetOrder(int orderId)
         {
             var order = _db.Orders.FirstOrDefault(x => x.Id == orderId);
             return order.MapToDTO();
@@ -44,7 +44,7 @@ namespace exercise.pizzashopapi.Repository
             return orders.MapListToDTO();
         }
 
-        public List<OrderDTO> GetOrdersByCustomer(int id, int customerId)
+        public List<OrderDTO> GetOrdersByCustomer(int customerId)
         {
             var orders = _db.Orders.Where(x => x.CustomerId == customerId).ToList();
             return orders.MapListToDTO();

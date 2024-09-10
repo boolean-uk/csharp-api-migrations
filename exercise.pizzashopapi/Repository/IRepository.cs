@@ -1,33 +1,33 @@
-﻿using exercise.pizzashopapi.Models.Order;
+﻿using exercise.pizzashopapi.Models.Customer;
+using exercise.pizzashopapi.Models.Order;
+using exercise.pizzashopapi.Models.Pizza;
 
 namespace exercise.pizzashopapi.Repository
 {
     public interface IRepository
     {
-        IEnumerable<Order> GetOrdersByCustomer();
-
-         Task<IResult> BecomeCustomer();
+         CustomerDTO BecomeCustomer(string Name);
 
 
-         Task<IResult> UpdateOrder();
+         OrderDTO UpdateOrder(int orderId, int pizzaId);
 
 
-         Task<IResult> OrderPizza();
+         OrderDTO OrderPizza(int pizzaId, int customerId);
 
 
-         Task<IResult> GetOrdersByCustomer();
+         List<OrderDTO> GetOrdersByCustomer(int customerId);
 
 
-         Task<IResult> GetOrder();
+         OrderDTO GetOrder(int orderId);
 
 
-         Task<IResult> GetOrders();
+         List<OrderDTO> GetOrders();
 
 
-         Task<IResult> GetMenuItem();
+         PizzaDTO GetMenuItem(int pizzaId);
 
 
-         Task<IResult> GetMenu();
+         List<PizzaDTO> GetMenu();
 
     }
 }

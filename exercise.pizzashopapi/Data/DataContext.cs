@@ -8,7 +8,9 @@ namespace exercise.pizzashopapi.Data
     public class DataContext : DbContext
     {
         private string connectionString;
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        //DbContextOptions<DataContext> options 
+         //: base(options)
+        public DataContext()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
@@ -17,8 +19,16 @@ namespace exercise.pizzashopapi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Customer>().HasKey(x => x.Id);
+            modelBuilder.Entity<Pizza>().HasKey(x => x.Id);
+            modelBuilder.Entity<Order>().HasKey(x => new { x.CustomerId, x.PizzaId });
+
+            
+
+            
 
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
             optionsBuilder.UseNpgsql(connectionString);

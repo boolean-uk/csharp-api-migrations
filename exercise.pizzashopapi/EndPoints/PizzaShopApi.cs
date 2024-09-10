@@ -1,4 +1,7 @@
-﻿using exercise.pizzashopapi.Repository;
+﻿using exercise.pizzashopapi.Models.Customer;
+using exercise.pizzashopapi.Models.Order;
+using exercise.pizzashopapi.Models.Pizza;
+using exercise.pizzashopapi.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace exercise.pizzashopapi.EndPoints
@@ -19,44 +22,48 @@ namespace exercise.pizzashopapi.EndPoints
                 
         }
 
-        private static async Task<IResult> BecomeCustomer(IRepository repository)
+        private static IResult BecomeCustomer(IRepository repository, string Name)
         {
-            throw new NotImplementedException();
+            return TypedResults.Ok(repository.BecomeCustomer(Name));
+        
+        
         }
 
-        private static async Task<IResult> UpdateOrder(IRepository repository)
+        private static IResult UpdateOrder(IRepository repository, int orderId, int pizzaId)
         {
-            throw new NotImplementedException();
+            return TypedResults.Ok(repository.UpdateOrder(orderId, pizzaId));
         }
 
-        private static async Task<IResult> OrderPizza(IRepository repository)
+        private static IResult OrderPizza(IRepository repository, int pizzaId, int customerId)
         {
-            throw new NotImplementedException();
+            return TypedResults.Ok(repository.OrderPizza(pizzaId, customerId));
+
         }
 
-        private static async Task<IResult> GetOrdersByCustomer(IRepository repository)
+        private static IResult GetOrdersByCustomer(IRepository repository, int customerId)
         {
-            throw new NotImplementedException();
+            return TypedResults.Ok(repository.GetOrdersByCustomer(customerId));
+
         }
 
-        private static async Task<IResult> GetOrder(IRepository repository)
+        private static IResult GetOrder(IRepository repository, int orderId)
         {
-            throw new NotImplementedException();
+            return TypedResults.Ok(repository.GetOrder(orderId));
         }
 
-        private static async Task<IResult> GetOrders(IRepository repository)
+        private static IResult GetOrders(IRepository repository)
         {
-            throw new NotImplementedException();
+            return TypedResults.Ok(repository.GetOrders());
         }
 
-        private static async Task<IResult> GetMenuItem(IRepository repository)
+        private static IResult GetMenuItem(IRepository repository, int pizzaId)
         {
-            throw new NotImplementedException();
+            return TypedResults.Ok(repository.GetMenuItem(pizzaId));
         }
 
-        private static async Task<IResult> GetMenu(IRepository repository)
+        private static IResult GetMenu(IRepository repository)
         {
-            throw new NotImplementedException();
+            return TypedResults.Ok(repository.GetMenu());
         }
     }
 }

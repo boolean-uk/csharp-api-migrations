@@ -1,4 +1,5 @@
-﻿using exercise.pizzashopapi.Models;
+﻿using exercise.pizzashopapi.Models.Customer;
+using exercise.pizzashopapi.Models.Pizza;
 
 namespace exercise.pizzashopapi.Data
 {
