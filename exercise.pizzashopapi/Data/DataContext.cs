@@ -1,4 +1,6 @@
-﻿using exercise.pizzashopapi.Models;
+﻿using exercise.pizzashopapi.Models.Customer;
+using exercise.pizzashopapi.Models.Order;
+using exercise.pizzashopapi.Models.Pizza;
 using Microsoft.EntityFrameworkCore;
 
 namespace exercise.pizzashopapi.Data
