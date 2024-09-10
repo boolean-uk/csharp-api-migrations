@@ -6,28 +6,28 @@ namespace exercise.pizzashopapi.Repository
     {
         IEnumerable<Order> GetOrdersByCustomer();
 
-         Task<IResult> BecomeCustomer(IRepository repository);
+         Task<IResult> BecomeCustomer();
 
 
-         Task<IResult> UpdateOrder(IRepository repository);
+         Task<IResult> UpdateOrder();
 
 
-         Task<IResult> OrderPizza(IRepository repository);
+         Task<IResult> OrderPizza();
 
 
-         Task<IResult> GetOrdersByCustomer(IRepository repository);
+         Task<IResult> GetOrdersByCustomer();
 
 
-         Task<IResult> GetOrder(IRepository repository);
+         Task<IResult> GetOrder();
 
 
-         Task<IResult> GetOrders(IRepository repository);
+         Task<IResult> GetOrders();
 
 
-         Task<IResult> GetMenuItem(IRepository repository);
+         Task<IResult> GetMenuItem();
 
 
-         Task<IResult> GetMenu(IRepository repository);
+         Task<IResult> GetMenu();
 
     }
 }

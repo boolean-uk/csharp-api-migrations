@@ -1,5 +1,7 @@
 ﻿using exercise.pizzashopapi.Data;
+using exercise.pizzashopapi.Models.Customer;
 using exercise.pizzashopapi.Models.Order;
+using exercise.pizzashopapi.Models.Pizza;
 
 namespace exercise.pizzashopapi.Repository
 {
@@ -12,44 +14,59 @@ namespace exercise.pizzashopapi.Repository
             _db = db;
         }
 
-        public Task<IResult> BecomeCustomer(IRepository repository, string Name)
+        public CustomerDTO BecomeCustomer(IRepository repository, string Name)
         {
-            throw new NotImplementedException();
+            Customer customer = null;
+            _db.Customers.Add(customer = new Customer { Id = _db.Customers.Max(x => x.Id) ,Name = Name });
+            return customer.MapToDTO();
         }
 
-        public Task<IResult> GetMenu(IRepository repository)
+        public List<PizzaDTO> GetMenu(IRepository repository)
         {
-            throw new NotImplementedException();
+            return _db.Pizzas.ToList().MapListToDTO();
         }
 
-        public Task<IResult> GetMenuItem(IRepository repository, int id)
+        public PizzaDTO GetMenuItem(IRepository repository, int id)
         {
-            throw new NotImplementedException();
+            var pizza = _db.Pizzas.FirstOrDefault(x => x.Id == id);
+            return pizza.MapToDTO();
         }
 
-        public Task<IResult> GetOrder(IRepository repository,int orderId)
+        public OrderDTO GetOrder(IRepository repository,int orderId)
         {
-            throw new NotImplementedException();
+            var order = _db.Orders.FirstOrDefault(x => x.Id == orderId);
+            return order.MapToDTO();
         }
 
-        public Task<IResult> GetOrders(IRepository repository)
+        public List<OrderDTO> GetOrders()
         {
-            throw new NotImplementedException();
+            var orders = _db.Orders.ToList();
+            return orders.MapListToDTO();
         }
 
-        public IEnumerable<Order> GetOrdersByCustomer(int id, int customerId)
+        public List<OrderDTO> GetOrdersByCustomer(int id, int customerId)
         {
-            throw new NotImplementedException();
+            var orders = _db.Orders.Where(x => x.CustomerId == customerId).ToList();
+            return orders.MapListToDTO();
         }
 
-        public Task<IResult> OrderPizza(IRepository repository, int pizzaId)
+        public OrderDTO OrderPizza(int pizzaId, int customerId)
         {
-            throw new NotImplementedException();
+            Order order = null;
+            _db.Orders.Add(order = new Order() { Id = _db.Orders.Max(x => x.Id), CustomerId = customerId, PizzaId = pizzaId });
+            return order.MapToDTO();
         }
 
-        public Task<IResult> UpdateOrder(IRepository repository, int orderId, Order newOrder)
+        public OrderDTO UpdateOrder(int orderId, int pizzaId)
         {
-            throw new NotImplementedException();
+            var order = _db.Orders.FirstOrDefault(o => o.Id == orderId);
+            if (order != null)
+            {
+                order.PizzaId = pizzaId;
+                _db.SaveChanges();
+                return order.MapToDTO();
+            }
+            return order.MapToDTO();
         }
     }
 }
