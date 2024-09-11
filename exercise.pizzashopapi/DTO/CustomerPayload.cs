@@ -3,11 +3,9 @@
     public class CustomerPayload
     {
         public string Name { get; set; }
-        public int Id { get; set; }
-        public CustomerPayload(string name, int id)
+        public CustomerPayload(string name)
         {
             Name = name;
-            Id = id;
         }
     }
 }

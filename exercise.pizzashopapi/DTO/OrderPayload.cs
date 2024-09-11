@@ -2,15 +2,16 @@
 {
     public class OrderPayload
     {
-        public OrderPayload(int customerId, int pizzaId, int id)
+        public OrderPayload(string customer, string pizza, decimal price)
         {
-            CustomerId = customerId;
-            PizzaId = pizzaId;
-            Id = Id;
+            Customer = customer;
+            Pizza = pizza;
+            Price = price;
         }
 
-        public int CustomerId { get; set; }
-        public int PizzaId { get; set; }
-        public int Id { get; set; }
+        public string Customer { get; set; }
+        public string Pizza { get; set; }
+
+        public decimal Price { get; set; }
     }
 }

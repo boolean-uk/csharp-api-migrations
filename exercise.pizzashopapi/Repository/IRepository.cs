@@ -13,9 +13,10 @@ namespace exercise.pizzashopapi.Repository
         public Task<PizzaPayload> GetPizza(int id);
         public Task<IEnumerable<PizzaPayload>> GetPizzas();
         public Task<PizzaPayload> AddPizza(PizzaPayload payload);
-        public Task<OrderPayload> AddOrder(OrderPayload payload);
+        public Task<OrderPayload> AddOrder(int customerId, int pizzaId);
         public Task<CustomerPayload> AddCustomer(CustomerPayload payload);
 
+        public Task<bool> CheckExists(int type, int id); //0 = customer, 1 = pizza, 2 = order
 
     }
 }
