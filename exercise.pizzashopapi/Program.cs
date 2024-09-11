@@ -1,6 +1,7 @@
 using exercise.pizzashopapi.Data;
 using exercise.pizzashopapi.EndPoints;
 using exercise.pizzashopapi.Repository;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var dbContext = new DataContext(new DbContextOptions<DataContext>()))
+{
+    dbContext.Database.EnsureCreated();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -24,11 +30,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.ConfigureOrderEndpoint();
+app.ConfigureCustomerEndpoint();
+app.ConfigurePizzaEndpoint();
 
-app.MapControllers();
-
-app.ConfigurePizzaShopApi();
-
-app.SeedPizzaShopApi();
 app.Run();

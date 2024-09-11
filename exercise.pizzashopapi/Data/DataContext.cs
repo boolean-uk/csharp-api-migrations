@@ -1,25 +1,39 @@
 ﻿using exercise.pizzashopapi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace exercise.pizzashopapi.Data
 {
     public class DataContext : DbContext
     {
-        private string connectionString;
-        public DataContext()
+        private string _connectionString;
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
+            _connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString")!;
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
-            optionsBuilder.UseNpgsql(connectionString);
+            optionsBuilder.UseNpgsql(_connectionString);
+            optionsBuilder.LogTo(message => Debug.WriteLine(message)); //see the sql EF using in the console
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //Keys
+            modelBuilder.Entity<Order>().HasKey(o => new { o.CustomerId, o.PizzaId });
 
-            //set primary of order?
+            modelBuilder.Entity<Order>().HasOne(o => o.Customer).WithOne(c => c.Order);
 
-            //seed data?
+            modelBuilder.Entity<Order>().HasOne(o => o.Pizza).WithOne(p => p.Order);
 
+            //Seeder
+            Seeder seeder = new Seeder();
+
+            //Data
+            modelBuilder.Entity<Customer>().HasData(seeder.customers);
+            modelBuilder.Entity<Pizza>().HasData(seeder.pizzas);
+            modelBuilder.Entity<Order>().HasData(seeder.orders);
         }
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
