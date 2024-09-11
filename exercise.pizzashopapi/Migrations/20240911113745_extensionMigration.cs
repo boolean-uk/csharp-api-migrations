@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -8,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace exercise.pizzashopapi.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class extensionMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,7 +46,9 @@ namespace exercise.pizzashopapi.Migrations
                 columns: table => new
                 {
                     PizzaId = table.Column<int>(type: "integer", nullable: false),
-                    CustomerId = table.Column<int>(type: "integer", nullable: false)
+                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    OrderedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PizzaStatus = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,7 +73,8 @@ namespace exercise.pizzashopapi.Migrations
                 values: new object[,]
                 {
                     { 1, "Anders Panders" },
-                    { 2, "Nigel Teacherman" }
+                    { 2, "Nigel Teacherman" },
+                    { 3, "Dave Davidson" }
                 });
 
             migrationBuilder.InsertData(
@@ -85,11 +89,11 @@ namespace exercise.pizzashopapi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Orders",
-                columns: new[] { "CustomerId", "PizzaId" },
+                columns: new[] { "CustomerId", "PizzaId", "OrderedAt", "PizzaStatus" },
                 values: new object[,]
                 {
-                    { 2, 1 },
-                    { 1, 2 }
+                    { 1, 2, new DateTime(2024, 9, 11, 11, 37, 44, 921, DateTimeKind.Utc).AddTicks(9728), "Preparing" },
+                    { 2, 3, new DateTime(2024, 9, 11, 11, 37, 44, 921, DateTimeKind.Utc).AddTicks(9731), "Preparing" }
                 });
 
             migrationBuilder.CreateIndex(

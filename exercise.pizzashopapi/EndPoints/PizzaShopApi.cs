@@ -18,6 +18,7 @@ namespace exercise.pizzashopapi.EndPoints
             pizzaGroup.MapGet("/OrdersByCustomer/{id:int}", GetOrdersByCustomer);
             pizzaGroup.MapGet("/Orders", GetAllOrders);
             pizzaGroup.MapPost("/Orders", CreateOrder);
+            pizzaGroup.MapPut("/OrderDelivered/{customerId:int}/{pizzaId:int}", DeliverStatusOrder);
 
             pizzaGroup.MapGet("/customers", GetCustomers);
             pizzaGroup.MapGet("/customers/{id:int}", GetSingleCustomer);
@@ -64,6 +65,10 @@ namespace exercise.pizzashopapi.EndPoints
         public static async Task<IResult> GetAllOrders(IRepository repository)
         {
             var orders = await repository.GetOrders();
+            foreach (var o in orders)
+            {
+                o.PizzaStatus = o.UpdatePizzaStatus();
+            }
             return TypedResults.Ok(orders);
         }
 
@@ -94,9 +99,24 @@ namespace exercise.pizzashopapi.EndPoints
             order.customer = customerInOrder;
             order.PizzaId = pizzaId;
             order.Pizza = pizzaInOrder;
+            order.OrderedAt = DateTime.UtcNow;
+            order.PizzaStatus = "Preparing";
 
             await repository.CreateOrder(order);
             return TypedResults.Created("", order);
+        }
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+
+        public static async Task<IResult> DeliverStatusOrder(IRepository repository, int customerId, int pizzaId)
+        {
+            Order orderDelivered = await repository.DeliverOrder(customerId, pizzaId);
+            if(orderDelivered == null)
+            {
+                return TypedResults.NotFound(error404);
+            }
+            return TypedResults.Ok(orderDelivered);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]

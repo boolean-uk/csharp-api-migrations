@@ -50,10 +50,14 @@ namespace exercise.pizzashopapi.Data
             Order order1 = new Order();
             order1.CustomerId = 1;
             order1.PizzaId = 2;
+            order1.OrderedAt = DateTime.UtcNow;
+            order1.PizzaStatus = "Preparing";
 
             Order order2 = new Order();
             order2.PizzaId = 3;
             order2.CustomerId = 2;
+            order2.OrderedAt = DateTime.UtcNow;
+            order2.PizzaStatus = "Preparing";
 
             _orders.Add(order1);
             _orders.Add(order2);

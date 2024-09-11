@@ -9,6 +9,7 @@ namespace exercise.pizzashopapi.Repository
         Task<Pizza> CreatePizza(Pizza pizza);
         Task<IEnumerable<Order>> GetOrdersByCustomer(int id);
         Task<IEnumerable<Order>> GetOrders();
+        Task<Order> DeliverOrder(int personId, int pizzaId);
         Task<Order> CreateOrder(Order order);
         Task<IEnumerable<Customer>> GetCustomers();
         Task<Customer> GetSingleCustomer(int id);

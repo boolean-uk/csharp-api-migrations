@@ -59,5 +59,18 @@ namespace exercise.pizzashopapi.Repository
             await _db.SaveChangesAsync();
             return customer;
         }
+
+        public async Task<Order> DeliverOrder(int customerId, int pizzaId)
+        {
+
+            Order order = await _db.Orders.FirstOrDefaultAsync(o => customerId == o.CustomerId && pizzaId == o.PizzaId);
+            if(order == null)
+            {
+                return null;
+            }
+            order.PizzaStatus = "Delivered";
+            await _db.SaveChangesAsync();
+            return order;
+        }
     }
 }
