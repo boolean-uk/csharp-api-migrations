@@ -20,7 +20,8 @@ namespace exercise.pizzashopapi.EndPoints
             pizzaGroup.MapPost("/Orders", CreateOrder);
 
             pizzaGroup.MapGet("/customers", GetCustomers);
-
+            pizzaGroup.MapGet("/customers/{id:int}", GetSingleCustomer);
+            pizzaGroup.MapPost("/customers", CreateCustomer);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
