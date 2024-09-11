@@ -61,6 +61,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public static async Task<IResult> CreateOrder(IRepository repository, int customerId, int pizzaId)
         {
             try
@@ -94,6 +95,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public static async Task<IResult> RemoveOrder(IRepository repository, int id)
         {
             try

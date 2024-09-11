@@ -14,6 +14,7 @@ namespace exercise.pizzashopapi.Models
         public string Name { get; set; }
         [Column("price")]
         public decimal Price { get; set; }
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public Order Order { get; set; }
+        //public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

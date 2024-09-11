@@ -47,12 +47,12 @@ namespace exercise.pizzashopapi.Data
         private List<string> _pizzaSecond = new List<string>()
         {
             "",
-            "& Cheese",
-            "& Ketchup",
-            "& Sardine",
-            "& California Reaper",
-            "& Expired Milk",
-            "& Despair"
+            " & Cheese",
+            " & Ketchup",
+            " & Sardine",
+            " & California Reaper",
+            " & Expired Milk",
+            " & Despair"
         };
 
         private List<Customer> _customers = new List<Customer>();
@@ -77,7 +77,7 @@ namespace exercise.pizzashopapi.Data
             {
                 Pizza pizza = new Pizza();
                 pizza.Id = y;
-                pizza.Name = $"{_pizzaFirst[pizzaRandom.Next(_pizzaFirst.Count)]} {_pizzaSecond[pizzaRandom.Next(_pizzaSecond.Count)]}";
+                pizza.Name = $"{_pizzaFirst[pizzaRandom.Next(_pizzaFirst.Count)]}{_pizzaSecond[pizzaRandom.Next(_pizzaSecond.Count)]} Pizza";
                 pizza.Price = pizzaRandom.Next(8, 20);
                 _pizzas.Add(pizza);
             }

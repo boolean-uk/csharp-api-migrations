@@ -52,11 +52,38 @@ namespace exercise.pizzashopapi.Repository
         }
         public async Task<OrderDTO> GetOrderByCustomerId(int id)
         {
-            throw new NotImplementedException();
+            //Get customer
+            var customer = await _db.Customers.Include(c => c.Order).Where(c => c.Id == id).FirstOrDefaultAsync();
+            if(customer == null)
+            {
+                throw new Exception("Customer not found");
+            }
+
+            //Get the order that corresponds to the customer
+            var order = customer.Order;
+            if (order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            //Response
+            return ConstructOrderDTO(order);
         }
         public async Task<OrderDTO> RemoveOrder(int id)
         {
-            throw new NotImplementedException();
+            //Get order
+            var order = await _db.Orders.Include(c => c.Customer).Include(p => p.Pizza).Where(o => o.Id == id).FirstOrDefaultAsync();
+            if(order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            //Remove it
+            _db.Orders.Remove(order);
+            await _db.SaveChangesAsync();
+
+            //Response
+            return ConstructOrderDTO(order);
         }
         private OrderDTO ConstructOrderDTO(Order order)
         {
@@ -77,11 +104,28 @@ namespace exercise.pizzashopapi.Repository
         }
         public async Task<IEnumerable<CustomerDTO>> GetCustomers()
         {
-            throw new NotImplementedException();
+            //Get all customers
+            var customers = await _db.Customers.ToListAsync();
+            List<CustomerDTO> result = new List<CustomerDTO>();
+            foreach(var customer in customers)
+            {
+                result.Add(ConstructCustomerDTO(customer));
+            }
+
+            //Response
+            return result;
         }
         public async Task<CustomerDTO> GetCustomerById(int id)
         {
-            throw new NotImplementedException();
+            //Get customer
+            var customer = await _db.Customers.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if(customer == null)
+            {
+                throw new Exception("Customer not found");
+            }
+
+            //Response
+            return ConstructCustomerDTO(customer);
         }
         private CustomerDTO ConstructCustomerDTO(Customer customer)
         {
@@ -102,11 +146,28 @@ namespace exercise.pizzashopapi.Repository
         }
         public async Task<IEnumerable<PizzaDTO>> GetPizzas()
         {
-            throw new NotImplementedException();
+            //Get all pizzas
+            var pizzas = await _db.Pizzas.ToListAsync();
+            List<PizzaDTO> result = new List<PizzaDTO>();
+            foreach (var pizza in pizzas)
+            {
+                result.Add(ConstructPizzaDTO(pizza));
+            }
+
+            //Response
+            return result;
         }
         public async Task<PizzaDTO> GetPizzaById(int id)
         {
-            throw new NotImplementedException();
+            //Get pizza
+            var pizza = await _db.Pizzas.Where(p => p.Id == id).FirstOrDefaultAsync();
+            if(pizza == null)
+            {
+                throw new Exception("Pizza not found");
+            }
+
+            //Response
+            return ConstructPizzaDTO(pizza);
         }
         private PizzaDTO ConstructPizzaDTO(Pizza pizza)
         {

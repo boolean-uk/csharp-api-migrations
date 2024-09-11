@@ -30,6 +30,7 @@ namespace exercise.pizzashopapi.EndPoints
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public static async Task<IResult> GetCustomer(IRepository repository, int id)
         {
             try
