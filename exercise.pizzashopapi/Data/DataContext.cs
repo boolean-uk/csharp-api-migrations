@@ -5,21 +5,16 @@ namespace exercise.pizzashopapi.Data
 {
     public class DataContext : DbContext
     {
-        private string connectionString;
+        private string _connectionString;
         public DataContext()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
-
+            _connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
-            optionsBuilder.UseNpgsql(connectionString);
-
+            optionsBuilder.UseNpgsql(_connectionString);
             //set primary of order?
-
-            //seed data?
-
         }
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
