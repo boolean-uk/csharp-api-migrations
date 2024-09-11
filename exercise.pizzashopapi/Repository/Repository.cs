@@ -54,6 +54,19 @@ namespace exercise.pizzashopapi.Repository
             await _db.SaveChangesAsync();
             return target;
         }
+        public async Task<Order> UpdateOrder(Order entity)
+        {
+            var target = await _db.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Pizza)
+                .FirstOrDefaultAsync(o => o.CustomerId == entity.CustomerId &&
+                                          o.PizzaId == entity.PizzaId);
+            target.CustomerId = entity.CustomerId;
+            target.PizzaId = entity.PizzaId;
+            target.Delivered = entity.Delivered;
+
+            return entity;
+        }
 
 
         //  ------ Customers ------
