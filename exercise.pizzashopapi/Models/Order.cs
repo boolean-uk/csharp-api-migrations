@@ -16,6 +16,7 @@ namespace exercise.pizzashopapi.Models
         }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
         public int Id { get; set; }
 

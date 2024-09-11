@@ -33,7 +33,8 @@ namespace exercise.pizzashopapi.Migrations
                 {
                     customer_id = table.Column<int>(type: "integer", nullable: false),
                     pizza_id = table.Column<int>(type: "integer", nullable: false),
-                    id = table.Column<int>(type: "integer", nullable: false),
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Status = table.Column<string>(type: "text", nullable: false),
                     Time_since_ordered = table.Column<double>(type: "double precision", nullable: false),
                     TimeOrdered = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -72,9 +73,9 @@ namespace exercise.pizzashopapi.Migrations
                 columns: new[] { "customer_id", "pizza_id", "id", "Status", "TimeOrdered", "Time_since_ordered" },
                 values: new object[,]
                 {
-                    { 1, 1, 1, "Preparing pizza", new DateTime(2024, 9, 11, 11, 23, 7, 144, DateTimeKind.Utc).AddTicks(3630), 0.0 },
-                    { 2, 2, 2, "Preparing pizza", new DateTime(2024, 9, 11, 11, 23, 7, 144, DateTimeKind.Utc).AddTicks(3738), 0.0 },
-                    { 3, 3, 3, "Preparing pizza", new DateTime(2024, 9, 11, 11, 23, 7, 144, DateTimeKind.Utc).AddTicks(3745), 0.0 }
+                    { 1, 1, 1, "Preparing pizza", new DateTime(2024, 9, 11, 11, 58, 11, 115, DateTimeKind.Utc).AddTicks(4564), 0.0 },
+                    { 2, 2, 2, "Preparing pizza", new DateTime(2024, 9, 11, 11, 58, 11, 115, DateTimeKind.Utc).AddTicks(4656), 0.0 },
+                    { 3, 3, 3, "Preparing pizza", new DateTime(2024, 9, 11, 11, 58, 11, 115, DateTimeKind.Utc).AddTicks(4661), 0.0 }
                 });
 
             migrationBuilder.InsertData(

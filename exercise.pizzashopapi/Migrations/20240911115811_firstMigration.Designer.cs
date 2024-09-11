@@ -12,7 +12,7 @@ using exercise.pizzashopapi.Data;
 namespace exercise.pizzashopapi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240911112307_firstMigration")]
+    [Migration("20240911115811_firstMigration")]
     partial class firstMigration
     {
         /// <inheritdoc />
@@ -72,8 +72,11 @@ namespace exercise.pizzashopapi.Migrations
                         .HasColumnName("pizza_id");
 
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -98,7 +101,7 @@ namespace exercise.pizzashopapi.Migrations
                             PizzaId = 1,
                             Id = 1,
                             Status = "Preparing pizza",
-                            TimeOrdered = new DateTime(2024, 9, 11, 11, 23, 7, 144, DateTimeKind.Utc).AddTicks(3630),
+                            TimeOrdered = new DateTime(2024, 9, 11, 11, 58, 11, 115, DateTimeKind.Utc).AddTicks(4564),
                             TimeSinceOrdered = 0.0
                         },
                         new
@@ -107,7 +110,7 @@ namespace exercise.pizzashopapi.Migrations
                             PizzaId = 2,
                             Id = 2,
                             Status = "Preparing pizza",
-                            TimeOrdered = new DateTime(2024, 9, 11, 11, 23, 7, 144, DateTimeKind.Utc).AddTicks(3738),
+                            TimeOrdered = new DateTime(2024, 9, 11, 11, 58, 11, 115, DateTimeKind.Utc).AddTicks(4656),
                             TimeSinceOrdered = 0.0
                         },
                         new
@@ -116,7 +119,7 @@ namespace exercise.pizzashopapi.Migrations
                             PizzaId = 3,
                             Id = 3,
                             Status = "Preparing pizza",
-                            TimeOrdered = new DateTime(2024, 9, 11, 11, 23, 7, 144, DateTimeKind.Utc).AddTicks(3745),
+                            TimeOrdered = new DateTime(2024, 9, 11, 11, 58, 11, 115, DateTimeKind.Utc).AddTicks(4661),
                             TimeSinceOrdered = 0.0
                         });
                 });
