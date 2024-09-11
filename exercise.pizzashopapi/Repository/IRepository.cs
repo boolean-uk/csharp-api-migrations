@@ -18,5 +18,7 @@ namespace exercise.pizzashopapi.Repository
 
         public Task<bool> CheckExists(int type, int id); //0 = customer, 1 = pizza, 2 = order
 
+        public Task<OrderPayload> MarkOrderAsAsDelivered(int orderId);
+
     }
 }

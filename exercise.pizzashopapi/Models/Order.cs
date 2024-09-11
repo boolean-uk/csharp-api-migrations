@@ -10,6 +10,9 @@ namespace exercise.pizzashopapi.Models
         {
             CustomerId = customerId;
             PizzaId = pizzaId;
+            TimeOrdered =  DateTime.Now.ToUniversalTime();
+            TimeSinceOrdered = 0.0;
+            Status = "Preparing pizza";
         }
 
         [Key]
@@ -17,13 +20,19 @@ namespace exercise.pizzashopapi.Models
         public int Id { get; set; }
 
         [ForeignKey("customerId")]
-        [Column("customer id")]
+        [Column("customer_id")]
         public int CustomerId { get; set; }
 
         [ForeignKey("pizzaId")]
-        [Column("pizza id")]
+        [Column("pizza_id")]
         public int PizzaId { get; set; }
 
-        
+        [Column("Status")]
+        public string Status { get; set; }
+
+        [Column("Time_since_ordered")]
+        public double TimeSinceOrdered { get; set; }
+
+        public DateTime TimeOrdered { get; set; }
     }
 }

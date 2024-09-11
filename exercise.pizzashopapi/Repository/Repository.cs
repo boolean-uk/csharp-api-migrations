@@ -30,24 +30,24 @@ namespace exercise.pizzashopapi.Repository
             _db.Orders.Add(order);
             await _db.SaveChangesAsync();
             
-            return MakeOrderPayload(customerId, pizzaId);
+            return MakeOrderPayload(order);
         }
 
-        private  OrderPayload MakeOrderPayload(int customerId, int pizzaId)
+        private OrderPayload MakeOrderPayload(Order order)
         {
-            var customer =  _db.Customers.SingleOrDefault(a => a.Id == customerId);
+            var customer =  _db.Customers.SingleOrDefault(a => a.Id == order.CustomerId);
             if (customer == null)
             {
                 throw new Exception("404, could not find customer!");
             }
 
-            var pizza =  _db.Pizzas.SingleOrDefault(a => a.Id == pizzaId);
+            var pizza =  _db.Pizzas.SingleOrDefault(a => a.Id == order.PizzaId);
             if (pizza == null)
             {
                 throw new Exception("404, could not find pizza!");
             }
 
-            OrderPayload dto = new OrderPayload(customer.Name, pizza.Name, pizza.Price);
+            OrderPayload dto = new OrderPayload(customer.Name, pizza.Name, pizza.Price, order.Status);
             return dto;
         }
 
@@ -92,7 +92,7 @@ namespace exercise.pizzashopapi.Repository
             {
                 throw new Exception("404, could not find order!");
             }
-
+            UpdateOrder(order);
             var pizza = await _db.Pizzas.SingleOrDefaultAsync(a => a.Id == order.PizzaId);
             var customer = await _db.Customers.SingleOrDefaultAsync(a => a.Id == order.CustomerId);
             if(pizza == null || customer == null)
@@ -100,10 +100,9 @@ namespace exercise.pizzashopapi.Repository
                 throw new Exception("404, could not find customer/pizza!");
 
             }
-            OrderPayload dto = new OrderPayload(customer.Name, pizza.Name, pizza.Price);
+            await _db.SaveChangesAsync();
 
-            
-            return dto;
+            return MakeOrderPayload(order);
         }
 
         public async Task<IEnumerable<OrderPayload>> GetOrders()
@@ -112,6 +111,7 @@ namespace exercise.pizzashopapi.Repository
             List<OrderPayload> orders = new List<OrderPayload>();
             foreach (var o in order)
             {
+                UpdateOrder(o);
                 var pizza = await _db.Pizzas.SingleOrDefaultAsync(a => a.Id == o.PizzaId);
                 var customer = await _db.Customers.SingleOrDefaultAsync(a => a.Id == o.CustomerId);
                 if (pizza == null || customer == null)
@@ -119,21 +119,23 @@ namespace exercise.pizzashopapi.Repository
                     throw new Exception("404, could not find customer/pizza!");
 
                 }
-                OrderPayload dto = new OrderPayload(customer.Name, pizza.Name, pizza.Price);
-                orders.Add(dto);
+                orders.Add(MakeOrderPayload(o));
                 
             }
+            await _db.SaveChangesAsync();
             return orders;
         }
 
         public async Task<IEnumerable<OrderPayload>> GetOrdersByCustomerId(int id)
         {
+
             var order = await _db.Orders.ToListAsync();
             List<OrderPayload> orders = new List<OrderPayload>();
             foreach (var o in order)
             {
                 if(o.CustomerId == id)
                 {
+                    UpdateOrder(o);
                     var pizza = await _db.Pizzas.SingleOrDefaultAsync(a => a.Id == o.PizzaId);
                     var customer = await _db.Customers.SingleOrDefaultAsync(a => a.Id == o.CustomerId);
                     if (pizza == null || customer == null)
@@ -141,10 +143,11 @@ namespace exercise.pizzashopapi.Repository
                         throw new Exception("404, could not find customer/pizza!");
 
                     }
-                    OrderPayload dto = new OrderPayload(customer.Name, pizza.Name, pizza.Price);
-                    orders.Add(dto);
+                    orders.Add(MakeOrderPayload(o));
                 }
             }
+            await _db.SaveChangesAsync();
+
             return orders;
         }
 
@@ -197,6 +200,43 @@ namespace exercise.pizzashopapi.Repository
                 }
             }
             return false;
+        }
+        private void UpdateOrder(Order order)
+        {
+            order.TimeSinceOrdered = DateTime.Now.ToUniversalTime().Subtract(order.TimeOrdered).Duration().TotalMinutes;
+
+           
+            if (order.TimeSinceOrdered >= 3 && order.Status == "Preparing pizza")
+            {
+                order.Status = "Cooking in the oven";
+            }
+            
+            
+            if (order.TimeSinceOrdered >= 15 && order.Status == "Cooking in the oven") //3+12
+            {
+                order.Status = "Out for delivery";
+            }
+            
+
+        }
+
+        public async Task<OrderPayload> MarkOrderAsAsDelivered(int orderId)
+        {
+            var order = await _db.Orders.SingleOrDefaultAsync(a => a.Id == orderId);
+            if (order == null)
+            {
+                throw new Exception("404, could not find order!");
+            }
+            UpdateOrder(order);
+            
+            if(order.Status == "Out for delivery")
+            {
+                order.Status = "Delivered";
+            }
+
+            await _db.SaveChangesAsync();
+
+            return MakeOrderPayload(order);
         }
     }
 }
