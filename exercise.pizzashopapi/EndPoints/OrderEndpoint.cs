@@ -16,6 +16,7 @@ namespace exercise.pizzashopapi.EndPoints
             orders.MapGet("/GetByCustomerId{id}", GetCustomerOrder);
             orders.MapPost("/Create{customerId}|{pizzaId}", CreateOrder);
             orders.MapDelete("/Remove{id}", RemoveOrder);
+            orders.MapPut("/MarkAsDelivered{id}", MarkDelivered);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -108,6 +109,31 @@ namespace exercise.pizzashopapi.EndPoints
                 }
 
                 var result = await repository.RemoveOrder(id);
+
+                //Response
+                return TypedResults.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.Problem(ex.Message);
+            }
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public static async Task<IResult> MarkDelivered(IRepository repository, int id)
+        {
+            try
+            {
+                //Check if the order is transporting or not
+                var order = await repository.GetOrderById(id);
+                if (order.Status != "Transporting")
+                {
+                    return TypedResults.BadRequest();
+                }
+
+                var result = await repository.OrderDelivered(id);
 
                 //Response
                 return TypedResults.Ok(result);

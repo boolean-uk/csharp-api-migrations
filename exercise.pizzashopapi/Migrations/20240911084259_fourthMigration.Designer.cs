@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using exercise.pizzashopapi.Data;
@@ -11,9 +12,11 @@ using exercise.pizzashopapi.Data;
 namespace exercise.pizzashopapi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240911084259_fourthMigration")]
+    partial class fourthMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,77 +47,47 @@ namespace exercise.pizzashopapi.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Patrick the Dinosaur"
+                            Name = "Luigi the Hedgehog"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Princess Squarepants"
+                            Name = "Sonic the Dinosaur"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Princess Mario"
+                            Name = "Patrick the Dinosaur"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Donkey the Dinosaur"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Luigi Peach"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Spongebob the Hedgehog"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Luigi the Echidna"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Sonic Mario"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Patrick Daisy"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Sonic the Hedgehog"
-                        },
-                        new
-                        {
-                            Id = 11,
                             Name = "Sonic Star"
                         },
                         new
                         {
-                            Id = 12,
-                            Name = "Yoshi Squarepants"
+                            Id = 5,
+                            Name = "Donkey Mario"
                         },
                         new
                         {
-                            Id = 13,
-                            Name = "Sandy Squarepants"
+                            Id = 6,
+                            Name = "Sonic Daisy"
                         },
                         new
                         {
-                            Id = 14,
-                            Name = "Sonic the Echidna"
+                            Id = 7,
+                            Name = "Yoshi the Dinosaur"
                         },
                         new
                         {
-                            Id = 15,
-                            Name = "Yoshi the Hedgehog"
+                            Id = 8,
+                            Name = "Luigi Star"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Princess Star"
                         });
                 });
 
@@ -159,16 +132,16 @@ namespace exercise.pizzashopapi.Migrations
                             CustomerId = 1,
                             PizzaId = 1,
                             Id = 1,
-                            Status = 0,
-                            TimeLeft = new TimeSpan(0, 0, 0, 14, 0)
+                            Status = 1,
+                            TimeLeft = new TimeSpan(0, 0, 4, 11, 0)
                         },
                         new
                         {
                             CustomerId = 2,
                             PizzaId = 2,
                             Id = 2,
-                            Status = 2,
-                            TimeLeft = new TimeSpan(0, 0, 4, 13, 0)
+                            Status = 0,
+                            TimeLeft = new TimeSpan(0, 0, 1, 27, 0)
                         },
                         new
                         {
@@ -176,103 +149,55 @@ namespace exercise.pizzashopapi.Migrations
                             PizzaId = 3,
                             Id = 3,
                             Status = 0,
-                            TimeLeft = new TimeSpan(0, 0, 1, 0, 0)
+                            TimeLeft = new TimeSpan(0, 0, 0, 8, 0)
                         },
                         new
                         {
                             CustomerId = 4,
                             PizzaId = 4,
                             Id = 4,
-                            Status = 2,
-                            TimeLeft = new TimeSpan(0, 0, 7, 4, 0)
+                            Status = 1,
+                            TimeLeft = new TimeSpan(0, 0, 2, 42, 0)
                         },
                         new
                         {
                             CustomerId = 5,
                             PizzaId = 5,
                             Id = 5,
-                            Status = 0,
-                            TimeLeft = new TimeSpan(0, 0, 1, 54, 0)
+                            Status = 1,
+                            TimeLeft = new TimeSpan(0, 0, 10, 1, 0)
                         },
                         new
                         {
                             CustomerId = 6,
                             PizzaId = 6,
                             Id = 6,
-                            Status = 2,
-                            TimeLeft = new TimeSpan(0, 0, 4, 14, 0)
+                            Status = 1,
+                            TimeLeft = new TimeSpan(0, 0, 8, 38, 0)
                         },
                         new
                         {
                             CustomerId = 7,
                             PizzaId = 7,
                             Id = 7,
-                            Status = 2,
-                            TimeLeft = new TimeSpan(0, 0, 8, 55, 0)
+                            Status = 0,
+                            TimeLeft = new TimeSpan(0, 0, 1, 1, 0)
                         },
                         new
                         {
                             CustomerId = 8,
                             PizzaId = 8,
                             Id = 8,
-                            Status = 2,
-                            TimeLeft = new TimeSpan(0, 0, 1, 3, 0)
+                            Status = 1,
+                            TimeLeft = new TimeSpan(0, 0, 5, 9, 0)
                         },
                         new
                         {
                             CustomerId = 9,
                             PizzaId = 9,
                             Id = 9,
-                            Status = 0,
-                            TimeLeft = new TimeSpan(0, 0, 2, 55, 0)
-                        },
-                        new
-                        {
-                            CustomerId = 10,
-                            PizzaId = 10,
-                            Id = 10,
-                            Status = 0,
-                            TimeLeft = new TimeSpan(0, 0, 0, 31, 0)
-                        },
-                        new
-                        {
-                            CustomerId = 11,
-                            PizzaId = 11,
-                            Id = 11,
                             Status = 1,
-                            TimeLeft = new TimeSpan(0, 0, 0, 38, 0)
-                        },
-                        new
-                        {
-                            CustomerId = 12,
-                            PizzaId = 12,
-                            Id = 12,
-                            Status = 0,
-                            TimeLeft = new TimeSpan(0, 0, 1, 7, 0)
-                        },
-                        new
-                        {
-                            CustomerId = 13,
-                            PizzaId = 13,
-                            Id = 13,
-                            Status = 1,
-                            TimeLeft = new TimeSpan(0, 0, 5, 8, 0)
-                        },
-                        new
-                        {
-                            CustomerId = 14,
-                            PizzaId = 14,
-                            Id = 14,
-                            Status = 1,
-                            TimeLeft = new TimeSpan(0, 0, 8, 12, 0)
-                        },
-                        new
-                        {
-                            CustomerId = 15,
-                            PizzaId = 15,
-                            Id = 15,
-                            Status = 1,
-                            TimeLeft = new TimeSpan(0, 0, 6, 1, 0)
+                            TimeLeft = new TimeSpan(0, 0, 8, 56, 0)
                         });
                 });
 
@@ -302,92 +227,56 @@ namespace exercise.pizzashopapi.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Dirt & Sardine Pizza",
-                            Price = 8m
+                            Name = "Grass & California Reaper Pizza",
+                            Price = 10m
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Tomato Pizza",
-                            Price = 9m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Grass & Sardine Pizza",
-                            Price = 14m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Tomato & California Reaper Pizza",
-                            Price = 16m
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Cheese & Despair Pizza",
+                            Name = "Mold & Despair Pizza",
                             Price = 11m
                         },
                         new
                         {
+                            Id = 3,
+                            Name = "Mold & Despair Pizza",
+                            Price = 18m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Tomato & Ketchup Pizza",
+                            Price = 19m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Dirt & Cheese Pizza",
+                            Price = 10m
+                        },
+                        new
+                        {
                             Id = 6,
-                            Name = "Candy Pizza",
-                            Price = 15m
+                            Name = "Depression & Ketchup Pizza",
+                            Price = 16m
                         },
                         new
                         {
                             Id = 7,
-                            Name = "Dirt & California Reaper Pizza",
+                            Name = "Mold & California Reaper Pizza",
                             Price = 19m
                         },
                         new
                         {
                             Id = 8,
-                            Name = "Dirt & Sardine Pizza",
-                            Price = 13m
+                            Name = "Grass & Cheese Pizza",
+                            Price = 16m
                         },
                         new
                         {
                             Id = 9,
-                            Name = "Cheese Pizza",
-                            Price = 12m
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Depression & Cheese Pizza",
-                            Price = 14m
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Concrete & Expired Milk Pizza",
-                            Price = 9m
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Mold & Despair Pizza",
-                            Price = 14m
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Mold & Expired Milk Pizza",
-                            Price = 15m
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Name = "Cheese & Expired Milk Pizza",
-                            Price = 8m
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Name = "Depression & Despair Pizza",
-                            Price = 18m
+                            Name = "Depression & Expired Milk Pizza",
+                            Price = 17m
                         });
                 });
 

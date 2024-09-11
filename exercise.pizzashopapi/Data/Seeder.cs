@@ -65,7 +65,7 @@ namespace exercise.pizzashopapi.Data
             Random pizzaRandom = new Random();
             Random orderRandom = new Random();
 
-            for(int x = 1; x < 10; x++)
+            for(int x = 1; x < 16; x++)
             {
                 Customer customer = new Customer();
                 customer.Id = x;
@@ -73,7 +73,7 @@ namespace exercise.pizzashopapi.Data
                 _customers.Add(customer);
             }
 
-            for(int y = 1; y < 10; y++)
+            for(int y = 1; y < 16; y++)
             {
                 Pizza pizza = new Pizza();
                 pizza.Id = y;
@@ -82,12 +82,29 @@ namespace exercise.pizzashopapi.Data
                 _pizzas.Add(pizza);
             }
 
-            for(int z= 1; z < 10; z++)
+            for(int z= 1; z < 16; z++)
             {
                 Order order = new Order();
                 order.Id = z;
                 order.CustomerId = _customers[z - 1].Id;
                 order.PizzaId = _pizzas[z - 1].Id;
+                order.Status = (OrderStatus)orderRandom.Next(0, 3);
+                if (order.Status == OrderStatus.Preparing)
+                {
+                    order.TimeLeft = TimeSpan.FromSeconds(orderRandom.Next(1, 180)); //1 second to 3 minutes
+                }
+                else if (order.Status == OrderStatus.Cooking)
+                {
+                    order.TimeLeft = TimeSpan.FromSeconds(orderRandom.Next(1, 720)); //1 second to 12 minutes
+                }
+                else if (order.Status == OrderStatus.Transporting)
+                {
+                    order.TimeLeft = TimeSpan.FromSeconds(orderRandom.Next(1, 600)); //1 second to 10 minutes
+                }
+                else
+                {
+                    order.TimeLeft = TimeSpan.Zero;
+                }
                 _orders.Add(order);
             }
         }

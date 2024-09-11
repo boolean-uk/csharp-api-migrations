@@ -27,10 +27,6 @@ namespace exercise.pizzashopapi.Data
 
             modelBuilder.Entity<Order>().HasOne(o => o.Pizza).WithOne(p => p.Order);
 
-            //modelBuilder.Entity<Order>().HasOne(o => o.Customer).WithMany(c => c.Orders).HasForeignKey(o => o.CustomerId);
-
-            //modelBuilder.Entity<Order>().HasOne(o => o.Pizza).WithMany(p => p.Orders).HasForeignKey(o => o.PizzaId);
-
             //Seeder
             Seeder seeder = new Seeder();
 

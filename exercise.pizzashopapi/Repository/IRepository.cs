@@ -10,6 +10,7 @@ namespace exercise.pizzashopapi.Repository
         public Task<OrderDTO> GetOrderById(int id);
         public Task<OrderDTO> GetOrderByCustomerId(int id);
         public Task<OrderDTO> RemoveOrder(int id);
+        public Task<OrderDTO> OrderDelivered(int id);
         public Task<PizzaDTO> AddPizza(Pizza entity);
         public Task<IEnumerable<PizzaDTO>> GetPizzas();
         public Task<PizzaDTO> GetPizzaById(int id);

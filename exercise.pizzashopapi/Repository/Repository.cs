@@ -85,6 +85,26 @@ namespace exercise.pizzashopapi.Repository
             //Response
             return ConstructOrderDTO(order);
         }
+        public async Task<OrderDTO> OrderDelivered(int id)
+        {
+            //Get order
+            var order = await _db.Orders.Include(c => c.Customer).Include(p => p.Pizza).Where(o => o.Id == id).FirstOrDefaultAsync();
+            if(order == null)
+            {
+                throw new Exception("Order not found");
+            }
+
+            //Change status and time left
+            order.Status = OrderStatus.Delivered;
+            order.TimeLeft = TimeSpan.Zero;
+
+            //Update database
+            _db.Attach(order).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
+            //Response
+            return ConstructOrderDTO(order);
+        }
         private OrderDTO ConstructOrderDTO(Order order)
         {
             return new OrderDTO(order, _db.Customers.ToList(), _db.Pizzas.ToList());

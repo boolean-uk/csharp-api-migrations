@@ -18,6 +18,9 @@ namespace exercise.pizzashopapi.Models
         [ForeignKey("pizza")]
         public int PizzaId { get; set; }
         public Pizza Pizza { get; set; }
-        
+        [Column("orderStatus")]
+        public OrderStatus Status { get; set; }
+        [Column("timeLeft")]
+        public TimeSpan TimeLeft { get; set; }
     }
 }
