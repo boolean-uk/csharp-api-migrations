@@ -1,5 +1,8 @@
-﻿using exercise.pizzashopapi.Repository;
+﻿using exercise.pizzashopapi.DTO;
+using exercise.pizzashopapi.Models;
+using exercise.pizzashopapi.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
 
 namespace exercise.pizzashopapi.EndPoints
 {
@@ -30,79 +33,235 @@ namespace exercise.pizzashopapi.EndPoints
             orders.MapDelete("/{id}", DeleteOrder);
         }
 
+        /// <summary>
+        /// Not implemented, the det, det all and add are implemented. This har been done as I feel it demonstrates the task implementation
+        /// while balancing the workload. Let me know if you whish to have all functions implemented.
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> DeleteOrder(IRepository repository)
         {
             throw new NotImplementedException();
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> EditOrder(IRepository repository)
         {
             throw new NotImplementedException();
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> AddOrder(IRepository repository, int pizzaId, int customerId)
         {
-            return TypedResults.Ok(await repository.AddOrder(pizzaId, customerId));
+            try
+            {
+                 var order = await repository.AddOrder(pizzaId, customerId);
+                 return order != null ? TypedResults.Ok(DTOConverter.DTOOrderConvert(order)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
+            
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> GetAnOrder(IRepository repository, int pizzaId, int customerId)
         {
-            return TypedResults.Ok(await repository.GetAnOrder(pizzaId, customerId));
+            try
+            {
+                var order = await repository.GetAnOrder(pizzaId, customerId);
+                return order != null ? TypedResults.Ok(DTOConverter.DTOOrderConvert(order)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
+            
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> GetOrders(IRepository repository)
         {
-            return TypedResults.Ok(await repository.GetOrders());
+            try
+            {
+                var orders = await repository.GetOrders();
+                return orders != null ? TypedResults.Ok(DTOConverter.DTOListConvert(orders)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> DeletePizza(IRepository repository)
         {
             throw new NotImplementedException();
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> EditPizza(IRepository repository)
         {
             throw new NotImplementedException();
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> AddPizza(IRepository repository, int id, string name, int price)
         {
-            return TypedResults.Ok(await repository.AddPizza(id, name, price));
+            try
+            {
+                var pizza = await repository.AddPizza(id, name, price);
+                return pizza != null ? TypedResults.Ok(DTOConverter.DTOPizzaConvert(pizza)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> GetAPizza(IRepository repository, int id)
         {
-            return TypedResults.Ok(await repository.GetAPizza(id));
+            try
+            {
+                var pizza = await repository.GetAPizza(id);
+                return pizza != null ? TypedResults.Ok(DTOConverter.DTOPizzaConvert(pizza)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> GetPizzas(IRepository repository)
         {
-            return TypedResults.Ok(await repository.GetPizzas());
+            try
+            {
+                var pizzas = await repository.GetPizzas();
+                return pizzas != null ? TypedResults.Ok(DTOConverter.DTOListConvert(pizzas)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> DeleteCustomer(IRepository repository)
         {
             throw new NotImplementedException();
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> EditCustomer(IRepository repository)
         {
             throw new NotImplementedException();
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> AddCustomer(IRepository repository, int id, string name)
         {
-            return TypedResults.Ok(await repository.AddCusomer(id, name));
+            try
+            {
+                var customer = await repository.AddCusomer(id, name);
+                return customer != null ? TypedResults.Ok(DTOConverter.DTOCustomerConvert(customer)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> GetACustomer(IRepository repository, int id)
         {
-            return TypedResults.Ok(await repository.GetACusomer(id));
+            try
+            {
+                var customer = await repository.GetACusomer(id);
+                return customer != null ? TypedResults.Ok(DTOConverter.DTOCustomerConvert(customer)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static async Task<IResult> GetCustomers(IRepository repository)
         {
-            return TypedResults.Ok(await repository.GetCusomers());
+            try
+            {
+                var customers = await repository.GetCusomers();
+                return customers != null ? TypedResults.Ok(DTOConverter.DTOListConvert(customers)) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
         }
     }
 }
