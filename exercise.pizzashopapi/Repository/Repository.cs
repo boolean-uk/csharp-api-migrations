@@ -57,10 +57,14 @@ namespace exercise.pizzashopapi.Repository
         public OrderDTO OrderPizza(int pizzaId, int customerId)
         {
             Order order = null;
-            if (_db.Orders.Count() != 0)
+            var customerCheck = _db.Customers.FirstOrDefault(x => x.Id == customerId);
+            var pizzaCheck = _db.Pizzas.FirstOrDefault(x => x.Id == pizzaId);
+
+
+            if (_db.Orders.Count() != 0 && customerCheck != null && pizzaCheck != null)
             {
                 _db.Orders.Add(order = new Order() { Id = _db.Orders.Max(x => x.Id) + 1, CustomerId = customerId, PizzaId = pizzaId });
-            } else
+            } else if (customerCheck != null && pizzaCheck != null)
             {
                 _db.Orders.Add(order = new Order() { Id = 1, CustomerId = customerId, PizzaId = pizzaId });
             }
@@ -71,15 +75,16 @@ namespace exercise.pizzashopapi.Repository
         public OrderDTO UpdateOrder(int orderId, int pizzaId) //TODO: fix problem with updating pizza id due to it being a key
         {
             var order = new Order() { Id = orderId, PizzaId = pizzaId };
-            
-            if (order != null)
+            var orderCheck = _db.Orders.FirstOrDefault(x => x.Id == orderId);
+            var pizzaCheck = _db.Pizzas.FirstOrDefault(x => x.Id == pizzaId);
+
+            if (orderCheck != null && pizzaCheck != null)
             {
                 _db.Orders.Attach(order);
                 _db.Orders.Where(o  => o.Id == orderId).ExecuteUpdate(x => x.SetProperty(o => o.PizzaId, pizzaId));
                 return order.MapToDTO();
             }
-            _db.SaveChanges();
-            return order != null ? order.MapToDTO() : null;
+            return null;
 
         }
     }

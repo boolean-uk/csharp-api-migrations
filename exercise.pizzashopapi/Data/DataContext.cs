@@ -22,11 +22,6 @@ namespace exercise.pizzashopapi.Data
             modelBuilder.Entity<Customer>().HasKey(x => x.Id);
             modelBuilder.Entity<Pizza>().HasKey(x => x.Id);
             modelBuilder.Entity<Order>().HasKey(x => new { x.CustomerId, x.PizzaId });
-
-            
-
-            
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
