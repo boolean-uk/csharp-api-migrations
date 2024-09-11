@@ -2,10 +2,11 @@
 
 namespace exercise.pizzashopapi.Repository
 {
-    public interface IRepository
+    public interface IRepository<T>
     {
-        IEnumerable<Order> GetOrdersByCustomer();
-        
-
+        Task <IEnumerable<T>> Get();
+        Task <T> Create(T entity);
+        Task<T> GetById(int id);
+        Task Save();
     }
 }
