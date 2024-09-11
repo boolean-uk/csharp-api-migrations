@@ -24,15 +24,24 @@ namespace exercise.pizzashopapi.EndPoints
 
         }
 
+        //done
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         private static IResult BecomeCustomer(IRepository repository, string Name)
         {
-            return TypedResults.Ok(repository.BecomeCustomer(Name));
+            try
+            {
+                return TypedResults.Ok(repository.BecomeCustomer(Name));
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest();
+            }
 
 
         }
 
+        //done
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -52,6 +61,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         }
 
+        //done
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -72,20 +82,45 @@ namespace exercise.pizzashopapi.EndPoints
 
         }
 
+        //done
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static IResult GetOrdersByCustomer(IRepository repository, int customerId)
         {
-            return TypedResults.Ok(repository.GetOrdersByCustomer(customerId));
+            try
+            {
+                int numTest = customerId;
+                var orders = repository.GetOrdersByCustomer(customerId);
+                return orders != null ? TypedResults.Ok() : TypedResults.NotFound();
+
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest();
+            }
 
         }
 
+        //done
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static IResult GetOrder(IRepository repository, int orderId)
         {
-            return TypedResults.Ok(repository.GetOrder(orderId));
+            try
+            {
+                int numTest = orderId;
+                OrderDTO orderDTO = repository.GetOrder(orderId);
+                return orderDTO != null ? TypedResults.Ok() : TypedResults.NotFound();
+
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest();
+            }
         }
+
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         private static IResult GetOrders(IRepository repository)
@@ -93,11 +128,23 @@ namespace exercise.pizzashopapi.EndPoints
             return TypedResults.Ok(repository.GetOrders());
         }
 
+        //done
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         private static IResult GetMenuItem(IRepository repository, int pizzaId)
         {
-            return TypedResults.Ok(repository.GetMenuItem(pizzaId));
+            try
+            {
+                int numTest = pizzaId;
+                PizzaDTO pizzaDTO = repository.GetMenuItem(pizzaId);
+                return pizzaDTO != null ? TypedResults.Ok() : TypedResults.NotFound();
+
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest();
+            }
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
