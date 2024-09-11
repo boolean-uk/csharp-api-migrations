@@ -23,12 +23,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.ConfigurePizzaShopApi();
-
-app.SeedPizzaShopApi();
+app.ConfigurePizzaEndpoint();
 app.Run();
