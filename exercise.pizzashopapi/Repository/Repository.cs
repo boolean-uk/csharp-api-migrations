@@ -2,6 +2,7 @@
 using exercise.pizzashopapi.Models.Customer;
 using exercise.pizzashopapi.Models.Order;
 using exercise.pizzashopapi.Models.Pizza;
+using Microsoft.EntityFrameworkCore;
 
 namespace exercise.pizzashopapi.Repository
 {
@@ -69,11 +70,12 @@ namespace exercise.pizzashopapi.Repository
 
         public OrderDTO UpdateOrder(int orderId, int pizzaId) //TODO: fix problem with updating pizza id due to it being a key
         {
-            var order = _db.Orders.FirstOrDefault(o => o.Id == orderId);
+            var order = new Order() { Id = orderId, PizzaId = pizzaId };
+            
             if (order != null)
             {
-                order.PizzaId = pizzaId;
-                _db.SaveChanges();
+                _db.Orders.Attach(order);
+                _db.Orders.Where(o  => o.Id == orderId).ExecuteUpdate(x => x.SetProperty(o => o.PizzaId, pizzaId));
                 return order.MapToDTO();
             }
             _db.SaveChanges();
