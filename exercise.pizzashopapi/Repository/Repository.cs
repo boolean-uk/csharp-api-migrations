@@ -44,5 +44,44 @@ namespace exercise.pizzashopapi.Repository
         {
             return await _db.Pizzas.ToListAsync();
         }
+
+        public async Task<Pizza> GetPizzaById(int id)
+        {
+            return await _db.Pizzas.FirstAsync(a => a.Id == id);
+        }
+
+        public async Task<Pizza> CreatePizza(Pizza entity)
+        {
+            _db.Pizzas.Add(entity);
+            await _db.SaveChangesAsync();
+
+            return entity;
+        }
+
+        public async Task<Customer> CreateCustomer(Customer entity)
+        {
+            _db.Customers.Add(entity);
+            await _db.SaveChangesAsync();
+
+            return entity;
+        }
+
+        public async Task<Order> CreateOrder(Order entity)
+        {
+            _db.Orders.Add(entity);
+            await _db.SaveChangesAsync();
+
+            return entity;
+        }
+
+        public async Task<Order> GetOrderByIds(int pizzaID, int customerID)
+        {
+            var entity = await _db.Orders
+                .Include(a => a.Customer)
+                .Include(b => b.Pizza)
+                .FirstAsync(o => o.PizzaID == pizzaID & o.CustomerID == customerID);
+
+            return entity;
+        }
     }
 }
