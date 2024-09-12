@@ -1,9 +1,11 @@
 ﻿using exercise.pizzashopapi.Models;
+using System.Drawing.Text;
 
 namespace exercise.pizzashopapi.Data
 {
     public static class Seeder
     {
+        
         public async static void SeedPizzaShopApi(this WebApplication app)
         {
             using(var db = new DataContext())
@@ -12,12 +14,12 @@ namespace exercise.pizzashopapi.Data
                 {
                     db.Add(new Customer() { Name="Nigel" });
                     db.Add(new Customer() { Name = "Dave" });
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                 }
                 if(!db.Pizzas.Any())
                 {
-                    db.Add(new Pizza() { Name = "Cheese & Pineapple" });
-                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
+                    db.Add(new Pizza() { Name = "Cheese & Pineapple" , Price = 6});
+                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic", Price = 5 });
                     await db.SaveChangesAsync();
 
                 }
@@ -26,7 +28,7 @@ namespace exercise.pizzashopapi.Data
                 if(1==1)
                 {
 
-                    db.SaveChanges();
+                   await db.SaveChangesAsync();
                 }
             }
         }
