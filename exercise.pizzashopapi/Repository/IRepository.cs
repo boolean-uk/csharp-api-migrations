@@ -8,5 +8,6 @@ namespace exercise.pizzashopapi.Repository
         Task <T> Create(T entity);
         Task<T> GetById(int id);
         Task Save();
+        Task<T> Update(T entity);
     }
 }

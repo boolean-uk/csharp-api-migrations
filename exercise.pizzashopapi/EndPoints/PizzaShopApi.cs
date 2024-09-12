@@ -4,7 +4,6 @@ using exercise.pizzashopapi.DTOs.Order;
 using exercise.pizzashopapi.DTOs.Pizza;
 using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace exercise.pizzashopapi.EndPoints
@@ -111,43 +110,99 @@ namespace exercise.pizzashopapi.EndPoints
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetOrders(IRepository<Order> repository)
+        public static async Task<IResult> GetOrders(IRepository<Order> orderRepo, IRepository<Customer> custRepo, IRepository<Pizza> pizzaRepo)
         {
-            Payload<List<Order>> payload = new Payload<List<Order>>();
-            var orders = await repository.Get();
-            payload.Data = orders.ToList();
 
-            return TypedResults.Ok(payload);
+            GetOrdersResponse response = new GetOrdersResponse();
+            var orders = await orderRepo.Get();
+
+            foreach (Order ord in orders)
+            {
+                OrderDTO orderDTO = new OrderDTO();
+                Customer cust = await custRepo.GetById(ord.CustomerId);
+                Pizza pizza = await pizzaRepo.GetById(ord.PizzaId);
+                orderDTO.Customer = cust.Name;
+                orderDTO.Pizza = pizza.Name;
+                orderDTO.Total = pizza.Price;
+
+                if (ord.OrderStatus != Enums.OrderStatus.delivered)
+                {
+                    TimeSpan timeSpent = DateTime.UtcNow - ord.TimeOfOrder;
+                    if (timeSpent.Minutes <= 3)
+                    {
+                        ord.OrderStatus = Enums.OrderStatus.preparing;
+
+                    }
+                    if (timeSpent.Minutes > 3 && timeSpent.Minutes <= 12)
+                    {
+                        ord.OrderStatus = Enums.OrderStatus.cooking;
+
+                    }
+                    if (timeSpent.Minutes > 12)
+                    {
+                        ord.OrderStatus = Enums.OrderStatus.delivering;
+
+                    }
+
+                    orderDTO.OrderStatus = ord.OrderStatus.ToString();
+                }
+
+                orderDTO.OrderStatus = ord.OrderStatus.ToString();
+
+                response.Orders.Add(orderDTO);
+
+            }
+            await orderRepo.Save();
+            return TypedResults.Ok(response);
         }
+
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> GetOrderByCustomer(IRepository<Order> orderRepository, int customerid)
+        public static async Task<IResult> GetOrderByCustomer(IRepository<Order> orderRepository, IRepository<Customer> custRepo, IRepository<Pizza> pizzarepo, int customerid)
         {
-            Payload<Order> payload = new Payload<Order>();
+
+            GetOrdersResponse response = new GetOrdersResponse();
 
             var orders = await orderRepository.Get();
-            var customerOrder = orders.FirstOrDefault(x => x.CustomerId == customerid);
+            var customerOrder = orders.Where(x => x.CustomerId == customerid);
 
             if (customerOrder != null)
             {
-                TimeSpan timeSpent = DateTime.UtcNow - customerOrder.TimeOfOrder;
-                if(timeSpent.Minutes <= 3)
+                foreach (Order ord in customerOrder)
                 {
-                    customerOrder.OrderStatus = Enums.OrderStatus.preparing;
-                }
-                if(timeSpent.Minutes > 3 && timeSpent.Minutes <= 12)
-                {
-                    customerOrder.OrderStatus = Enums.OrderStatus.cooking;
-                }
-                if(timeSpent.Minutes > 12)
-                {
-                    customerOrder.OrderStatus = Enums.OrderStatus.delivering;
-                }
+                    OrderDTO orderDTO = new OrderDTO();
+                    Customer cust = await custRepo.GetById(customerid);
+                    orderDTO.Customer = cust.Name;
+                    Pizza pizza = await pizzarepo.GetById(ord.PizzaId);
+                    orderDTO.Pizza = pizza.Name;
+                    orderDTO.Total = pizza.Price;
 
-                payload.Data = customerOrder;
+                    if (ord.OrderStatus != Enums.OrderStatus.delivered)
+                    {
+                        TimeSpan timeSpent = DateTime.UtcNow - ord.TimeOfOrder;
+                        if (timeSpent.Minutes <= 3)
+                        {
+                            ord.OrderStatus = Enums.OrderStatus.preparing;
+                        }
+                        if (timeSpent.Minutes > 3 && timeSpent.Minutes <= 12)
+                        {
+                            ord.OrderStatus = Enums.OrderStatus.cooking;
+                        }
+                        if (timeSpent.Minutes > 12)
+                        {
+                            ord.OrderStatus = Enums.OrderStatus.delivering;
+                        }
+                        orderDTO.OrderStatus = ord.OrderStatus.ToString();
+                    }
+                    orderDTO.OrderStatus = ord.OrderStatus.ToString();
+                    response.Orders.Add(orderDTO);
+
+                }
                 await orderRepository.Save();
-                return TypedResults.Ok(payload);
+
+                return TypedResults.Ok(response);
+
             }
             return TypedResults.BadRequest("No order exists for this customer");
 
@@ -184,24 +239,39 @@ namespace exercise.pizzashopapi.EndPoints
 
         public static async Task<IResult> DeliverOrder(IRepository<Order> orderRepo, IRepository<Customer> custRepo, IRepository<Pizza> pizzaRepo, int id)
         {
+            GetOrdersResponse response = new GetOrdersResponse();
             var orders = await orderRepo.Get();
-            var customerOrder = orders.FirstOrDefault(x => x.CustomerId == id);
+            var customerOrder = orders.Where(x => x.CustomerId == id);
 
-            if (customerOrder != null) 
+            if (customerOrder != null)
             {
-                
-                if (customerOrder.OrderStatus != Enums.OrderStatus.delivering)
+                foreach (Order ord in customerOrder)
                 {
-                    return TypedResults.BadRequest("Order is not ready");
-                }
-                customerOrder.OrderStatus = Enums.OrderStatus.delivered;
-                await orderRepo.Save();
+                    OrderDTO orderDTO = new OrderDTO();
+                    Customer customer = await custRepo.GetById(ord.CustomerId);
+                    Pizza pizza = await pizzaRepo.GetById(ord.PizzaId);
+                    orderDTO.Customer = customer.Name;
+                    orderDTO.Pizza = pizza.Name;
+                    orderDTO.Total = pizza.Price;
 
-                Customer customer = await custRepo.GetById(customerOrder.CustomerId);
-                Pizza pizza = await pizzaRepo.GetById(customerOrder.PizzaId);
-                OrderDTO order = new OrderDTO() { Customer = customer.Name, Pizza = pizza.Name, Total = pizza.Price, OrderStatus = customerOrder.OrderStatus.ToString() };
-                
-                return TypedResults.Ok(order);
+                    if (ord.OrderStatus == Enums.OrderStatus.delivered)
+                    {
+                        return TypedResults.BadRequest("Order is alredy delivered");
+                    }
+                    if (ord.OrderStatus != Enums.OrderStatus.delivering)
+                    {
+                        return TypedResults.BadRequest("Order is not ready");
+                    }
+
+                    ord.OrderStatus = Enums.OrderStatus.delivered;
+                    await orderRepo.Update(ord);
+                    orderDTO.OrderStatus = ord.OrderStatus.ToString();
+                    response.Orders.Add(orderDTO);
+                }
+
+                await orderRepo.Save();
+                return TypedResults.Ok(response);
+
             }
             return TypedResults.BadRequest("No order found");
         }

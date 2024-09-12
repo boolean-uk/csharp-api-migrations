@@ -38,5 +38,13 @@ namespace exercise.pizzashopapi.Repository
         {
            await _db.SaveChangesAsync();
         }
+
+        public async Task<T> Update(T entity)
+        {
+            _table.Attach(entity);
+            _db.Entry(entity).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+            return entity;
+        }
     }
 }
