@@ -6,9 +6,11 @@ namespace exercise.pizzashopapi.Repository
     public class Repository : IRepository
     {
         private DataContext _db;
-        public IEnumerable<Order> GetOrdersByCustomer(int id)
+        public async Task<Order> GetOrdersByCustomer(int id)
         {
-            return _db.ord
+            throw new NotImplementedException();
         }
+
+        
     }
 }

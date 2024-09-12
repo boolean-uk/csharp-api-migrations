@@ -17,7 +17,7 @@ namespace exercise.pizzashopapi.Data
                 if(!db.Pizzas.Any())
                 {
                     db.Add(new Pizza() { Name = "Cheese & Pineapple" });
-                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
+                    db.Add(new Pizza() { Name = "Vegan Cheese Tactic" });
                     await db.SaveChangesAsync();
 
                 }

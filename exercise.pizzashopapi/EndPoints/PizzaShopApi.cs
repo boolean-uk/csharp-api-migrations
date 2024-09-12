@@ -7,9 +7,7 @@ namespace exercise.pizzashopapi.EndPoints
     {
         public static void ConfigurePizzaShopApi(this WebApplication app)
         {
-                
+              
         }
-
-       
     }
 }

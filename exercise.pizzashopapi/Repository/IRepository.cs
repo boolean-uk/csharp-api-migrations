@@ -4,7 +4,7 @@ namespace exercise.pizzashopapi.Repository
 {
     public interface IRepository
     {
-        IEnumerable<Order> GetOrdersByCustomer();
+        Task<Order> GetOrdersByCustomer(int id);
         
 
     }
