@@ -26,6 +26,11 @@ Pizza Shop needs a very simple ordering system with just just 3 tables, Customer
 
 - The Pizza Shop can only cook 4 pizzas at a time and the delivery driver is allocated 10 minutes to deliver one pizza at a time.  Add an estimated delivery time to the Order!
  
+## Comments by Agron
+For the extensions I have made some assumptions
+- We have infinite amount of delivery drivers (No waiting for pickup)
+- The next pizza which is prepared and cooked is the one that at the end of the queue. (No dynamic)
+- When there are n pizzas in front in queue, we assume calculate the estimated delivery time for a pizza to take Ceiling(n/4) minutes + 15 minutes. Meaning we assume the currently cooking to be negligible (For simplicity) 
 
 ## Tips
 

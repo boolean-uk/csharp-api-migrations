@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using exercise.pizzashopapi.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace exercise.pizzashopapi.Models
 {
@@ -7,6 +8,10 @@ namespace exercise.pizzashopapi.Models
     {
         [Column("orderdate")]
         public DateTime OrderDate { get; set; }
+        [Column("status")]
+        public OrderStatus Status { get; set; }
+        [Column("estimatedDelivery")]
+        public DateTime EstimatedDelivery {  get; set; }
         [ForeignKey("Pizza")]
         [Column("pizzaid")]
         public int PizzaId { get; set; }
