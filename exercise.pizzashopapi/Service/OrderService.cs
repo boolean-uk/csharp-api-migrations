@@ -1,4 +1,5 @@
 ﻿using exercise.pizzashopapi.Models;
+using exercise.pizzashopapi.Models.DTOs;
 using exercise.pizzashopapi.Repository;
 
 namespace exercise.pizzashopapi.Service
@@ -26,6 +27,13 @@ namespace exercise.pizzashopapi.Service
                 o => o.Customer,
                 o => o.Pizza
                 );
+        }
+
+        public async Task<Order> CreateOrder(Order order)
+        {
+            var createdOrder = await _orderRepository.Create(order);
+
+            return await GetOrder(order.Id);
         }
     }
 }

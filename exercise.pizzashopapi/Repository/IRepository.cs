@@ -7,5 +7,9 @@ namespace exercise.pizzashopapi.Repository
     {
         Task<IEnumerable<T>> GetAll(params Expression<Func<T, object>>[] includes);
         Task<T> GetById(int id, params Expression<Func<T, object>>[] includes);
+        Task<T> Create(T entity);
+
+        Task<IEnumerable<Customer>> GetCustomers();
+        Task<Customer> GetCustomer(int id);
     }
 }

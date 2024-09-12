@@ -1,5 +1,6 @@
 ﻿using exercise.pizzashopapi.Data;
 using exercise.pizzashopapi.Models;
+using exercise.pizzashopapi.Service;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Linq.Expressions;
@@ -41,6 +42,29 @@ namespace exercise.pizzashopapi.Repository
             return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
         }
 
+        public async Task<T> Create(T entity)
+        {
+            _dbSet.Add(entity);
 
+            await _db.SaveChangesAsync();
+
+            return entity;
+        }
+
+        public async Task<IEnumerable<Customer>> GetCustomers()
+        {
+            return await _db.Customers
+                .Include(c => c.Order)
+                .ThenInclude(o => o.Pizza)
+                .ToListAsync();
+        }
+
+        public async Task<Customer> GetCustomer(int id)
+        {
+            return await _db.Customers
+                .Include(c => c.Order)
+                .ThenInclude(o => o.Pizza)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 }

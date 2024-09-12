@@ -4,7 +4,10 @@ using exercise.pizzashopapi.Repository;
 using exercise.pizzashopapi.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
+using exercise.pizzashopapi.Models;
+using System.Runtime.InteropServices;
 
 namespace exercise.pizzashopapi.EndPoints
 {
@@ -15,7 +18,17 @@ namespace exercise.pizzashopapi.EndPoints
             var pizzaShopGroup = app.MapGroup("");
 
             pizzaShopGroup.MapGet("/orders", GetOrders);
-            pizzaShopGroup.MapGet("/order/{id}", GetOrder);
+            pizzaShopGroup.MapGet("/orders/{id}", GetOrder);
+            pizzaShopGroup.MapPost("/orders/", CreateOrder);
+
+            pizzaShopGroup.MapGet("/pizzas/", GetPizzas);
+            pizzaShopGroup.MapGet("/pizza/{id}", GetPizza);
+            pizzaShopGroup.MapPost("/pizza/", CreatePizza);
+
+            pizzaShopGroup.MapGet("/customers/", GetCustomers);
+            pizzaShopGroup.MapGet("/customers/{id}", GetCustomer);
+            pizzaShopGroup.MapPost("/customers/", CreateCustomer);
+
 
         }
 
@@ -40,5 +53,78 @@ namespace exercise.pizzashopapi.EndPoints
 
             return TypedResults.Ok(orderDTO);
         }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> CreateOrder(OrderService orderService, IMapper mapper, CreateOrderDTO orderDTO)
+        {
+          
+            Order order = mapper.Map<Order>(orderDTO);
+
+            Order createdOrder = await orderService.CreateOrder(order);
+
+            var getOrderDTO = mapper.Map<GetOrderDTO>(createdOrder);
+
+            return TypedResults.Ok(getOrderDTO);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> GetPizzas(PizzaService pizzaService, IMapper mapper)
+        {
+            var pizzas = await pizzaService.GetPizzas();
+
+            return TypedResults.Ok(pizzas);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> GetPizza(PizzaService pizzaService, IMapper mapper, int id)
+        {
+            Pizza pizza = await pizzaService.GetPizza(id);
+
+            if (pizza == null)
+                return TypedResults.NotFound("Pizza not found");
+
+            return TypedResults.Ok(pizza);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> CreatePizza(PizzaService pizzaService, IMapper mapper, CreatePizzaDTO pizzaDTO)
+        {
+            Pizza pizza = mapper.Map<Pizza>(pizzaDTO);
+
+            Pizza createdPizza = await pizzaService.CreatePizza(pizza);
+
+            return TypedResults.Ok(createdPizza);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> GetCustomers(CustomerService customerService, IMapper mapper)
+        {
+            var customers = await customerService.GetCustomers();
+
+            var customersDTO = mapper.Map<IEnumerable<GetCustomerDTO>>(customers);
+
+            return TypedResults.Ok(customersDTO);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> GetCustomer(CustomerService customerService, IMapper mapper, int id)
+        {
+            var customer = await customerService.GetCustomer(id);
+
+            var customersDTO = mapper.Map<GetCustomerDTO>(customer);
+
+            return TypedResults.Ok(customersDTO);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> CreateCustomer(CustomerService customerService, IMapper mapper, CreateCustomerDTO customerDTO)
+        {
+            Customer customer = mapper.Map<Customer>(customerDTO);
+
+            Customer createdCustomer = await customerService.CreateCustomer(customer);
+
+            return TypedResults.Ok(createdCustomer);
+        }
+
     }
 }
