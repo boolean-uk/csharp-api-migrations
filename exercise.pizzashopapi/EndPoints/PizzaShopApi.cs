@@ -1,5 +1,6 @@
 ﻿using exercise.pizzashopapi.DTO;
 using exercise.pizzashopapi.DTO.GetResponse;
+using exercise.pizzashopapi.DTO.ViewModels;
 using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,13 @@ namespace exercise.pizzashopapi.EndPoints
 
             pizzashop.MapGet("/orders", GetOrders);
             pizzashop.MapGet("/orders/{id}", GetOrdersByCustomer);
-            //pizzashop.MapPost("/orders", CreateOrder);
+            pizzashop.MapPost("/orders", CreateOrder);
             pizzashop.MapGet("/pizzas", GetPizzas);
-            //   pizzashop.MapGet("/pizzas/{id}", GetAPizza);
-            // pizzashop.MapGet("/customers", GetCustomers);
+            pizzashop.MapGet("/pizzas/{id}", GetPizza);
+            pizzashop.MapPost("/pizzas", CreatePizza);
+            pizzashop.MapGet("/customers", GetCustomers);
             pizzashop.MapGet("/customers/{id}", GetACustomer);
+            pizzashop.MapPost("/customer", CreateCustomer);
 
 
         }
@@ -100,6 +103,91 @@ namespace exercise.pizzashopapi.EndPoints
                 return TypedResults.Ok(response.Orders);
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> CreateOrder(IRepository repository, OrderPostModel model)
+        {
+
+            
+
+            var order = await repository.CreateOrder(new Order() { PizzaId = model.PizzaId, CustomerId = model.CustomerId });
+
+            var customer = await repository.GetCustomerById(order.CustomerId);
+
+            var pizza = await repository.GetPizzaById(order.PizzaId);
+
+        
+            PizzaDTO pizzaDTO = new PizzaDTO()
+            {
+               Id = pizza.Id,
+               Name = pizza.Name,
+            Price = pizza.Price
+            };
+
+            CustomerDTO customerDTO = new CustomerDTO()
+            {
+                Id = customer.Id, 
+                Name = customer.Name,
+
+            };
+
+            OrderDTO orderDTO = new OrderDTO()
+            {
+                Pizza = pizzaDTO,
+                Customer = customerDTO
+                
+
+            };
+
+            return TypedResults.Ok(orderDTO);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> CreatePizza(IRepository repository, PizzaPostModel model)
+        {
+
+            var pizza = await repository.CreatePizza(new Pizza() { Name = model.Name, Price = model.Price });
+
+
+            var result = await repository.GetPizzaById(pizza.Id);
+
+        
+            PizzaDTO pizzaDTO = new PizzaDTO()
+            {
+               Id = pizza.Id,
+               Name = pizza.Name,
+            Price = pizza.Price
+            };
+
+
+            return TypedResults.Ok(pizzaDTO);
+        }
+        
+        
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> CreateCustomer(IRepository repository, CustomerPostModel model)
+        {
+
+            var customer = await repository.CreateCustomer(new Customer() { Name = model.Name });
+
+
+            var result = await repository.GetCustomerById(customer.Id);
+
+        
+            CustomerDTO customerDTO = new CustomerDTO()
+            {
+               Id = customer.Id,
+               Name = customer.Name,
+            };
+
+
+            return TypedResults.Ok(customerDTO);
+        }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         public static async Task<IResult> GetACustomer(IRepository repository, int id)
@@ -138,6 +226,45 @@ namespace exercise.pizzashopapi.EndPoints
             }
             return TypedResults.Ok(response.Pizzas);
         }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> GetPizza(IRepository repository, int id)
+        {
+            var results = await repository.GetPizzaById(id);
 
+
+            PizzaDTO pizzaDTO = new PizzaDTO()
+            {
+                Id = results.Id,
+                Name = results.Name,
+                Price = results.Price,
+
+
+            };
+            return TypedResults.Ok(pizzaDTO);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> GetCustomers(IRepository repository)
+        {
+            GetCustomerResponse response = new GetCustomerResponse();
+
+            var result = await repository.GetCustomers();
+
+            foreach (Customer c in result)
+            {
+                CustomerDTO customerDTO = new CustomerDTO()
+                {
+
+                    Id = c.Id,
+                    Name = c.Name,
+
+                };
+
+                response.Customers.Add(customerDTO);
+            }
+
+            return TypedResults.Ok(response.Customers);
+
+        }
     }
 }
