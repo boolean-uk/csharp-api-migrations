@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using exercise.pizzashopapi.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace exercise.pizzashopapi.DTOs
 {
@@ -30,5 +32,11 @@ namespace exercise.pizzashopapi.DTOs
             }
             return orderStatus.ToString();
         }
+    }
+
+    public class PostOrderDTO
+    {
+        public int CustomerId { get; set; }
+        public int PizzaId { get; set; }
     }
 }
