@@ -12,7 +12,7 @@ namespace exercise.pizzashopapi.Data
                 {
                     db.Add(new Customer() { Name="Nigel" });
                     db.Add(new Customer() { Name = "Dave" });
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                 }
                 if(!db.Pizzas.Any())
                 {
@@ -21,11 +21,16 @@ namespace exercise.pizzashopapi.Data
                     await db.SaveChangesAsync();
 
                 }
+                if(!db.Orders.Any())
+                {
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 2, Id = 1 });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 1, Id = 2 });
+                    await db.SaveChangesAsync();
+                }
 
                 //order data
                 if(1==1)
                 {
-
                     db.SaveChanges();
                 }
             }

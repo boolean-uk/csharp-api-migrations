@@ -21,11 +21,9 @@ namespace exercise.pizzashopapi.Data
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
-            //set primary of order?
+            
             optionsBuilder.UseNpgsql(_connectionString);
             optionsBuilder.LogTo(message => Debug.WriteLine(message));
-
-            //seed data?
 
         }
         public DbSet<Pizza> Pizzas { get; set; }
