@@ -1,6 +1,8 @@
 using exercise.pizzashopapi.Data;
 using exercise.pizzashopapi.EndPoints;
 using exercise.pizzashopapi.Repository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +29,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.ConfigurePizzaShopApi();
-
 app.SeedPizzaShopApi();
 app.Run();
+
+
