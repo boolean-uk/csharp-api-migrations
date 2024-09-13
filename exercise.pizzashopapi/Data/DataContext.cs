@@ -1,24 +1,29 @@
 ﻿using exercise.pizzashopapi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 namespace exercise.pizzashopapi.Data
 {
     public class DataContext : DbContext
     {
-        private string connectionString;
+        private string _connectionString;
         public DataContext()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
+            _connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
+            //this.Database.EnsureCreated();
 
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+              modelBuilder.Entity<Order>().HasKey(x => new {x.PizzaId, x.CustomerId});
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
-            optionsBuilder.UseNpgsql(connectionString);
-
-            //set primary of order?
-
-            //seed data?
+            
+            optionsBuilder.UseNpgsql(_connectionString);
+            optionsBuilder.LogTo(message => Debug.WriteLine(message));
 
         }
         public DbSet<Pizza> Pizzas { get; set; }
