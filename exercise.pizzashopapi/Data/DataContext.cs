@@ -21,6 +21,21 @@ namespace exercise.pizzashopapi.Data
             //seed data?
 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>()
+                .HasKey(o => new { o.PizzaId, o.CustomerId });
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Pizza)
+                .WithOne(p => p.Order)
+                .HasForeignKey<Order>(o => o.PizzaId);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)
+                .WithOne(c => c.Order)
+                .HasForeignKey<Order>(o => o.CustomerId);
+        }
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
