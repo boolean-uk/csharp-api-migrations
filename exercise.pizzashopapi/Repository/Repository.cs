@@ -13,6 +13,13 @@ namespace exercise.pizzashopapi.Repository
             _db = db;
         }
 
+        public async Task<Customer> CreateCustomer(Customer customer)
+        {
+            await _db.AddAsync(customer);
+            await _db.SaveChangesAsync();
+            return customer;
+        }
+
         public async Task<Order> CreateOrder(Order order)
         {
             await _db.AddAsync(order);

@@ -2,6 +2,7 @@
 using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
 using Microsoft.AspNetCore.Mvc;
+using static exercise.pizzashopapi.DTO.CustomerDTO;
 
 namespace exercise.pizzashopapi.EndPoints
 {
@@ -20,16 +21,41 @@ namespace exercise.pizzashopapi.EndPoints
 
             var thirdGroup = app.MapGroup("customers");
             thirdGroup.MapGet("/", GetCustomers);
+            thirdGroup.MapPost("/", CreateCustomer);
         }
 
-        private static async Task<IResult> CreateOrder(IRepository repository, Order order)
+        private static async Task<IResult> CreateCustomer(IRepository repository, CreateCustomerDTO customerDTO)
         {
+            Customer customer = new()
+            {
+                Name = customerDTO.customerFullName
+            };
+
+            var result = await repository.CreateCustomer(customer);
+
+            return TypedResults.Created($"Customer named {customer.Name} created");
+        }
+
+        private static async Task<IResult> CreateOrder(IRepository repository, CreateOrderDTO createdOrder)
+        {
+            Order order = new() 
+            {
+                CustomerId = createdOrder.CustomerId,
+                PizzaId = createdOrder.PizzaId
+            };
+
             var result = await repository.CreateOrder(order);
             return TypedResults.Created($"Pizza with Id number {result.PizzaId} is created");
         }
 
-        private static async Task<IResult> NewPizza(IRepository repository, Pizza pizza)
+        private static async Task<IResult> NewPizza(IRepository repository, CreatePizzaDTO createdPizza)
         {
+            Pizza pizza = new()
+            {
+                Price = createdPizza.Price,
+                Name = createdPizza.PizzaName
+            };
+
             var result = await repository.CreatePizza(pizza);
             return TypedResults.Created($"{result.Name} created");
         }
@@ -37,24 +63,42 @@ namespace exercise.pizzashopapi.EndPoints
         private static async Task<IResult> GetOrdersByCustomerId(IRepository repository,int id)
         {
             var result = await repository.GetOrdersByCustomerId(id);
-            return TypedResults.Ok(result);
+            GetResponse<GetOrderDTO> response = new();
+
+            foreach (var order in result)
+            {
+                decimal calculatedPrice = order.pizza.Price;
+
+                GetOrderDTO orderDTO = new(order.customer.Name, order.pizza.Name, calculatedPrice);
+                response.ResponseItems.Add(orderDTO);
+            }
+            return TypedResults.Ok(response);
         }
 
         private static async Task<IResult> GetCustomers(IRepository repository)
         {
             var result = await repository.GetCustomers();
-            return TypedResults.Ok(result);
+            GetResponse<GetCustomerDTO> response = new();
+
+            foreach (var customer in result)
+            {
+                GetCustomerDTO c = new(customer.Name);
+                response.ResponseItems.Add(c);
+            }
+            return TypedResults.Ok(response);
         }
 
         private static async Task<IResult> GetOrders(IRepository repository)
         {
             var result = await repository.GetOrders();
-            OrderResponse<GetOrderDTO> response = new();
+            GetResponse<GetOrderDTO> response = new();
 
             foreach (var order in result)
             {
-                GetOrderDTO orderDTO = new(order.customer.Name, order.pizza.Name, order.pizza.Price);
-                response.Orders.Add(orderDTO);
+                decimal calculatedPrice = order.pizza.Price;
+
+                GetOrderDTO orderDTO = new(order.customer.Name, order.pizza.Name, calculatedPrice);
+                response.ResponseItems.Add(orderDTO);
             }
             return TypedResults.Ok(response);
         }
@@ -62,6 +106,14 @@ namespace exercise.pizzashopapi.EndPoints
         private static async Task<IResult> GetPizzas(IRepository repository)
         {
             var result = await repository.GetPizzas();
+            GetResponse<GetPizzaDTO> response = new();
+
+            foreach (var pizza in result)
+            {
+
+                GetPizzaDTO p = new(pizza.Name, pizza.Price);
+                response.ResponseItems.Add(p);
+            }
             return TypedResults.Ok(result);
         }
   

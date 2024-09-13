@@ -4,6 +4,7 @@ namespace exercise.pizzashopapi.Repository
 {
     public interface IRepository
     {
+        Task<Customer> CreateCustomer(Customer customer);
         Task<Order> CreateOrder(Order order);
         Task<Pizza> CreatePizza(Pizza pizza);
         Task<IEnumerable<Customer>> GetCustomers();
