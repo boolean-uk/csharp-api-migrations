@@ -11,8 +11,8 @@ namespace exercise.pizzashopapi.DTO
     {
         
     }
-    public class OrderResponse()
+    public class OrderResponse<T>() 
     {
-        public List<string> Orders { get; set; } = new List<string>();
+        public List<T> Orders { get; set; } = new();
     }
 }

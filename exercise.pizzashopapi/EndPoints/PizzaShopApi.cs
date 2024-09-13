@@ -49,13 +49,14 @@ namespace exercise.pizzashopapi.EndPoints
         private static async Task<IResult> GetOrders(IRepository repository)
         {
             var result = await repository.GetOrders();
-            OrderResponse response = new();
+            OrderResponse<GetOrderDTO> response = new();
 
             foreach (var order in result)
             {
-                GetOrderDTO orderDTO
+                GetOrderDTO orderDTO = new(order.customer.Name, order.pizza.Name, order.pizza.Price);
+                response.Orders.Add(orderDTO);
             }
-            return TypedResults.Ok(result);
+            return TypedResults.Ok(response);
         }
 
         private static async Task<IResult> GetPizzas(IRepository repository)
