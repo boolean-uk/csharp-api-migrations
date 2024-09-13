@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace exercise.pizzashopapi.Controllers;
 
-[ApiController]
+/*[ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
@@ -30,3 +30,4 @@ public class WeatherForecastController : ControllerBase
         .ToArray();
     }
 }
+*/
