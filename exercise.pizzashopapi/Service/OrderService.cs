@@ -35,5 +35,10 @@ namespace exercise.pizzashopapi.Service
 
             return await GetOrder(order.Id);
         }
+
+        public async Task<Order> UpdateOrder(int id, UpdateOrderDTO order)
+        {
+            return await _orderRepository.UpdateOrder(id, order);
+        }
     }
 }

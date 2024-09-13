@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using exercise.pizzashopapi.Models;
 using System.Runtime.InteropServices;
+using exercise.pizzashopapi.Enum;
 
 namespace exercise.pizzashopapi.EndPoints
 {
@@ -20,6 +21,7 @@ namespace exercise.pizzashopapi.EndPoints
             pizzaShopGroup.MapGet("/orders", GetOrders);
             pizzaShopGroup.MapGet("/orders/{id}", GetOrder);
             pizzaShopGroup.MapPost("/orders/", CreateOrder);
+            pizzaShopGroup.MapPut("/orders/{id}", UpdateOrderStatus);
 
             pizzaShopGroup.MapGet("/pizzas/", GetPizzas);
             pizzaShopGroup.MapGet("/pizza/{id}", GetPizza);
@@ -124,6 +126,16 @@ namespace exercise.pizzashopapi.EndPoints
             Customer createdCustomer = await customerService.CreateCustomer(customer);
 
             return TypedResults.Ok(createdCustomer);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public static async Task<IResult> UpdateOrderStatus(OrderService orderService, IMapper mapper, int id, UpdateOrderDTO orderDTO)
+        {
+            
+
+            Order updatedOrder = await orderService.UpdateOrder(id, orderDTO);
+
+            return TypedResults.Ok(updatedOrder);
         }
 
     }

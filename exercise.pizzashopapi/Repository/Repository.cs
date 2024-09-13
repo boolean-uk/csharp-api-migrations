@@ -4,6 +4,7 @@ using exercise.pizzashopapi.Service;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Linq.Expressions;
+using exercise.pizzashopapi.Models.DTOs;
 
 namespace exercise.pizzashopapi.Repository
 {
@@ -65,6 +66,15 @@ namespace exercise.pizzashopapi.Repository
                 .Include(c => c.Order)
                 .ThenInclude(o => o.Pizza)
                 .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<Order> UpdateOrder(int id, UpdateOrderDTO order)
+        {
+            var orderToUpdate = await _db.Orders.FindAsync(id);
+            orderToUpdate.Status = order.Status;
+            await _db.SaveChangesAsync();
+
+            return orderToUpdate;
         }
     }
 }
