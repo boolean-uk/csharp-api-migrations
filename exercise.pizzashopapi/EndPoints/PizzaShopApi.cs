@@ -1,6 +1,8 @@
 ﻿using exercise.pizzashopapi.DTO;
+using exercise.pizzashopapi.Extensions;
 using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
+using exercise.pizzashopapi.Services;
 using exercise.pizzashopapi.ViewModels;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,18 +15,21 @@ namespace exercise.pizzashopapi.EndPoints
         public static void ConfigurePizzaShopApi(this WebApplication app)
         {
             var pizzashop = app.MapGroup("pizzashop");
-            pizzashop.MapGet("/pizzas/", GetPizzas);
-            pizzashop.MapGet("/pizzas/{id}", GetAPizza);
-            pizzashop.MapGet("/customers/", GetCustomers);
-            pizzashop.MapGet("/customers/{id}", GetACustomer);
-            pizzashop.MapGet("/orders/", GetOrders);
-            pizzashop.MapGet("/orders/{id}", GetOrdersByCustomer);
-            pizzashop.MapPost("/pizzas", CreatePizza);
-            pizzashop.MapPost("/customers", CreateCustomer);
-            pizzashop.MapPost("/orders", CreateOrder);
-            pizzashop.MapDelete("/pizzas", DeletePizza);
-            pizzashop.MapDelete("/customers", DeleteCustomer);
-            pizzashop.MapDelete("/orders", DeleteOrder);
+            pizzashop.MapGet("/GetPizzas/", GetPizzas);
+            pizzashop.MapGet("/GetPizzas/{id}", GetAPizza);
+            pizzashop.MapDelete("/DeletePizza", DeletePizza);
+            pizzashop.MapPost("/CreatePizza", CreatePizza);
+
+            pizzashop.MapGet("/GetCustomers/", GetCustomers);
+            pizzashop.MapGet("/GetACustomer/{id}", GetACustomer);
+            pizzashop.MapPost("/CreateCustomer", CreateCustomer);
+            pizzashop.MapDelete("/DeleteCustomer", DeleteCustomer);
+
+            pizzashop.MapGet("/GetAllOrders/", GetOrders);
+            pizzashop.MapGet("/GetOrdersByCustomer/{id}", GetOrdersByCustomer);
+            pizzashop.MapPost("/CreateOrder", CreateOrder);
+            pizzashop.MapDelete("/DeleteOrder", DeleteOrder);
+            pizzashop.MapPut("/MarkOrderAsDelivered", MarkOrderAsDelivered);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -124,8 +129,9 @@ namespace exercise.pizzashopapi.EndPoints
         }
 
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> CreateOrder(IRepository repository, OrderPostModel orderPost)
+        public static async Task<IResult> CreateOrder(IRepository repository, OrderPostModel orderPost, OrderCookManager cook)
         {
             var customer = await repository.GetCustomer(orderPost.Customer);
             if (customer is null) return TypedResults.NotFound("The customer was not found");
@@ -133,10 +139,35 @@ namespace exercise.pizzashopapi.EndPoints
             var pizza = await repository.GetPizza(orderPost.Pizza);
             if (pizza is null) return TypedResults.NotFound("The pizza was not found");
 
-            Order order = new Order() { OrderDate = DateTime.UtcNow, Customer = customer, CustomerId = customer.Id, Pizza = pizza, PizzaId = pizza.Id };
-            await repository.CreateOrder(order);
+            var existingOrder = await repository.GetOrder(pizza.Id, customer.Id);
+            if (existingOrder is not null) return TypedResults.BadRequest("This order has already been placed.");
 
-            return TypedResults.Created("https://localhost:7138/pizzashop/orders/id", (order.Customer, order.Pizza));
+            Order order = orderPost.ToOrder(customer, pizza);
+            
+            var pizzaOrder = cook.StartCooking(order.ToOrderDTO());
+            
+            order.EstimatedDelivery = pizzaOrder.EstimatedDelivery;
+            order.Status = pizzaOrder.Status;
+
+            order = await repository.CreateOrder(order);
+
+            return TypedResults.Created("https://localhost:7138/pizzashop/orders/id", order.ToOrderDTO());
+        }
+
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public static async Task<IResult> MarkOrderAsDelivered(IRepository repository, int pizzaId, int customerId)
+        {
+            var order = await repository.GetOrder(pizzaId, customerId);
+            if (order is null) return TypedResults.NotFound("The order was not found");
+            if (order.Status is not Enums.OrderStatus.Delivering) return TypedResults.BadRequest("This order is either not finished cooking or has already been delivered");
+
+            order.Status = Enums.OrderStatus.Delivered;
+
+            var result = await repository.UpdateOrder(order);
+
+            return TypedResults.Created("", result.ToOrderDTO());
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -169,9 +200,6 @@ namespace exercise.pizzashopapi.EndPoints
             return TypedResults.Ok(result.ToOrderDTO());
         }
 
-        private static OrderDTO ToOrderDTO(this Order order)
-        {
-            return new OrderDTO() {OrderDate = order.OrderDate, Customer = order.Customer.Name, Pizza = order.Pizza.Name};
-        }
+
     }
 }

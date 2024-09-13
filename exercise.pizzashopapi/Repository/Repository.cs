@@ -80,6 +80,11 @@ namespace exercise.pizzashopapi.Repository
             return await _db.Customers.ToListAsync();
         }
 
+        public async Task<Order> GetOrder(int pizzaId, int customerId)
+        {
+            return await _db.Orders.Include(o => o.Customer).Include(p => p.Pizza).FirstOrDefaultAsync(o => o.CustomerId == customerId && o.PizzaId == pizzaId);
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersByCustomer(int id)
         {
             return await _db.Orders.Include(o => o.Customer).Include(p => p.Pizza).Where(o => o.CustomerId == id).ToListAsync();
@@ -98,6 +103,13 @@ namespace exercise.pizzashopapi.Repository
         public async Task<IEnumerable<Pizza>> GetPizzas()
         {
             return await _db.Pizzas.ToListAsync();
+        }
+
+        public async Task<Order> UpdateOrder(Order order)
+        {
+            _db.Orders.Update(order);
+            await _db.SaveChangesAsync();
+            return order;
         }
     }
 }

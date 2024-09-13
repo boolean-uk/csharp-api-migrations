@@ -1,45 +1,72 @@
 ﻿namespace exercise.pizzashopapi.Models
 {
-    public static class Cook
+    public class Cook
     {
-        private static Queue<PizzaOrder> WaitingToCook = [];
-        private static Queue<PizzaOrder> Cooking = [];
-        private static int Capacity = 4;
+        public event EventHandler UpdateOrder;
+        private Queue<PizzaOrder> WaitingToCook { get; } = [];
+        private Queue<PizzaOrder> Cooking { get; } = [];
+        private int Capacity { get; set; } = 4;
 
-        public static void AddToCookingOrder(PizzaOrder pizza)
+
+        public PizzaOrder AddToCookingOrder(PizzaOrder pizza)
         {
-            if (Cooking.Count == Capacity) WaitingToCook.Enqueue(pizza);
-
-            else 
+            Console.WriteLine($"Cook received order for customer {pizza.CustomerId} with pizza {pizza.PizzaId}");
+            if (Cooking.Count == Capacity) 
             {
+                WaitingToCook.Enqueue(pizza);
+                pizza.EstimatedDelivery = EstimatedDelivery();
+                return pizza;
+            }
+
+            else
+            {
+                EventArgs args = new EventArgs();
                 pizza.StartPreparing();
                 pizza.NextEvent += PizzaPrepared;
-                pizza.EstimatedFinish = DateTime.UtcNow.AddMinutes(15);
+                pizza.EstimatedDelivery = DateTime.UtcNow.AddMinutes(25); // 15 minutes cooking + 10 minutes delivery
                 Cooking.Enqueue(pizza);
-                Capacity += 1;
+                return pizza;
             }
         }
 
-        private static void PizzaPrepared(object sender, EventArgs e)
+        private DateTime EstimatedDelivery()
         {
-            var pizza = sender as PizzaOrder;
-            Console.WriteLine($"Pizza {pizza.OrderId} finished preparing");
-            pizza.NextEvent -= PizzaPrepared;
-            pizza.NextEvent += PizzaCooked;
+            var queueTime = WaitingToCook.Count / 4d;
+            var deliveryDate = DateTime.UtcNow.AddMinutes((queueTime * 15) + 15 + 10); // Waiting in queue + 15 minutes cooking + 10 minutes delivery
+
+            var nextPizzaDone = Cooking.Peek().EstimatedDelivery;
+
+            deliveryDate += (nextPizzaDone - DateTime.UtcNow);
+
+            return deliveryDate;
         }
 
-        private static void PizzaCooked(object sender, EventArgs e)
+        private void PizzaPrepared(object sender, EventArgs e)
         {
             var pizza = sender as PizzaOrder;
-            Console.WriteLine($"Pizza {pizza.OrderId} finished cooking");
+            Console.WriteLine($"Pizza with customer {pizza.CustomerId} with pizza {pizza.PizzaId} finished preparing");
+            pizza.NextEvent -= PizzaPrepared;
+            pizza.NextEvent += PizzaCooked;
+            UpdateOrder?.Invoke(pizza, e);
+            pizza.StartCooking();
+        }
 
-            if(WaitingToCook.Count > 0 && Cooking.Count < 4)
+        private void PizzaCooked(object sender, EventArgs e)
+        {
+            var pizza = sender as PizzaOrder;
+            Console.WriteLine($"Pizza with customer {pizza.CustomerId} with pizza {pizza.PizzaId} finished cooking");
+            UpdateOrder?.Invoke(pizza, e); // Update db that pizza is done
+            Cooking.Dequeue();
+
+            // This statement replaces a mutex. Mutex is better. This is simpler
+            if (WaitingToCook.Count > 0 && Cooking.Count < 4)
             {
                 var nextPizza = WaitingToCook.Dequeue();
                 Cooking.Enqueue(nextPizza);
                 nextPizza.StartPreparing();
                 nextPizza.NextEvent += PizzaPrepared;
-                Console.WriteLine($"Started cooking Pizza {nextPizza.OrderId}");
+                Console.WriteLine($"Started cooking Pizza that has customer {pizza.CustomerId} with pizza {pizza.PizzaId}");
+                UpdateOrder?.Invoke(nextPizza, e); // Update db that pizza started cooking
             }
         }
 

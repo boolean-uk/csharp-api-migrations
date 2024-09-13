@@ -43,9 +43,11 @@ namespace exercise.pizzashopapi.Data
                         {
                             Customer = customerNigel,
                             CustomerId = customerNigel.Id,
+                            Status = Enums.OrderStatus.Delivered,
                             Pizza = pizzaCheesePineapple,
                             PizzaId = pizzaCheesePineapple.Id,
-                            OrderDate = DateTime.UtcNow
+                            OrderDate = DateTime.UtcNow,
+                            EstimatedDelivery = DateTime.UtcNow.AddMinutes(25)
                         });
                     }
 
@@ -55,9 +57,11 @@ namespace exercise.pizzashopapi.Data
                         {
                             CustomerId = customerDave.Id,
                             Customer = customerDave,
+                            Status = Enums.OrderStatus.Delivered,
                             Pizza = pizzaVeganCheese,
                             PizzaId = pizzaVeganCheese.Id,
-                            OrderDate = DateTime.UtcNow
+                            OrderDate = DateTime.UtcNow,
+                            EstimatedDelivery = DateTime.UtcNow.AddMinutes(25)
                         });
                     }
 
@@ -67,9 +71,11 @@ namespace exercise.pizzashopapi.Data
                         {
                             CustomerId = customerAgron.Id,
                             Customer = customerAgron,
+                            Status = Enums.OrderStatus.Delivered,
                             Pizza = pizzaAlTono,
                             PizzaId = pizzaAlTono.Id,
-                            OrderDate = DateTime.UtcNow
+                            OrderDate = DateTime.UtcNow,
+                            EstimatedDelivery = DateTime.UtcNow.AddMinutes(25)
                         });
                     }
 

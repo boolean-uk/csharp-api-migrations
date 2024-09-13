@@ -5,45 +5,46 @@ namespace exercise.pizzashopapi.Models
 {
     public class PizzaOrder
     {
-        public int OrderId { get; set; }
+        public int CustomerId { get; set; }
+        public int PizzaId { get; set; }
         public event EventHandler NextEvent;
 
         private System.Timers.Timer PreparationTimer;
         private System.Timers.Timer CookingTimer;
-        private PizzaStatus _status { get; set; }
-        public DateTime EstimatedFinish { get; set; }
+        private OrderStatus _status { get; set; } = OrderStatus.Ordered;
+        public DateTime EstimatedDelivery { get; set; }
 
         private void OnPreparingDone(object source, ElapsedEventArgs e)
         {
             PreparationTimer.Dispose();
-            NextEvent?.Invoke(source, e);
+            NextEvent?.Invoke(this, e);
         }
 
         private void OnCookingDone(object source, ElapsedEventArgs e)
         {
             CookingTimer.Dispose();
-            _status = PizzaStatus.Cooked;
-            NextEvent?.Invoke(source, e);
+            _status = OrderStatus.Delivering;
+            NextEvent?.Invoke(this, e);
         }
 
         public void StartPreparing()
         {
-            PreparationTimer = new System.Timers.Timer(TimeSpan.FromMinutes(3));
+            PreparationTimer = new System.Timers.Timer(TimeSpan.FromMinutes(1));
             PreparationTimer.Elapsed += OnPreparingDone;
             PreparationTimer.AutoReset = false;
-            _status = PizzaStatus.Preparing;
+            _status = OrderStatus.Preparing;
             PreparationTimer.Start();
         }
 
         public void StartCooking()
         {
-            CookingTimer = new System.Timers.Timer(TimeSpan.FromMinutes(12));
+            CookingTimer = new System.Timers.Timer(TimeSpan.FromMinutes(2));
             CookingTimer.Elapsed += OnCookingDone;
             CookingTimer.AutoReset = false;
-            _status = PizzaStatus.Cooking;
+            _status = OrderStatus.Cooking;
             CookingTimer.Start();
         }
 
-        public PizzaStatus Status { get { return _status; } }
+        public OrderStatus Status { get { return _status; } }
     }
 }
