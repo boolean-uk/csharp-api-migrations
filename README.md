@@ -26,6 +26,15 @@ Pizza Shop needs a very simple ordering system with just just 3 tables, Customer
 
 - The Pizza Shop can only cook 4 pizzas at a time and the delivery driver is allocated 10 minutes to deliver one pizza at a time.  Add an estimated delivery time to the Order!
  
+## Comments by Agron
+For the extensions I have made some assumptions
+- We have infinite amount of delivery drivers (No waiting for pickup)
+- The order for pizza cooking is FIFO. Therefore, when a pizza is announced to be done, we take the one at the end of the queue regardless.
+- The 10 minutes allocated for the delivery is only for providing and estimated delivery to customer. In this app, the delivery will be manually reported.
+- When there are n pizzas in front in queue, we assume calculate the estimated delivery time for a pizza to take Ceiling(n/4) minutes + 15 minutes cooking + 10 minutes delivery + remaining time for next pizza out of oven.
+- Check the terminal when placing orders
+- For testing purposes, preparing takes 1 minute and cooking takes 2 minutes. Change the input values in FromMinutes under PizzaOrder.cs to change this.
+- Shutting down the website does not update orders to be done or deleted. Trash in, trash out.
 
 ## Tips
 
