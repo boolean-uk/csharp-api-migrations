@@ -1,13 +1,18 @@
 using exercise.pizzashopapi.Data;
 using exercise.pizzashopapi.EndPoints;
 using exercise.pizzashopapi.Repository;
+using exercise.pizzashopapi.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddScoped<IRepository, Repository>();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<OrderService, OrderService>();
+builder.Services.AddScoped<PizzaService, PizzaService>();
+builder.Services.AddScoped<CustomerService, CustomerService>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddDbContext<DataContext>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -24,11 +29,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
-app.MapControllers();
 
 app.ConfigurePizzaShopApi();
 
-app.SeedPizzaShopApi();
 app.Run();
