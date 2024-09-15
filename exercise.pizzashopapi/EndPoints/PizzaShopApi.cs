@@ -14,7 +14,9 @@ namespace exercise.pizzashopapi.EndPoints
             var pizzaShopGroup = app.MapGroup("/pizzaShop");
             pizzaShopGroup.MapGet("/orders", GetOrders);
             pizzaShopGroup.MapGet("/orders/{customerId}", GetOrdersByCustomerId);
+            pizzaShopGroup.MapGet("/orders/{customerId}/{pizzaId}", GetOrderById);
             pizzaShopGroup.MapPost("/orders", AddOrder);
+            pizzaShopGroup.MapPut("/orders/{customerId}/{pizzaId}", UpdateOrderStatus);
 
             pizzaShopGroup.MapGet("/pizzas", GetPizzas);
             pizzaShopGroup.MapGet("/pizzas/{id}", GetPizzaById);
@@ -61,6 +63,28 @@ namespace exercise.pizzashopapi.EndPoints
             return TypedResults.Ok(orderResponse);
         }
 
+        [Route("/orders/{customerId}/{pizzaId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public static async Task<IResult> GetOrderById(IRepository repository, int customerId, int pizzaId)
+        {
+            if (await repository.GetCustomerById(customerId) == null)
+            {
+                return TypedResults.NotFound(new Message { Information = "Customer does not exist in database  :(" });
+            }
+            if (await repository.GetPizzaById(pizzaId) == null)
+            {
+                return TypedResults.NotFound(new Message { Information = "Pizza does not exist in database  :(" });
+            }
+
+            Order order = await repository.GetOrderById(customerId, pizzaId);
+            if (order == null)
+            {
+                return TypedResults.NotFound(new Message());
+            }
+            return TypedResults.Ok(_getDtoOrder(order));
+        }
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -77,8 +101,23 @@ namespace exercise.pizzashopapi.EndPoints
                     return TypedResults.NotFound(new Message { Information = "Pizza does not exist in database  :(" });
                 }
 
-                Order order = await repository.AddOrder(new Order { CustomerId = model.CustomerId, PizzaId = model.PizzaId, DeliveryAddress = model.DeliveryAddress });
+                Order order = await repository.AddOrder(new Order { CustomerId = model.CustomerId, PizzaId = model.PizzaId, DeliveryAddress = model.DeliveryAddress, Status = OrderStatus.Preparing });
                 return TypedResults.Created("", _getDtoOrder(order));
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest(ex);
+            }
+        }
+
+        [Route("/orders/{customerId}/{pizzaId}")]
+        public static async Task<IResult> UpdateOrderStatus(IRepository repository, int customerId, int pizzaId, OrderPutModel model)
+        {
+            try
+            {
+                Order toUpdate = await repository.GetOrderById(customerId, pizzaId);
+                toUpdate.Status = (OrderStatus)model.StatusCode;
+                return TypedResults.Created("", _getDtoOrder(await repository.UpdateOrderStatus(toUpdate)));
             }
             catch (Exception ex)
             {
@@ -168,7 +207,7 @@ namespace exercise.pizzashopapi.EndPoints
         {
             DTOPizza pizza = new DTOPizza() { ID = order.PizzaOnOrder.Id, Name = order.PizzaOnOrder.Name, Price = order.PizzaOnOrder.Price };
             DTOCustomer customer = new DTOCustomer() { ID = order.CustomerOnOrder.Id, Name = order.CustomerOnOrder.Name };
-            DTOOrder dtoorder = new DTOOrder() { DeliveryAdcress = order.DeliveryAddress, Customer = customer, Pizza = pizza };
+            DTOOrder dtoorder = new DTOOrder() { DeliveryAdcress = order.DeliveryAddress, Customer = customer, Pizza = pizza, Status = order.Status.ToString()};
             return dtoorder;
         }
     }

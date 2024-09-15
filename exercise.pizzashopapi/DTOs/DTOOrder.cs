@@ -6,5 +6,7 @@
         public DTOCustomer Customer { get; set; }
         public DTOPizza Pizza { get; set; }
 
+        public string Status { get; set; }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using exercise.pizzashopapi.Data;
 using exercise.pizzashopapi.Models;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace exercise.pizzashopapi.Repository
 {
@@ -21,10 +22,21 @@ namespace exercise.pizzashopapi.Repository
         {
             return await _db.Orders.Include(o => o.CustomerOnOrder).Include(o => o.PizzaOnOrder).Where(o => o.CustomerId == customerId).ToListAsync();
         }
+        public async Task<Order> GetOrderById(int customerId, int pizzaId)
+        {
+            return await _db.Orders.Include(o => o.CustomerOnOrder).Include(o => o.PizzaOnOrder).FirstOrDefaultAsync(o => o.CustomerId == customerId && o.PizzaId == pizzaId);
+        }
         public async Task<Order> AddOrder(Order order)
         {
             await _db.AddAsync(order);
             await _db.SaveChangesAsync();
+            return order;
+        }
+        public async Task<Order> UpdateOrderStatus(Order order)
+        {
+            _db.Attach(order).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
             return order;
         }
 

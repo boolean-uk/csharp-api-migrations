@@ -28,9 +28,9 @@ namespace exercise.pizzashopapi.Data
                 //order data
                 if(!db.Orders.Any())
                 {
-                    db.Add(new Order() { CustomerId = 1, PizzaId = 2, DeliveryAddress = "England" });
-                    db.Add(new Order() { CustomerId = 2, PizzaId = 1, DeliveryAddress = "Also in England, I think" });
-                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, DeliveryAddress = "Lakkegata 53" });
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 2, DeliveryAddress = "England" , Status = OrderStatus.Preparing});
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 1, DeliveryAddress = "Also in England, I think", Status = OrderStatus.OnRoute });
+                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, DeliveryAddress = "Lakkegata 53", Status = OrderStatus.Delivered });
                     await db.SaveChangesAsync();
                 }
             }
