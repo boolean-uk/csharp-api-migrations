@@ -1,4 +1,5 @@
 ﻿using exercise.pizzashopapi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace exercise.pizzashopapi.Data
 {
@@ -10,23 +11,27 @@ namespace exercise.pizzashopapi.Data
             {
                 if(!db.Customers.Any())
                 {
-                    db.Add(new Customer() { Name="Nigel" });
+                    db.Add(new Customer() { Name = "Nigel" });
                     db.Add(new Customer() { Name = "Dave" });
-                    db.SaveChanges();
+                    db.Add(new Customer() { Name = "Bjorg" });
+                    await db.SaveChangesAsync();
                 }
                 if(!db.Pizzas.Any())
                 {
-                    db.Add(new Pizza() { Name = "Cheese & Pineapple" });
-                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
+                    db.Add(new Pizza() { Name = "Cheese & Pineapple", Price = 12.5m });
+                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic", Price = 10.5m });
+                    db.Add(new Pizza() { Name = "Squash and Avokado", Price = 12.5m });
                     await db.SaveChangesAsync();
 
                 }
 
                 //order data
-                if(1==1)
+                if(!db.Orders.Any())
                 {
-
-                    db.SaveChanges();
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 2, DeliveryAddress = "England" , Status = OrderStatus.Preparing});
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 1, DeliveryAddress = "Also in England, I think", Status = OrderStatus.OnRoute });
+                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, DeliveryAddress = "Lakkegata 53", Status = OrderStatus.Delivered });
+                    await db.SaveChangesAsync();
                 }
             }
         }
