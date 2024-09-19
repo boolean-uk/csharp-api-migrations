@@ -31,6 +31,61 @@ namespace exercise.pizzashopapi.EndPoints
             orders.MapPost("/", AddOrder);
             orders.MapPut("/{id}", EditOrder);
             orders.MapDelete("/{id}", DeleteOrder);
+            orders.MapPut("/changestatus/{id}", ChangeOrderStatus);
+            orders.MapGet("/timeleft/{id}", GetOrderTime);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        private static async Task<IResult>ChangeOrderStatus(IRepository repository, int pizzaId, int customerId, bool IsDelivered)
+        {
+            try
+            {
+                var order = await repository.ChangeOrderStatus(pizzaId, customerId);
+                return order != null ? TypedResults.Ok("Order status: " + DTOConverter.DTOOrderConvert(order).IsDelivered) : TypedResults.NotFound("NotFound");
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
+
+        }
+
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        private static async Task<IResult> GetOrderTime(IRepository repository, int pizzaId, int customerId)
+        {
+            try
+            {
+                var order = await repository.GetAnOrder(pizzaId, customerId);
+                var timeNow = DateTime.UtcNow;
+                var timeDifference = timeNow.Subtract(order.StartTime).TotalMinutes;
+
+                if (timeDifference < 3)
+                {
+                    return TypedResults.Ok("Pizza is being preppared");
+                } else if (3 < timeDifference && timeDifference < 15)
+                {
+                    return TypedResults.Ok("Pizza is in the oven");
+                }
+
+
+                return TypedResults.Ok("Pizza is on its way"); ;
+            }
+            catch (Exception ex)
+            {
+                using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
+                ILogger logger = factory.CreateLogger("Errors");
+                logger.LogInformation(ex.ToString());
+
+                return TypedResults.BadRequest("Bad Request");
+            }
         }
 
         /// <summary>

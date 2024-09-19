@@ -7,6 +7,7 @@ namespace exercise.pizzashopapi.Repository
         Task<Customer> AddCusomer(int id, string name);
         Task<Order> AddOrder(int pizzaId, int customerId);
         Task<Pizza> AddPizza(int id, string name, int price);
+        Task<Order> ChangeOrderStatus(int pizzaId, int customerId);
         Task<Customer> GetACusomer(int id);
         Task<Order> GetAnOrder(int pizzaId, int customerId);
         Task<Pizza> GetAPizza(int id);

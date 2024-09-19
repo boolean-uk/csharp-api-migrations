@@ -23,16 +23,16 @@ namespace exercise.pizzashopapi.Repository
 
         public async Task<Order> AddOrder(int pizzaId, int customerId)
         {
-            await _db.Orders.AddAsync(new Order { PizzaId = pizzaId, CustomerId = customerId });
+            await _db.Orders.AddAsync(new Order { PizzaId = pizzaId, CustomerId = customerId, StartTime = DateTime.UtcNow, IsDelivered = false });
             await _db.SaveChangesAsync();
-            return new Order { PizzaId = pizzaId, CustomerId = customerId };
+            return new Order { PizzaId = pizzaId, CustomerId = customerId, IsDelivered = false, StartTime = DateTime.UtcNow };
         }
 
         public async Task<Pizza> AddPizza(int id, string name, int price)
         {
-            await _db.Pizzas.AddAsync(new Pizza { Id = id, Name = name, Price = price });
+            await _db.Pizzas.AddAsync(new Pizza { Id = id, Name = name, Price = price  });
             await _db.SaveChangesAsync();
-            return new Pizza { Id = id, Name = name, Price = price }; 
+            return new Pizza { Id = id, Name = name, Price = price}; 
         }
 
         public async Task<Customer> GetACusomer(int id)
@@ -63,6 +63,13 @@ namespace exercise.pizzashopapi.Repository
         public async Task<IEnumerable<Pizza>> GetPizzas()
         {
             return await _db.Pizzas.ToListAsync();
+        }
+
+        public async Task<Order> ChangeOrderStatus(int pizzaId, int customerId)
+        {
+            var order = await _db.Orders.FirstOrDefaultAsync(p => p.PizzaId == pizzaId && p.CustomerId == customerId);
+            if (order.IsDelivered) { order.IsDelivered = false;} else { order.IsDelivered = true;}
+            return order;
         }
     }
 }

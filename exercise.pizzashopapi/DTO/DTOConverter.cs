@@ -6,7 +6,7 @@ namespace exercise.pizzashopapi.DTO
     {
         public static DTOPizza DTOPizzaConvert(this Models.Pizza pizza) { return new DTOPizza() { Id = pizza.Id, Name = pizza.Name, Price = pizza.Price }; }
 
-        public static DTOOrder DTOOrderConvert(this Models.Order order) { return new DTOOrder() { CustomerId = order.CustomerId, PizzaId = order.PizzaId }; }
+        public static DTOOrder DTOOrderConvert(this Models.Order order) { return new DTOOrder() { CustomerId = order.CustomerId, PizzaId = order.PizzaId, StartTime = order.StartTime, IsDelivered = order.IsDelivered }; }
 
         public static DTOCustomer DTOCustomerConvert(this Models.Customer customer) { return new DTOCustomer() { Id = customer.Id, Name = customer.Name }; }
 
@@ -17,7 +17,7 @@ namespace exercise.pizzashopapi.DTO
 
         public static IEnumerable<DTOOrder> DTOListConvert(this IEnumerable<Order> orders)
         {
-            return orders.Select(o => new DTOOrder { CustomerId = o.CustomerId, PizzaId = o.PizzaId });
+            return orders.Select(o => new DTOOrder { CustomerId = o.CustomerId, PizzaId = o.PizzaId, StartTime = o.StartTime, IsDelivered = o.IsDelivered });
         }
 
         public static IEnumerable<DTOCustomer> DTOListConvert(this IEnumerable<Customer> customer)
