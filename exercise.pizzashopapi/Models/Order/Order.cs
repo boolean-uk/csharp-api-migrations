@@ -20,6 +20,9 @@ namespace exercise.pizzashopapi.Models.Order
         [Column("PIZZAID")]
         public int PizzaId { get; set; }
 
+        public DateTime orderTime { get; set; }
+        public bool isDelivered { get; set; }
+
 
     }
 }

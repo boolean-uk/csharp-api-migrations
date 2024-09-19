@@ -22,6 +22,47 @@ namespace exercise.pizzashopapi.EndPoints
             pizzas.MapPut("/pizza/{id}", UpdateOrder);
             pizzas.MapPost("/pizza/customer/{id}", BecomeCustomer);
 
+            pizzas.MapGet("/order/status", GetOrderStatus);
+            pizzas.MapPut("/order/delivered", OrderDelivered);
+
+        }
+
+        private static async Task<IResult> OrderDelivered(IRepository repository, int id)
+        {
+            try
+            {
+                int numTest = id;
+                OrderDTO orderDTO = repository.DeliverPizza(id);
+
+                return orderDTO != null ? TypedResults.Ok("Pizza has been delivered") : TypedResults.NotFound();
+
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest();
+            }
+        }
+
+        private static async Task<IResult> GetOrderStatus(IRepository repository, int id)
+        {
+            try
+            {
+                int numTest = id;
+                OrderDTO orderDTO = repository.GetOrder(id);
+                if (DateTime.UtcNow.Subtract(orderDTO.orderTime).TotalMinutes > 3 && DateTime.UtcNow.Subtract(orderDTO.orderTime).TotalMinutes < 15 && orderDTO != null)
+                {
+                    return TypedResults.Ok("Pizza is being cooked");
+                } else if (DateTime.UtcNow.Subtract(orderDTO.orderTime).TotalMinutes >= 15 || orderDTO.isDelivered && orderDTO != null)
+                {
+                    return TypedResults.Ok("Pizza is Delivered");
+                }
+                return orderDTO != null ? TypedResults.Ok("Pizza is being prepared") : TypedResults.NotFound();
+
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest();
+            }
         }
 
         //done
@@ -112,7 +153,12 @@ namespace exercise.pizzashopapi.EndPoints
             {
                 int numTest = orderId;
                 OrderDTO orderDTO = repository.GetOrder(orderId);
-                return orderDTO != null ? TypedResults.Ok() : TypedResults.NotFound();
+
+                if (DateTime.UtcNow.Subtract(orderDTO.orderTime).TotalMinutes >= 15)
+                {
+                    OrderDelivered(repository, orderId);
+                }
+                return orderDTO != null ? TypedResults.Ok(orderDTO) : TypedResults.NotFound();
 
             }
             catch (Exception ex)

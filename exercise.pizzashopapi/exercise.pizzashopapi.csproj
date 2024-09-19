@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Dockerfile" />
     <None Remove="Models\Order.cs~RF919e54e.TMP" />
   </ItemGroup>
 

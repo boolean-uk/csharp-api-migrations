@@ -29,5 +29,7 @@ namespace exercise.pizzashopapi.Repository
 
          List<PizzaDTO> GetMenu();
 
+        OrderDTO DeliverPizza(int pizzaId);
+
     }
 }

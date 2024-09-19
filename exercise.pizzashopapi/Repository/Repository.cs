@@ -23,6 +23,20 @@ namespace exercise.pizzashopapi.Repository
             return customer.MapToDTO();
         }
 
+        public OrderDTO DeliverPizza(int orderId)
+        {
+            var order = new Order() { Id = orderId, isDelivered = true };
+            var orderCheck = _db.Orders.FirstOrDefault(x => x.Id == orderId);
+
+            if (orderCheck != null)
+            {
+                _db.Orders.Attach(order);
+                _db.Orders.Where(o => o.Id == orderId).ExecuteUpdate(x => x.SetProperty(o => o.isDelivered, true));
+                return order.MapToDTO();
+            }
+            return null;
+        }
+
         public List<PizzaDTO> GetMenu()
         {
             return _db.Pizzas.ToList().MapListToDTO();
@@ -63,10 +77,10 @@ namespace exercise.pizzashopapi.Repository
 
             if (_db.Orders.Count() != 0 && customerCheck != null && pizzaCheck != null)
             {
-                _db.Orders.Add(order = new Order() { Id = _db.Orders.Max(x => x.Id) + 1, CustomerId = customerId, PizzaId = pizzaId });
+                _db.Orders.Add(order = new Order() { Id = _db.Orders.Max(x => x.Id) + 1, CustomerId = customerId, PizzaId = pizzaId, orderTime = DateTime.UtcNow, isDelivered = false });
             } else if (customerCheck != null && pizzaCheck != null)
             {
-                _db.Orders.Add(order = new Order() { Id = 1, CustomerId = customerId, PizzaId = pizzaId });
+                _db.Orders.Add(order = new Order() { Id = 1, CustomerId = customerId, PizzaId = pizzaId, orderTime = DateTime.UtcNow, isDelivered = false });
             }
             _db.SaveChanges();
             return order != null ? order.MapToDTO() : null;

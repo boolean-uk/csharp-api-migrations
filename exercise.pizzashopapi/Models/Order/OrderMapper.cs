@@ -10,7 +10,9 @@ namespace exercise.pizzashopapi.Models.Order
             {
                 Id = order.Id,
                 CustomerId = order.CustomerId,
-                PizzaId = order.PizzaId
+                PizzaId = order.PizzaId,
+                orderTime = order.orderTime,
+                isDelivered = order.isDelivered
             };
         }
 
@@ -20,7 +22,9 @@ namespace exercise.pizzashopapi.Models.Order
             {
                 Id = order.Id,
                 CustomerId = order.CustomerId,
-                PizzaId = order.PizzaId
+                PizzaId = order.PizzaId,
+                orderTime = order.orderTime,
+                isDelivered = order.isDelivered
             }).ToList();
         }
     }
