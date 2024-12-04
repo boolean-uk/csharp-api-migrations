@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Dockerfile" />
     <None Remove="Models\Order.cs~RF919e54e.TMP" />
   </ItemGroup>
 
@@ -23,6 +24,10 @@
     <PackageReference Include="npgsql.EntityFrameworkCore.postgresql" Version="7.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
