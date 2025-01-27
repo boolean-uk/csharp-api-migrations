@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using exercise.pizzashopapi.Data;
@@ -11,9 +12,11 @@ using exercise.pizzashopapi.Data;
 namespace exercise.pizzashopapi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250127114502_deliverydrivers")]
+    partial class deliverydrivers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,9 +91,8 @@ namespace exercise.pizzashopapi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("customer_id");
 
-                    b.Property<int>("DeliveryDriverId")
-                        .HasColumnType("integer")
-                        .HasColumnName("delivery_driver_id");
+                    b.Property<int?>("DeliveryDriverId")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsDelivered")
                         .HasColumnType("boolean")
@@ -214,11 +216,9 @@ namespace exercise.pizzashopapi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("exercise.pizzashopapi.Models.DeliveryDriver", "DeliveryDriver")
+                    b.HasOne("exercise.pizzashopapi.Models.DeliveryDriver", null)
                         .WithMany("Orders")
-                        .HasForeignKey("DeliveryDriverId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DeliveryDriverId");
 
                     b.HasOne("exercise.pizzashopapi.Models.Pizza", "Pizza")
                         .WithMany()
@@ -227,8 +227,6 @@ namespace exercise.pizzashopapi.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("DeliveryDriver");
 
                     b.Navigation("Pizza");
                 });

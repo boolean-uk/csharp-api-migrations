@@ -23,6 +23,8 @@ namespace exercise.pizzashopapi.EndPoints
             shop.MapGet("/toppings/{id}", GetTopping);
             shop.MapGet("/toppings", GetToppings);
             shop.MapPost("/orders/{orderId}", DeliverOrder);
+            shop.MapGet("drivers/{driverId}/orders", GetOrdersByDriverId);
+            shop.MapPut("/orders/{orderId}/{driverId}", AssignOrderToDriver);
         }
 
         private static async Task<IResult> GetPizzas(IRepository<Pizza> repository)
@@ -210,6 +212,32 @@ namespace exercise.pizzashopapi.EndPoints
             order.IsDelivered = true;
             await repository.Update(order);
             return TypedResults.Ok("Order has been delivered");
+        }
+
+        private static async Task<IResult> GetOrdersByDriverId(IRepository<Order> repository, int driverId)
+        {
+            var orders = await repository.GetWithIncludes(o => o.Customer, o => o.Pizza, o => o.DeliveryDriver);
+            return TypedResults.Ok(orders.Where(o => o.DeliveryDriverId == driverId).Select(o => new OrderDto()
+            {
+                Customer = o.Customer.Name,
+                Pizza = o.Pizza.Name,
+                OrderedAt = o.OrderedAt,
+                Price = o.Price,
+                Stage = o.OrderedAt.GetPizzaStage().GetPizzaStageString(),
+                EstimatedDelivery = DeliveryEngine.GetEstimatedDeliveryInMinutes(orders, o.Id)
+            }));
+        }
+
+        private static async Task<IResult> AssignOrderToDriver(IRepository<Order> repository, int orderId, int driverId)
+        {
+            var order = await repository.GetById(orderId);
+            if (order == null)
+            {
+                return TypedResults.NotFound();
+            }
+            order.DeliveryDriverId = driverId;
+            await repository.Update(order);
+            return TypedResults.Ok("Order has been assigned to driver");
         }
     }
 }

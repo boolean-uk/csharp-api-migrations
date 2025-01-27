@@ -23,19 +23,27 @@ namespace exercise.pizzashopapi.Data
                     await db.SaveChangesAsync();
 
                 }
+                if (!db.DeliveryDrivers.Any())
+                {
+                    db.Add(new DeliveryDriver() { Name = "Donald Driver" });
+                    db.Add(new DeliveryDriver() { Name = "Daisy Driver" });
+                    db.Add(new DeliveryDriver() { Name = "Daffy Driver" });
+                    db.Add(new DeliveryDriver() { Name = "Dennis Driver" });
+                    await db.SaveChangesAsync();
+                }
 
                 //order data
                 if (!db.Orders.Any())
                 {
-                    db.Add(new Order() { CustomerId = 1, PizzaId = 1, OrderedAt = new DateTime(2025, 1, 20, 8, 30, 0, DateTimeKind.Utc), Price = 10 });
-                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, OrderedAt = new DateTime(2025, 1, 23, 19, 10, 0, DateTimeKind.Utc), Price = 15 });
-                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, OrderedAt = new DateTime(2025, 1, 26, 16, 45, 0, DateTimeKind.Utc), Price = 8 });
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 1, OrderedAt = new DateTime(2025, 1, 20, 8, 30, 0, DateTimeKind.Utc), Price = 10,DeliveryDriverId = 1 });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, OrderedAt = new DateTime(2025, 1, 23, 19, 10, 0, DateTimeKind.Utc), Price = 15, DeliveryDriverId = 2 });
+                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, OrderedAt = new DateTime(2025, 1, 26, 16, 45, 0, DateTimeKind.Utc), Price = 8, DeliveryDriverId = 3 });
                     await db.SaveChangesAsync();
                 }
 
                 if (!db.Toppings.Any())
                 {
-                    db.Add(new Topping() { Name = "Bacon" , Price = 3});
+                    db.Add(new Topping() { Name = "Bacon", Price = 3 });
                     db.Add(new Topping() { Name = "Pineapple", Price = 2 });
                     db.Add(new Topping() { Name = "Vegan Cheese", Price = 1 });
                     db.Add(new Topping() { Name = "Mushrooms", Price = 1 });
@@ -51,6 +59,8 @@ namespace exercise.pizzashopapi.Data
                     db.Add(new OrderToppings() { OrderId = 3, ToppingId = 5 });
                     await db.SaveChangesAsync();
                 }
+
+                
             }
         }
     }

@@ -22,6 +22,7 @@ namespace exercise.pizzashopapi.Data
             modelBuilder.Entity<Topping>().HasKey(t => t.Id);
             modelBuilder.Entity<OrderToppings>().HasKey(ot => new { ot.OrderId, ot.ToppingId });
             modelBuilder.Entity<OrderToppings>().HasKey(o => o.Id);
+            modelBuilder.Entity<DeliveryDriver>().HasKey(d => d.Id);
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,5 +34,6 @@ namespace exercise.pizzashopapi.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Topping> Toppings { get; set; }
         public DbSet<OrderToppings> OrderToppings { get; set; }
+        public DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
     }
 }

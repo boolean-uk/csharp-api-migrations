@@ -13,6 +13,8 @@ namespace exercise.pizzashopapi.Models
         [Column("pizza_id")]
         public int PizzaId { get; set; }
         public Pizza Pizza { get; set; }
+        public int? DeliveryDriverId { get; set; } = 1;
+        public DeliveryDriver DeliveryDriver { get; set; }
         [Column("ordered_at")]
         public DateTime OrderedAt { get; set; } = DateTime.UtcNow;
         [Column("is_delivered")]
