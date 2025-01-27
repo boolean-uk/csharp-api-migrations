@@ -37,31 +37,6 @@ namespace exercise.pizzashopapi.Data
                     db.Add(new Order() { CustomerId = 3, PizzaId = 3 });
                     await db.SaveChangesAsync();
                 }
-
-                /*var cheesePineapplePizza = db.Pizzas.FirstOrDefault(p => p.Name == "Cheese & Pineapple");
-                var veganPizza = db.Pizzas.FirstOrDefault(p => p.Name == "Vegan Cheese Tastic");
-                var pepperoniPizza = db.Pizzas.FirstOrDefault(p => p.Name == "Pepperoni");
-
-                var extraCheese = db.Toppings.FirstOrDefault(t => t.Name == "Extra Cheese");
-                var olives = db.Toppings.FirstOrDefault(t => t.Name == "Olives");
-                var bacon = db.Toppings.FirstOrDefault(t => t.Name == "Bacon");
-
-                if (cheesePineapplePizza != null && extraCheese != null)
-                {
-                    cheesePineapplePizza.Toppings.Add(extraCheese);
-                }
-
-                if (veganPizza != null && olives != null)
-                {
-                    veganPizza.Toppings.Add(olives);
-                }
-
-                if (pepperoniPizza != null && bacon != null)
-                {
-                    pepperoniPizza.Toppings.Add(bacon);
-                }
-
-                await db.SaveChangesAsync();*/
             }
         }
     }

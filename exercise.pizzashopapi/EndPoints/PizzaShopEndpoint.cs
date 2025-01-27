@@ -25,6 +25,8 @@ namespace exercise.pizzashopapi.EndPoints
             orderGroup.MapPut("/{id}", UpdateOrder);
             orderGroup.MapDelete("/{id}", DeleteOrder);
             orderGroup.MapPost("/{orderId}/topping/{toppingId}", AddToppingToOrder);
+            orderGroup.MapPut("/{id}/delivered", SetOrderAsDelivered);
+            orderGroup.MapGet("/{id}/status", GetOrderStatus);
 
             pizzaGroup.MapPost("/", CreatePizza);
             pizzaGroup.MapGet("/", GetPizzas);
@@ -95,7 +97,12 @@ namespace exercise.pizzashopapi.EndPoints
 
         #region order
 
-        public static async Task<IResult> CreateOrder(IRepository<Order> orderRepository, IRepository<Customer> customerRepository, IRepository<Pizza> pizzaRepository, int customerId, int pizzaId)
+        public static async Task<IResult> CreateOrder(
+            IRepository<Order> orderRepository,
+            IRepository<Customer> customerRepository,
+            IRepository<Pizza> pizzaRepository,
+            int customerId,
+            int pizzaId)
         {
             var customer = await customerRepository.GetById(customerId);
             if (customer == null)
@@ -109,21 +116,47 @@ namespace exercise.pizzashopapi.EndPoints
                 return TypedResults.NotFound(new { Message = "Pizza not found" });
             }
 
-            var order = new Order { CustomerId = customerId, PizzaId = pizzaId };
+            var order = new Order
+            {
+                CustomerId = customerId,
+                PizzaId = pizzaId,
+                Status = "Preparing",
+                CreatedAt = DateTime.UtcNow
+            };
+
             var createdOrder = await orderRepository.Insert(order);
+
             return TypedResults.Created($"/order/{createdOrder.Id}", createdOrder);
         }
+
 
         public static async Task<IResult> GetOrders(IRepository<Order> orderRepository)
         {
             var orders = await orderRepository.GetWithIncludes(
-                o => o.customer,
-                o => o.pizza,
-                o => o.pizza.Toppings,
-                o => o.OrderToppings
+                o => o.customer,          
+                o => o.pizza,             
+                o => o.pizza.Toppings,    
+                o => o.OrderToppings      
             );
-            return TypedResults.Ok(orders);
+
+            var orderDetails = orders.Select(order => new
+            {
+                order.Id,
+                order.CustomerId,
+                Customer = order.customer,
+                order.PizzaId,
+                Pizza = order.pizza,
+                Toppings = order.pizza?.Toppings,
+                OrderToppings = order.OrderToppings,
+                order.Status,
+                order.CreatedAt,
+                order.CookingStartedAt,
+                order.DeliveredAt
+            }).ToList();
+
+            return TypedResults.Ok(orderDetails);
         }
+
 
         public static async Task<IResult> GetOrderById(IRepository<Order> orderRepository, int id)
         {
@@ -208,6 +241,37 @@ namespace exercise.pizzashopapi.EndPoints
             var deletedOrder = await orderRepository.Delete(id);
 
             return TypedResults.Ok(deletedOrder);
+        }
+
+        public static async Task<IResult> SetOrderAsDelivered(
+            IRepository<Order> orderRepository,
+            int orderId)
+        {
+            var order = await orderRepository.GetById(orderId);
+            if (order == null)
+            {
+                return TypedResults.NotFound(new { Message = "Order not found" });
+            }
+
+            order.Status = "Delivered";
+            order.DeliveredAt = DateTime.UtcNow;
+
+            var updatedOrder = await orderRepository.Update(order);
+
+            return TypedResults.Ok(updatedOrder);
+        }
+
+        public static async Task<IResult> GetOrderStatus(
+            IRepository<Order> orderRepository,
+            int orderId)
+        {
+            var order = await orderRepository.GetById(orderId);
+            if (order == null)
+            {
+                return TypedResults.NotFound(new { Message = "Order not found" });
+            }
+
+            return TypedResults.Ok(new { order.Id, order.Status });
         }
 
         #endregion

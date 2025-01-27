@@ -12,6 +12,11 @@ builder.Services.AddScoped<IRepository<Pizza>, Repository<Pizza>>();
 builder.Services.AddScoped<IRepository<Topping>, Repository<Topping>>();
 builder.Services.AddScoped<IRepository<OrderTopping>, Repository<OrderTopping>>();
 builder.Services.AddDbContext<DatabaseContext>();
+
+builder.Services.AddHostedService<OrderStatusUpdaterService>();
+
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
