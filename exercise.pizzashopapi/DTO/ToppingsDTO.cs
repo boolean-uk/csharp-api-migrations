@@ -2,8 +2,8 @@
 {
     public class ToppingsDTO
     {
-        public int Id;
-        public string name;
-        public int cost;
+        public int Id { get; set; }
+        public string name { get; set; }
+        public int cost { get; set; }
     }
 }

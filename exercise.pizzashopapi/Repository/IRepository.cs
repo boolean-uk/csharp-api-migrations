@@ -9,5 +9,7 @@ namespace exercise.pizzashopapi.Repository
         Task<IEnumerable<Customer>> GetCustomers();
         Task<IEnumerable<Order>> GetOrders();
         Task<Order>GetOrderById(int id);
+        Task<Pizza> GetPizzaById(int id);
+        Task<Toppings> GetToppingsById(int id);
     }
 }

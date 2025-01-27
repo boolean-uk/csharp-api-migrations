@@ -39,5 +39,33 @@ namespace exercise.pizzashopapi.Repository
         {
             return _db.Orders.Where(x => x.orderId == id).FirstOrDefault()!;
         }
+
+        public async Task<Toppings>AddTopping(Toppings topping)
+        {
+            _db.Toppings.Add(topping);
+            _db.SaveChanges();
+            return topping;
+        }
+
+        public async Task<OrderToppings>AddToppingToOrder(Toppings topping, OrderToppings top)
+        {
+            top.Topping = topping;
+            top.ToppingId = topping.id;
+            _db.Toppings.Add(topping);
+            _db.OrderToppings.Add(top);
+            _db.SaveChanges();
+
+            return top;
+        }
+
+        public async Task<Pizza> GetPizzaById(int id)
+        {
+            return _db.Pizzas.Where(x => x.Id == id).FirstOrDefault()!;
+        }
+
+        public async Task<Toppings> GetToppingsById(int id)
+        {
+            return _db.Toppings.Where(x => x.id == id).FirstOrDefault();
+        }
     }
 }
