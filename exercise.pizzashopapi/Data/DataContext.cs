@@ -16,13 +16,49 @@ namespace exercise.pizzashopapi.Data
         {            
             optionsBuilder.UseNpgsql(connectionString);
 
+
             //set primary of order?
 
             //seed data?
+            
+            
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>().HasKey(x => x.orderId);
+            modelBuilder.Entity<Customer>()
+        .HasMany(c => c.Orders)
+        .WithOne(o => o.Customer)
+        .HasForeignKey(o => o.customerId);
+
+            modelBuilder.Entity<Order>()
+                .HasOne(x => x.Pizza)
+                .WithMany()
+                .HasForeignKey(x => x.pizzaId); 
+
+            modelBuilder.Entity<OrderToppings>()
+                .HasKey(ot => new { ot.OrderId, ot.ToppingId });
+
+            modelBuilder.Entity<OrderToppings>()
+                .HasOne(ot => ot.Order)
+                .WithMany(o => o.toppings)
+                .HasForeignKey(ot => ot.OrderId);
+
+            modelBuilder.Entity<OrderToppings>()
+                .HasOne(ot => ot.Topping)
+                .WithMany(t => t.OrderToppings)
+                .HasForeignKey(ot => ot.ToppingId);
+        }
+
+        
+
+
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Toppings> Toppings { get; set; }
+        public DbSet<OrderToppings> OrderToppings { get; set; }
     }
 }
