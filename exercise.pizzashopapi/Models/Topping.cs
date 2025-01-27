@@ -2,8 +2,8 @@
 
 namespace exercise.pizzashopapi.Models
 {
-    [Table("pizzas")]
-    public class Pizza
+    [Table("toppings")]
+    public class Topping
     {
         [Column("id")]
         public int Id { get; set; }
@@ -11,5 +11,8 @@ namespace exercise.pizzashopapi.Models
         public string Name { get; set; }
         [Column("price")]
         public decimal Price { get; set; }
+
+        public List<OrderToppings> OrderToppings { get; set; } = new List<OrderToppings>();
+        public List<Order> Orders { get; set; } = new List<Order>();
     }
 }
