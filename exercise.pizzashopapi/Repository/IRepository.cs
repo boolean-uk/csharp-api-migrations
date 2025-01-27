@@ -5,11 +5,11 @@ namespace exercise.pizzashopapi.Repository
     public interface IRepository
     {
         Task<IEnumerable<Order>> GetOrdersByCustomerId(int id);
-        Task<List<Customer>> GetCustomers();
+        Task<IEnumerable<Customer>> GetCustomers();
         Task<Customer> GetCustomerById(int id);
 
 
-        Task<List<Order>> GetOrders();
+        Task<IEnumerable<Order>> GetOrders();
 
         Task<Order> GetOrderById(int id);
 

@@ -2,6 +2,7 @@
 
 namespace exercise.pizzashopapi.Models
 {
+    [Table("customer")]
     public class Customer
     {
         [Column("id")]
@@ -9,5 +10,6 @@ namespace exercise.pizzashopapi.Models
 
         [Column("customer_name")]
         public string Name { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order> ();
     }
 }

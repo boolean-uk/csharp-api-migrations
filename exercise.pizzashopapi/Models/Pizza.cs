@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using exercise.pizzashopapi.Repository;
 
 namespace exercise.pizzashopapi.Models
 {
-    [Table("Pizza")]
+    [Table("pizza")]
     public class Pizza
     {
         [Column("id")]

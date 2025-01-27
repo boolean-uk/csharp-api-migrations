@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using exercise.pizzashopapi.DTOS;
 using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,16 @@ namespace exercise.pizzashopapi.EndPoints
                 return TypedResults.NotFound("Could not find any orders");
 
             }
-            return TypedResults.Ok(orders);
+
+            var orderDto = orders.Select( o => new OrderDTO
+            {
+
+                CustomerName = o.Customer.Name,
+                PizzaName = o.Pizza.Name,
+                Price = o.Pizza.Price,
+                }).ToList();
+           
+            return TypedResults.Ok(orderDto);
 
 
         }
@@ -54,7 +64,16 @@ namespace exercise.pizzashopapi.EndPoints
 
             }
 
-            return TypedResults.Ok(order);
+            var orderDto = new OrderDTO
+
+            {
+                CustomerName= order.Customer.Name,
+                PizzaName= order.Pizza.Name,
+                Price = order.Pizza.Price,
+
+            };
+
+            return TypedResults.Ok(orderDto);
 
         }
 
@@ -71,7 +90,14 @@ namespace exercise.pizzashopapi.EndPoints
 
             }
 
-            return TypedResults.Ok(pizzas);
+            var pizzaDto = pizzas.Select(p => new PizzaDTO
+            {
+                PizzaId = p.Id,
+                PizzaName = p.Name,
+                Price = p.Price,
+                }).ToList();
+
+            return TypedResults.Ok(pizzaDto);
 
         }
 
@@ -88,7 +114,15 @@ namespace exercise.pizzashopapi.EndPoints
                 return TypedResults.NotFound($"Pizza with the id:{id} not found");
             }
 
-            return TypedResults.Ok(pizza);
+            var pizzaDto = new PizzaDTO
+            {
+                PizzaId = pizza.Id,
+                PizzaName = pizza.Name,
+                Price = pizza.Price,
+
+            };
+
+            return TypedResults.Ok(pizzaDto);
 
         }
 
@@ -104,7 +138,13 @@ namespace exercise.pizzashopapi.EndPoints
             
             }
 
-            return TypedResults.Ok(customers);  
+            var customerDto = customers.Select(c => new CustomerDTO
+            {
+                CustomerId = c.Id,
+                Name = c.Name
+                }).ToList();
+
+            return TypedResults.Ok(customerDto);  
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -120,7 +160,14 @@ namespace exercise.pizzashopapi.EndPoints
 
             }
 
-            return TypedResults.Ok(customer);
+            var customerDto =  new CustomerDTO
+
+            { 
+                CustomerId = customer.Id,
+                Name = customer.Name
+            };
+
+            return TypedResults.Ok(customerDto);
 
         }
 
