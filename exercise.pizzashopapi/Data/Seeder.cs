@@ -10,24 +10,29 @@ namespace exercise.pizzashopapi.Data
             {
                 if(!db.Customers.Any())
                 {
-                    db.Add(new Customer() { Name="Nigel" });
                     db.Add(new Customer() { Name = "Dave" });
+                    db.Add(new Customer() { Name = "Nigel" });
+                    db.Add(new Customer() { Name = "Andreas" });
                     await db.SaveChangesAsync();
                 }
                 if(!db.Pizzas.Any())
                 {
-                    db.Add(new Pizza() { Name = "Cheese & Pineapple" });
-                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
+                    db.Add(new Pizza() { Name = "Cheese & Pineapple" , Price = 10});
+                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic", Price = 15 });
+                    db.Add(new Pizza() { Name = "Mushrooms & Onion" , Price = 8});
                     await db.SaveChangesAsync();
 
                 }
 
                 //order data
-                if(1==1)
+                if (!db.Orders.Any())
                 {
-
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 1, OrderedAt = new DateTime(2025, 1, 20, 8,30,0, DateTimeKind.Utc),Price = 10 });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, OrderedAt = new DateTime(2025, 1, 23, 19, 10, 0, DateTimeKind.Utc), Price = 15 });
+                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, OrderedAt = new DateTime(2025, 1, 26, 16,45,0, DateTimeKind.Utc), Price = 8 });
                     await db.SaveChangesAsync();
                 }
+
             }
         }
     }
