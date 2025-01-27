@@ -26,16 +26,6 @@ Pizza Shop needs a very simple ordering system with just just 3 tables, Customer
 - Add a new table for DeliveryDrivers and add an endpoint to assign a driver to an order.  Add a new endpoint to get all orders for a driver.
 - Add the ability for the Pizza shop to sell other products on the Menu. e.g. Burgers, Fries, Drinks.  Update any existing code and add any endpoints you think necessary to add products these to an order.
 
-## Tips
-
-- You can map the Pizza to the Customer with the Order model
-- You'll need a composite key in the Order model
-
-```cs
- protected override void OnModelCreating(ModelBuilder modelBuilder)
- {
-        modelBuilder.Entity<Order>().HasKey(o=> new {o.PizzaId, o.CustomerId});
- }
 
 
 ```
