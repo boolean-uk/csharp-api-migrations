@@ -22,10 +22,20 @@ namespace exercise.pizzashopapi.Data
         ];
 
         private List<Order> _orders = [
-            new Order { Id = 1, CustomerId = 1, ProductId = 2 },
-            new Order { Id = 2, CustomerId = 2, ProductId = 1 },
-            new Order { Id = 3, CustomerId = 3, ProductId = 3 },
-            new Order { Id = 4, CustomerId = 3, ProductId = 7 },
+            new Order {
+                Id = 1, CustomerId = 1, ProductId = 2, IsDelivered = true,
+                CreatedAt = DateTime.UtcNow.AddDays(-1), StartedAt = DateTime.UtcNow.AddDays(-1).AddMinutes(4),
+                CompletedAt = DateTime.UtcNow.AddDays(-1).AddMinutes(12),
+                PreparationStage = PreparationStage.Finished },
+            new Order { Id = 2, CustomerId = 2, ProductId = 1, IsDelivered = false },
+            new Order { Id = 3, CustomerId = 3, ProductId = 3, IsDelivered = true,
+                            CreatedAt = DateTime.UtcNow.AddDays(-1), StartedAt = DateTime.UtcNow.AddDays(-1).AddMinutes(4),
+                CompletedAt = DateTime.UtcNow.AddDays(-1).AddMinutes(12),
+                PreparationStage = PreparationStage.Finished},
+            new Order { Id = 4, CustomerId = 3, ProductId = 7, IsDelivered = true,
+                CreatedAt = DateTime.UtcNow.AddDays(-1), StartedAt = DateTime.UtcNow.AddDays(-1).AddMinutes(4),
+                CompletedAt = DateTime.UtcNow.AddDays(-1).AddMinutes(12),
+                PreparationStage = PreparationStage.Finished},
         ];
 
         private List<Topping> _toppings = [

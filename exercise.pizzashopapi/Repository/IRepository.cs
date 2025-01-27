@@ -17,5 +17,10 @@ namespace exercise.pizzashopapi.Repository
         Task<T> Delete(U id);
         Task Save();
         Task<T> Find(Expression<Func<T, bool>> condition, params Func<IQueryable<T>, IQueryable<T>>[] includeChains);
+        Task<IEnumerable<T>> FindAll(
+            Expression<Func<T, bool>>? condition = null, 
+            Expression<Func<T, object>>? orderBy = null, 
+            bool ascending = true, 
+            params Func<IQueryable<T>, IQueryable<T>>[] includeChains);
     }
 }

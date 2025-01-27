@@ -11,10 +11,14 @@ namespace exercise.pizzashopapi.Tools
             CreateMap<Product, ProductView>()
                 .ForMember(p => p.ProductType, opt => opt.MapFrom(src => src.ProductType.ToString()));
 
-            CreateMap<Order, OrderView>();
-            CreateMap<Order, OrderCustomerProduct>();
-            CreateMap<Order, OrderProduct>();
-            CreateMap<Order, OrderProductToppings>();
+            CreateMap<Order, OrderView>()
+                .ForMember(p => p.PreparationStage, opt => opt.MapFrom(src => src.PreparationStage.ToString()));
+            CreateMap<Order, OrderCustomerProduct>()
+                .ForMember(p => p.PreparationStage, opt => opt.MapFrom(src => src.PreparationStage.ToString()));
+            CreateMap<Order, OrderProduct>()
+                .ForMember(p => p.PreparationStage, opt => opt.MapFrom(src => src.PreparationStage.ToString()));
+            CreateMap<Order, OrderProductToppings>()
+                .ForMember(p => p.PreparationStage, opt => opt.MapFrom(src => src.PreparationStage.ToString()));
 
             CreateMap<Customer, CustomerView>();
             CreateMap<Customer, CustomerInternal>();

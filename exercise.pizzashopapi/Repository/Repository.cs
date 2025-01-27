@@ -69,6 +69,24 @@ namespace exercise.pizzashopapi.Repository
             return entity;
         }
 
+        public async Task<IEnumerable<T>> FindAll(
+            Expression<Func<T, bool>>? condition = null, 
+            Expression<Func<T, object>>? orderBy = null, 
+            bool ascending = true, 
+            params Func<IQueryable<T>, IQueryable<T>>[] includeChains)
+        {
+            IQueryable<T> query = GetIncludeTable(includeChains);
+
+            if (condition != null)
+            {
+                query = query.Where(condition);
+            }
+            if (orderBy != null)
+            {
+                query = ascending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);
+            }
+            return await query.ToListAsync();
+        }
         private IQueryable<T> GetIncludeTable(params Func<IQueryable<T>, IQueryable<T>>[] includeChains)
         {
             IQueryable<T> query = _table;
