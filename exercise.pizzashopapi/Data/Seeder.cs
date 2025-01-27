@@ -16,16 +16,17 @@ namespace exercise.pizzashopapi.Data
                 }
                 if(!db.Pizzas.Any())
                 {
-                    db.Add(new Pizza() { Name = "Cheese & Pineapple" });
-                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
+                    db.Add(new Pizza() { Name = "Cheese & Pineapple", Price = 20 });
+                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic", Price = 15 });
                     await db.SaveChangesAsync();
 
                 }
 
                 //order data
-                if(1==1)
+                if (!db.Orders.Any())
                 {
-
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 1, Date = DateTime.Now });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, Date = DateTime.Now });
                     await db.SaveChangesAsync();
                 }
             }
