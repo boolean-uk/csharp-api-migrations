@@ -7,6 +7,7 @@ namespace exercise.pizzashopapi.Repository
         Task<IEnumerable<Pizza>> GetPizzas();
         Task<Pizza> GetPizza(int id);
         Task<Pizza> AddPizza(Pizza pizza);
+        Task<Pizza> AddToppingToPizza(int pizzaId, int toppingId);
 
         Task<Pizza> UpdatePizza(int id, Pizza pizza);
         Task<Pizza> DeletePizza(int id);

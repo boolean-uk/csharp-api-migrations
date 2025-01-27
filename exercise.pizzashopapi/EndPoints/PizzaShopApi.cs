@@ -13,6 +13,7 @@ namespace exercise.pizzashopapi.EndPoints
             app.MapGet("/pizza", GetAllPizzas);
             app.MapGet("/pizza/{id}", GetPizzaById);
             app.MapPost("/pizza", AddPizza);
+            app.MapPost("/pizza/{id}", AddToppingToPizza);
             app.MapPut("/pizza/{id}", UpdatePizza);
             app.MapDelete("/pizza/{id}", DeletePizza);
 
@@ -29,6 +30,18 @@ namespace exercise.pizzashopapi.EndPoints
             app.MapPut("/orders/{id}", UpdateOrder);
             app.MapDelete("/orders/{id}", DeleteOrder);
 
+            //app.MapGet("/toppings", GetAllToppings);
+            //app.MapGet("/toppings/{id}", GetToppingById);
+            //app.MapPost("/toppings", AddTopping);
+
+
+        }
+
+        private static async Task<IResult> AddToppingToPizza(IRepository repository, int pizzaId, int toppingId)
+        {
+
+            Pizza pizza = await repository.AddToppingToPizza(pizzaId, toppingId);
+            return Results.Ok(pizza);
         }
 
         private static async Task<IResult>DeleteOrder(IRepository repository, int id)
@@ -115,7 +128,7 @@ namespace exercise.pizzashopapi.EndPoints
 
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        private static async Task<IResult>UpdatePizza(IRepository repository, int id, PizzaDTO pizzaDTO)
+        private static async Task<IResult>UpdatePizza(IRepository repository, int id, PizzaDTONoTopping pizzaDTO)
         {
             Pizza pizza = await repository.GetPizza(id);
 
@@ -133,7 +146,7 @@ namespace exercise.pizzashopapi.EndPoints
         }
 
         [ProducesResponseType(StatusCodes.Status201Created)]
-        private static async Task<IResult> AddPizza(IRepository repository, PizzaDTO pizzaDTO)
+        private static async Task<IResult> AddPizza(IRepository repository, PizzaDTONoTopping pizzaDTO)
         {
             Pizza pizza1 = new Pizza
             {

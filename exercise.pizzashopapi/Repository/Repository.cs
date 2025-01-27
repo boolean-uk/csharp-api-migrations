@@ -165,5 +165,23 @@ namespace exercise.pizzashopapi.Repository
             await _db.SaveChangesAsync();
             return order;
         }
+
+        public async Task<PizzaTopping> AddTopping(PizzaTopping topping)
+        {
+            await _db.Toppings.AddAsync(topping);
+            await _db.SaveChangesAsync();
+            return topping;
+        }
+
+        public async Task<Pizza> AddToppingToPizza(int pizzaId, int toppingId)
+        {
+            Pizza pizza = await _db.Pizzas.Include(p => p.Toppings).FirstOrDefaultAsync(p => p.Id == pizzaId);
+            PizzaTopping pizzaTopping = await _db.Toppings.FirstOrDefaultAsync(t => t.Id == toppingId);
+
+            pizza.Toppings.Add(pizzaTopping);
+            await _db.SaveChangesAsync();
+            return pizza;
+
+        }
     }
 }

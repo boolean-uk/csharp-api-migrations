@@ -14,5 +14,7 @@ namespace exercise.pizzashopapi.Models
         [Required]
         [Column("Price")]
         public decimal Price { get; set; }
+        [Column("Toppings")]
+        public List<PizzaTopping> Toppings { get; set; }
     }
 }

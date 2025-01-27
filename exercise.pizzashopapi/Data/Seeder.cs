@@ -34,6 +34,13 @@ namespace exercise.pizzashopapi.Data
                     db.Add(new Order() { CustomerId = 3, PizzaId = 3, Date = DateTime.Now });
                     await db.SaveChangesAsync();
                 }
+                //topping data
+                if (!db.Toppings.Any())
+                {
+                    db.Add(new PizzaTopping() { Name = "Pepperoni", Price = 2 });
+                    db.Add(new PizzaTopping() { Name = "Bacon", Price = 4 });
+                    await db.SaveChangesAsync();
+                }
             }
         }
     }
