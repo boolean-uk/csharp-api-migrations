@@ -12,11 +12,12 @@ namespace exercise.pizzashopapi.Data
             connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
 
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
             optionsBuilder.UseNpgsql(connectionString);
 
-            //set primary of order?
+            //set primary of order
 
             //seed data?
 
