@@ -21,6 +21,7 @@ namespace exercise.pizzashopapi.EndPoints
             shop.MapGet("/pizzas/{id}", GetPizzaById);
             shop.MapGet("/toppings/{id}", GetTopping);
             shop.MapGet("/toppings", GetToppings);
+            shop.MapPost("/orders/{orderId}", DeliverOrder);
         }
 
         private static async Task<IResult> GetPizzas(IRepository<Pizza> repository)
@@ -51,7 +52,7 @@ namespace exercise.pizzashopapi.EndPoints
                 Pizza = o.Pizza.Name,
                 OrderedAt = o.OrderedAt,
                 Price = o.Price,
-                IsDelivered = o.IsDelivered
+                Stage = o.OrderedAt.GetPizzaStage().GetPizzaStageString()
             }));
         }
 
@@ -64,7 +65,7 @@ namespace exercise.pizzashopapi.EndPoints
                 Pizza = o.Pizza.Name,
                 OrderedAt = o.OrderedAt,
                 Price = o.Price,
-                IsDelivered = o.IsDelivered
+                Stage = o.OrderedAt.GetPizzaStage().GetPizzaStageString()
             }));
         }
 
@@ -129,8 +130,7 @@ namespace exercise.pizzashopapi.EndPoints
                 Customer = updatedOrder.Customer.Name,
                 Pizza = updatedOrder.Pizza.Name,
                 OrderedAt = updatedOrder.OrderedAt,
-                Price = updatedOrder.Price,
-                IsDelivered = updatedOrder.IsDelivered
+                Price = updatedOrder.Price
             };
             return TypedResults.Ok(responseDto);
         }
@@ -192,6 +192,18 @@ namespace exercise.pizzashopapi.EndPoints
                 Name = t.Name,
                 Price = t.Price
             }));
+        }
+
+        private static async Task<IResult> DeliverOrder(IRepository<Order> repository, int id)
+        {
+            var order = await repository.GetById(id);
+            if (order == null)
+            {
+                return TypedResults.NotFound();
+            }
+            order.IsDelivered = true;
+            await repository.Update(order);
+            return TypedResults.Ok("Order has been delivered");
         }
     }
 }

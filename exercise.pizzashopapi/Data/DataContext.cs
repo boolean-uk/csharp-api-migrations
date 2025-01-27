@@ -14,7 +14,6 @@ namespace exercise.pizzashopapi.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Seeder seeder = new Seeder();
             modelBuilder.Entity<Pizza>().HasKey(p => p.Id);
             modelBuilder.Entity<Customer>().HasKey(c => c.Id);
 

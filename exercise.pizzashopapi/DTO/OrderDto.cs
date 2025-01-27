@@ -6,6 +6,6 @@
         public string Pizza { get; set; }
         public decimal Price { get; set; }
         public DateTime OrderedAt { get; set; }
-        public bool IsDelivered { get; set; }
+        public string Stage { get; set; }
     }
 }
