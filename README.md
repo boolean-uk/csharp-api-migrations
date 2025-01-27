@@ -18,14 +18,13 @@ Pizza Shop needs a very simple ordering system with just just 3 tables, Customer
 - Include yourself as a customer and your favourite Pizza.
 
 
-## Extension
+## Extension (choose at least two)
 
+- Add extra toppings to Pizzas and allow customers to add toppings to their order.  Add a new table for Toppings and a new table for OrderToppings.  Add any endpoints you think necessary to add toppings.
 - Assume that Pizzas take 3 minutes to prepare and 12 minutes to cook in the oven. Modify your code so your customers see at what stage their order is and add an endpoint so the delivery drivers app can set the order as Delivered
-
-## Super Extension (optional)
-
 - The Pizza Shop can only cook 4 pizzas at a time and the delivery driver is allocated 10 minutes to deliver one pizza at a time.  Add an estimated delivery time to the Order!
- 
+- Add a new table for DeliveryDrivers and add an endpoint to assign a driver to an order.  Add a new endpoint to get all orders for a driver.
+- Add the ability for the Pizza shop to sell other products on the Menu. e.g. Burgers, Fries, Drinks.  Update any existing code and add any endpoints you think necessary to add products these to an order.
 
 ## Tips
 
