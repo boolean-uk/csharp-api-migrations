@@ -15,8 +15,6 @@ builder.Services.AddDbContext<DatabaseContext>();
 
 builder.Services.AddHostedService<OrderStatusUpdaterService>();
 
-
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

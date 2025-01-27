@@ -157,7 +157,6 @@ namespace exercise.pizzashopapi.EndPoints
             return TypedResults.Ok(orderDetails);
         }
 
-
         public static async Task<IResult> GetOrderById(IRepository<Order> orderRepository, int id)
         {
             var orders = await orderRepository.GetWithIncludes(
@@ -437,6 +436,5 @@ namespace exercise.pizzashopapi.EndPoints
         }
 
         #endregion
-
     }
 }

@@ -10,7 +10,7 @@ namespace exercise.pizzashopapi.Data
             {
                 if(!db.Customers.Any())
                 {
-                    db.Add(new Customer() { Name="Nigel" });
+                    db.Add(new Customer() { Name = "Nigel" });
                     db.Add(new Customer() { Name = "Dave" });
                     db.Add(new Customer() { Name = "Jone" });
                     await db.SaveChangesAsync();
