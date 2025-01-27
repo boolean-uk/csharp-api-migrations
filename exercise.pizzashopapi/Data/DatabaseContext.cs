@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace exercise.pizzashopapi.Data
 {
-    public class DataContext : DbContext
+    public class DatabaseContext : DbContext
     {
         private string connectionString;
-        public DataContext()
+        public DatabaseContext()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
-
+            connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString") ?? "";
+            this.Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -24,5 +24,7 @@ namespace exercise.pizzashopapi.Data
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Topping> Toppings { get; set; }
+        public DbSet<OrderTopping> OrderToppings { get; set; }
     }
 }
