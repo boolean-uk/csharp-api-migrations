@@ -1,6 +1,7 @@
 ﻿using exercise.pizzashopapi.Models;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace exercise.pizzashopapi.Data
 {
     public class DataContext : DbContext
