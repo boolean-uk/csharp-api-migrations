@@ -13,16 +13,23 @@ namespace exercise.pizzashopapi.Data
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {            
+        {
             optionsBuilder.UseNpgsql(connectionString);
-
-            //set primary of order?
-
-            //seed data?
-
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrderMenuItem>()
+                .HasKey(omi => new { omi.OrderId, omi.MenuItemId });
+
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<MenuItem> MenuItems { get; set; }
+        public DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
+        public DbSet<OrderMenuItem> OrderMenuItems { get; set; }
     }
 }
