@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace exercise.pizzashopapi.Models
 {
-    
-    public class Pizza
+    public class Product
     {
         [Key]
         [Column("id")]
