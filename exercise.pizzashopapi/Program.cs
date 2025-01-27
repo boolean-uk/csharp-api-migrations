@@ -1,35 +1,51 @@
+using System.Numerics;
 using exercise.pizzashopapi.Data;
 using exercise.pizzashopapi.EndPoints;
+using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+using exercise.pizzashopapi.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddScoped<IRepository, Repository>();
-builder.Services.AddDbContext<DataContext>();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+builder.Services.AddOpenApi();
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    var connectionString = configuration.GetConnectionString("DefaultConnectionString");
+    options.UseNpgsql(connectionString);
+
+    options.ConfigureWarnings(warnings =>
+        warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+});
+
+builder.Services.AddScoped<IRepository<Customer, int>, Repository<Customer, int>>();
+builder.Services.AddScoped<IRepository<Product, int>, Repository<Product, int>>();
+builder.Services.AddScoped<IRepository<Order, int>, Repository<Order, int>>();
+builder.Services.AddScoped<IRepository<Topping, int>, Repository<Topping, int>>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.ConfigurePizzaShopApi();
-
-app.SeedPizzaShopApi();
+app.ConfigureProductsEndpoints();
+app.ConfigureCustomersEndpoints();
+app.ConfigureOrdersEndpoints();
+app.ConfigureToppingsEndpoints();
 
 app.Run();
