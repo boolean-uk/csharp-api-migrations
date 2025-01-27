@@ -482,3 +482,4 @@ $RECYCLE.BIN/
 */**/obj/Release
 /exercise.pizzashopapi/appsettings.json
 /exercise.pizzashopapi/appsettings.Development.json
+*/**/Migrations
