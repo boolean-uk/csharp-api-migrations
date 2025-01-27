@@ -11,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IRepository<Pizza>, Repository<Pizza>>();
 builder.Services.AddScoped<IRepository<Customer>, Repository<Customer>>();
 builder.Services.AddScoped<IRepository<Order>, Repository<Order>>();
+builder.Services.AddScoped<IRepository<Topping>, Repository<Topping>>();
+builder.Services.AddScoped<IRepository<OrderToppings>, Repository<OrderToppings>>();
 builder.Services.AddDbContext<DataContext>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

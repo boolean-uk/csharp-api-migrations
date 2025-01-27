@@ -19,6 +19,8 @@ namespace exercise.pizzashopapi.EndPoints
             shop.MapPost("/customers", CreateCustomer);
             shop.MapPost("/pizzas", CreatePizza);
             shop.MapGet("/pizzas/{id}", GetPizzaById);
+            shop.MapGet("/toppings/{id}", GetTopping);
+            shop.MapGet("/toppings", GetToppings);
         }
 
         private static async Task<IResult> GetPizzas(IRepository<Pizza> repository)
@@ -66,20 +68,71 @@ namespace exercise.pizzashopapi.EndPoints
             }));
         }
 
-        private static async Task<IResult> CreateOrder(IRepository<Order> repository, IRepository<Pizza> pizzaRepository, CreateOrderDto orderDto)
+        private static async Task<IResult> CreateOrder(IRepository<Order> repository, IRepository<Pizza> pizzaRepository, IRepository<Topping> toppingRepository, CreateOrderDto orderDto)
         {
-
-            PizzaDto pizzaDto = (PizzaDto)await GetPizzaById(pizzaRepository, orderDto.PizzaId);
+            var pizza = await pizzaRepository.GetById(orderDto.PizzaId);
+            if (pizza == null)
+            {
+                return TypedResults.NotFound();
+            }
             var order = new Order()
             {
                 CustomerId = orderDto.CustomerId,
                 PizzaId = orderDto.PizzaId,
-                OrderedAt = DateTime.Now,
-                Price = pizzaDto.Price,
-                IsDelivered = false
+                OrderedAt = DateTime.UtcNow,
+                Price = pizza.Price
             };
-            await repository.Insert(order);
-            return TypedResults.Created();
+            orderDto.ToppingIds.ForEach(async toppingId =>
+            {
+                Topping thisTopping = await toppingRepository.GetById(toppingId);
+                var orderTopping = new OrderToppings()
+                {
+                    ToppingId = toppingId,
+                };
+                order.OrderToppings.Add(orderTopping);
+                order.Price += thisTopping.Price;
+                order.Toppings.Add(thisTopping);
+            });
+            var orderedPizza = await repository.Insert(order);
+            var pizzaWithIncludes = await repository.GetByIdWithIncludes(orderedPizza.Id, o => o.Customer, o => o.Pizza, o => o.Toppings);
+            CreatedOrderDto createdOrder = new CreatedOrderDto()
+            {
+                Customer = pizzaWithIncludes.Customer.Name,
+                Pizza = pizzaWithIncludes.Pizza.Name,
+                OrderedAt = pizzaWithIncludes.OrderedAt,
+                Price = pizzaWithIncludes.Price,
+                IsDelivered = pizzaWithIncludes.IsDelivered,
+                Toppings = pizzaWithIncludes.Toppings.Select(t => new ToppingDto()
+                {
+                    Name = t.Name,
+                    Price = t.Price
+                })
+            };
+            return TypedResults.Created("apath", createdOrder);
+
+        }
+
+        private static async Task<IResult> UpdateOrder(IRepository<Order> repository, int orderId, UpdateOrderDto orderDto)
+        {
+            var order = await repository.GetById(orderId);
+            if (order == null)
+            {
+                return TypedResults.NotFound();
+            }
+            if(orderDto.IsDelivered != null)
+                order.IsDelivered = orderDto.IsDelivered;
+            if(orderDto.Price != null)
+                order.Price = orderDto.Price;
+            var updatedOrder = await repository.Update(order);
+            OrderDto responseDto = new OrderDto()
+            {
+                Customer = updatedOrder.Customer.Name,
+                Pizza = updatedOrder.Pizza.Name,
+                OrderedAt = updatedOrder.OrderedAt,
+                Price = updatedOrder.Price,
+                IsDelivered = updatedOrder.IsDelivered
+            };
+            return TypedResults.Ok(responseDto);
         }
 
         private static async Task<IResult> CreateCustomer(IRepository<Customer> repository, string customerName)
@@ -117,6 +170,28 @@ namespace exercise.pizzashopapi.EndPoints
             });
         }
 
+        private static async Task<IResult> GetTopping(IRepository<Topping> repository, int id)
+        {
+            var topping = await repository.GetById(id);
+            if (topping == null)
+            {
+                return TypedResults.NotFound();
+            }
+            return TypedResults.Ok(new ToppingDto()
+            {
+                Name = topping.Name,
+                Price = topping.Price
+            });
+        }
 
+        private static async Task<IResult> GetToppings(IRepository<Topping> repository)
+        {
+            var toppings = await repository.Get();
+            return TypedResults.Ok(toppings.Select(t => new ToppingDto()
+            {
+                Name = t.Name,
+                Price = t.Price
+            }));
+        }
     }
 }
