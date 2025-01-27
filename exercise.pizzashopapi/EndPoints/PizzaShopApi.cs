@@ -34,14 +34,47 @@ namespace exercise.pizzashopapi.EndPoints
             //app.MapGet("/toppings/{id}", GetToppingById);
             //app.MapPost("/toppings", AddTopping);
 
-
+            app.MapPut("/orders/{orderId}/driver/{driverId}", AddDriverToOrder);
+            app.MapPost("/drivers", AddDriver);
+            app.MapGet("/drivers", GetAllDrivers);
+            app.MapGet("/drivers/{id}/orders", GetAllOrdersForDriverID);
         }
+
 
         private static async Task<IResult> AddToppingToPizza(IRepository repository, int pizzaId, int toppingId)
         {
 
             Pizza pizza = await repository.AddToppingToPizza(pizzaId, toppingId);
             return Results.Ok(pizza);
+        }
+
+        private static async Task<IResult> AddDriverToOrder(IRepository repository, int orderId, int driverId)
+        {
+            Order order = await repository.AddDriverToOrder(orderId, driverId);
+            return Results.Ok(order);
+        }
+
+        private static async Task<IResult> AddDriver(IRepository repository, DriverDTO driver)
+        {
+            Driver driver1 = new Driver
+            {
+                Name = driver.Name
+            };
+            await repository.AddDriver(driver1);
+
+            return Results.Created($"/pizza/{driver1.Id}", driver1);
+        }
+
+        private static async Task<IResult> GetAllDrivers(IRepository repository)
+        {
+            IEnumerable<Driver> drivers = await repository.GetAllDrivers();
+            return Results.Ok(drivers);
+        }
+
+        private static async Task<IResult> GetAllOrdersForDriverID(IRepository repository, int driverId)
+        {
+            IEnumerable<Order> orders = await repository.GetAllOrdersForDriverID(driverId);
+            return Results.Ok(orders);
         }
 
         private static async Task<IResult>DeleteOrder(IRepository repository, int id)

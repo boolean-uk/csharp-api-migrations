@@ -13,9 +13,13 @@ namespace exercise.pizzashopapi.Models
         [ForeignKey("Pizzas")]
         public int PizzaId { get; set; }
 
+        [Column("Driver")]
+        public int DriverId { get; set; }
+
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
 
-        
+
+
     }
 }

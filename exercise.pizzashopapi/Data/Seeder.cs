@@ -41,6 +41,14 @@ namespace exercise.pizzashopapi.Data
                     db.Add(new PizzaTopping() { Name = "Bacon", Price = 4 });
                     await db.SaveChangesAsync();
                 }
+                //driver data
+                if (!db.Drivers.Any())
+                {
+                    db.Add(new Driver() { Name = "Tim" });
+                    db.Add(new Driver() { Name = "Henrik" });
+
+                    await db.SaveChangesAsync();
+                }
             }
         }
     }

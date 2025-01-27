@@ -181,7 +181,34 @@ namespace exercise.pizzashopapi.Repository
             pizza.Toppings.Add(pizzaTopping);
             await _db.SaveChangesAsync();
             return pizza;
+        }
 
+        public async Task<Driver> AddDriver(Driver driver)
+        {
+            await _db.Drivers.AddAsync(driver);
+            await _db.SaveChangesAsync();
+            return driver;
+        }
+
+        public async Task<Order> AddDriverToOrder(int orderId, int driverId)
+        {
+            Order order = await _db.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            Driver driver = await _db.Drivers.FirstOrDefaultAsync(d => d.Id == driverId);
+
+            order.DriverId = driverId;
+            await _db.SaveChangesAsync();
+            return order;
+
+        }
+
+        public async Task<IEnumerable<Order>> GetAllOrdersForDriverID(int driverId)
+        {
+            return await _db.Orders.Where(o => o.DriverId == driverId).ToListAsync();
+        }
+
+        public async Task<List<Driver>> GetAllDrivers()
+        {
+            return await _db.Drivers.ToListAsync();
         }
     }
 }

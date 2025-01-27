@@ -25,6 +25,12 @@ namespace exercise.pizzashopapi.Repository
         Task<Order> GetOrder(int id);
         Task<Order> UpdateOrder(int id, Order order);
         Task<Order> DeleteOrder(int id);
+
+        Task<Driver> AddDriver(Driver driver);
+        Task<Order> AddDriverToOrder(int orderId, int driverId);
+        Task<List<Driver>> GetAllDrivers();
+        Task<IEnumerable<Order>> GetAllOrdersForDriverID(int driverId);
+
     }
 }
 
