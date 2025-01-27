@@ -12,19 +12,40 @@ namespace exercise.pizzashopapi.Data
                 {
                     db.Add(new Customer() { Name="Nigel" });
                     db.Add(new Customer() { Name = "Dave" });
+                    db.Add(new Customer() { Name = "Giar" });
+
                     await db.SaveChangesAsync();
                 }
                 if(!db.Pizzas.Any())
                 {
-                    db.Add(new Pizza() { Name = "Cheese & Pineapple" });
-                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
+                    db.Add(new Pizza() { Name = "Cheese & Pineapple", Price = 20 });
+                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic", Price = 15 });
+                    db.Add(new Pizza() { Name = "Cheese & Chicken", Price = 15 });
+
                     await db.SaveChangesAsync();
 
                 }
 
                 //order data
-                if(1==1)
+                if (!db.Orders.Any())
                 {
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 1, Date = DateTime.Now });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, Date = DateTime.Now });
+                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, Date = DateTime.Now });
+                    await db.SaveChangesAsync();
+                }
+                //topping data
+                if (!db.Toppings.Any())
+                {
+                    db.Add(new PizzaTopping() { Name = "Pepperoni", Price = 2 });
+                    db.Add(new PizzaTopping() { Name = "Bacon", Price = 4 });
+                    await db.SaveChangesAsync();
+                }
+                //driver data
+                if (!db.Drivers.Any())
+                {
+                    db.Add(new Driver() { Name = "Tim" });
+                    db.Add(new Driver() { Name = "Henrik" });
 
                     await db.SaveChangesAsync();
                 }
