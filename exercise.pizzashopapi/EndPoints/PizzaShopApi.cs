@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,16 +43,20 @@ namespace exercise.pizzashopapi.EndPoints
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetOrderById(IRepository repo)
+        public static async Task<IResult> GetOrderById(IRepository repo, int id)
         {
-            throw new NotImplementedException();
+            var order = await repo.GetOrderById(id);
 
+            if (order == null)
+
+            {
+                return TypedResults.NotFound($"Order with the id:{id} not found");
+
+            }
+
+            return TypedResults.Ok(order);
 
         }
-
-
-
-
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -68,18 +73,24 @@ namespace exercise.pizzashopapi.EndPoints
 
             return TypedResults.Ok(pizzas);
 
-
         }
-
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetPizzaById(IRepository repo)
-        {
-            throw new NotImplementedException();
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public static async Task<IResult> GetPizzaById(IRepository repo, int id)
 
+        {
+            var pizza = await repo.GetPizzaById(id);
+
+            if (pizza == null)
+
+            {
+                return TypedResults.NotFound($"Pizza with the id:{id} not found");
+            }
+
+            return TypedResults.Ok(pizza);
 
         }
-
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType (StatusCodes.Status404NotFound)]
@@ -94,16 +105,22 @@ namespace exercise.pizzashopapi.EndPoints
             }
 
             return TypedResults.Ok(customers);  
-
-
         }
 
-
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetCustomerById(IRepository repo)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public static async Task<IResult> GetCustomerById(IRepository repo, int id)
         {
-            throw new NotImplementedException();
+            var customer = await repo.GetCustomerById(id);
 
+            if (customer == null)
+
+            {
+                return TypedResults.NotFound($"Customer with the id:{id} not found");
+
+            }
+
+            return TypedResults.Ok(customer);
 
         }
 
