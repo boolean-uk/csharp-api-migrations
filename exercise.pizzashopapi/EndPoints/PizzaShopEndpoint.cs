@@ -11,6 +11,7 @@ namespace exercise.pizzashopapi.EndPoints
             var customerGroup = app.MapGroup("customer");
             var orderGroup = app.MapGroup("order");
             var pizzaGroup = app.MapGroup("pizza");
+            var toppingGroup = app.MapGroup("topping");
 
             customerGroup.MapPost("/", CreateCustomer);
             customerGroup.MapGet("/", GetCustomers);
@@ -23,12 +24,20 @@ namespace exercise.pizzashopapi.EndPoints
             orderGroup.MapGet("/{id}", GetOrderById);
             orderGroup.MapPut("/{id}", UpdateOrder);
             orderGroup.MapDelete("/{id}", DeleteOrder);
+            orderGroup.MapPost("/{orderId}/topping/{toppingId}", AddToppingToOrder);
 
             pizzaGroup.MapPost("/", CreatePizza);
             pizzaGroup.MapGet("/", GetPizzas);
             pizzaGroup.MapGet("/{id}", GetPizzaById);
             pizzaGroup.MapPut("/{id}", UpdatePizza);
             pizzaGroup.MapDelete("/{id}", DeletePizza);
+            pizzaGroup.MapPost("/{pizzaId}/topping/{toppingId}", AddToppingToPizza);
+
+            toppingGroup.MapPost("/", CreateTopping);
+            toppingGroup.MapGet("/", GetToppings);
+            toppingGroup.MapGet("/{id}", GetToppingById);
+            toppingGroup.MapPut("/{id}", UpdateTopping);
+            toppingGroup.MapDelete("/{id}", DeleteTopping);
         }
 
         #region customer
@@ -88,32 +97,30 @@ namespace exercise.pizzashopapi.EndPoints
 
         public static async Task<IResult> CreateOrder(IRepository<Order> orderRepository, IRepository<Customer> customerRepository, IRepository<Pizza> pizzaRepository, int customerId, int pizzaId)
         {
-            // Check if the customer exists
             var customer = await customerRepository.GetById(customerId);
             if (customer == null)
             {
                 return TypedResults.NotFound(new { Message = "Customer not found" });
             }
 
-            // Check if the pizza exists
             var pizza = await pizzaRepository.GetById(pizzaId);
             if (pizza == null)
             {
                 return TypedResults.NotFound(new { Message = "Pizza not found" });
             }
 
-            // Create the order
             var order = new Order { CustomerId = customerId, PizzaId = pizzaId };
             var createdOrder = await orderRepository.Insert(order);
             return TypedResults.Created($"/order/{createdOrder.Id}", createdOrder);
         }
 
-
         public static async Task<IResult> GetOrders(IRepository<Order> orderRepository)
         {
             var orders = await orderRepository.GetWithIncludes(
                 o => o.customer,
-                o => o.pizza
+                o => o.pizza,
+                o => o.pizza.Toppings,
+                o => o.OrderToppings
             );
             return TypedResults.Ok(orders);
         }
@@ -122,7 +129,10 @@ namespace exercise.pizzashopapi.EndPoints
         {
             var orders = await orderRepository.GetWithIncludes(
                 o => o.customer,
-                o => o.pizza
+                o => o.pizza,
+                o => o.pizza.Toppings,
+                o => o.OrderToppings
+                
             );
 
             var order = orders.FirstOrDefault(o => o.Id == id);
@@ -133,7 +143,6 @@ namespace exercise.pizzashopapi.EndPoints
             return TypedResults.Ok(order);
         }
 
-
         public static async Task<IResult> UpdateOrder(
             IRepository<Order> orderRepository,
             IRepository<Customer> customerRepository,
@@ -142,7 +151,13 @@ namespace exercise.pizzashopapi.EndPoints
             int? customerId,
             int? pizzaId)
         {
-            var orders = await orderRepository.GetWithIncludes(o => o.customer, o => o.pizza);
+            var orders = await orderRepository.GetWithIncludes(
+                o => o.customer,
+                o => o.pizza,
+                o => o.pizza.Toppings,
+                o => o.OrderToppings
+            );
+
             var order = orders.FirstOrDefault(o => o.Id == id);
 
             if (order == null)
@@ -174,10 +189,15 @@ namespace exercise.pizzashopapi.EndPoints
             return TypedResults.Ok(updatedOrder);
         }
 
-
         public static async Task<IResult> DeleteOrder(IRepository<Order> orderRepository, int id)
         {
-            var orders = await orderRepository.GetWithIncludes(o => o.customer, o => o.pizza);
+            var orders = await orderRepository.GetWithIncludes(
+                o => o.customer,
+                o => o.pizza,
+                o => o.pizza.Toppings,
+                o => o.OrderToppings
+            );
+
             var order = orders.FirstOrDefault(o => o.Id == id);
 
             if (order == null)
@@ -189,7 +209,6 @@ namespace exercise.pizzashopapi.EndPoints
 
             return TypedResults.Ok(deletedOrder);
         }
-
 
         #endregion
 
@@ -251,5 +270,109 @@ namespace exercise.pizzashopapi.EndPoints
         }
 
         #endregion
+
+        #region topping
+
+        public static async Task<IResult> CreateTopping(IRepository<Topping> toppingRepository, string name, decimal price)
+        {
+            var topping = new Topping { Name = name, Price = price };
+            var createdTopping = await toppingRepository.Insert(topping);
+            return TypedResults.Created($"/topping/{createdTopping.Id}", createdTopping);
+        }
+
+        public static async Task<IResult> GetToppings(IRepository<Topping> toppingRepository)
+        {
+            var toppings = await toppingRepository.Get();
+            return TypedResults.Ok(toppings);
+        }
+
+        public static async Task<IResult> GetToppingById(IRepository<Topping> toppingRepository, int id)
+        {
+            var topping = await toppingRepository.GetById(id);
+            if (topping == null)
+            {
+                return TypedResults.NotFound(new { Message = "Topping not found" });
+            }
+            return TypedResults.Ok(topping);
+        }
+
+        public static async Task<IResult> UpdateTopping(IRepository<Topping> toppingRepository, int id, string? name, decimal? price)
+        {
+            var topping = await toppingRepository.GetById(id);
+            if (topping == null)
+            {
+                return TypedResults.NotFound(new { Message = "Topping not found" });
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                topping.Name = name;
+            }
+            if (price >= 0 && price != null)
+            {
+                topping.Price = (decimal)price;
+            }
+
+            var updatedTopping = await toppingRepository.Update(topping);
+            return TypedResults.Ok(updatedTopping);
+        }
+
+        public static async Task<IResult> DeleteTopping(IRepository<Topping> toppingRepository, int id)
+        {
+            var topping = await toppingRepository.GetById(id);
+            if (topping == null)
+            {
+                return TypedResults.NotFound(new { Message = "Topping not found" });
+            }
+            var deletedTopping = await toppingRepository.Delete(id);
+            return TypedResults.Ok(deletedTopping);
+        }
+
+        public static async Task<IResult> AddToppingToPizza(
+            IRepository<Pizza> pizzaRepository,
+            IRepository<Topping> toppingRepository,
+            int pizzaId,
+            int toppingId)
+        {
+            var pizza = await pizzaRepository.GetWithIncludes(p => p.Toppings);
+            var selectedPizza = pizza.FirstOrDefault(p => p.Id == pizzaId);
+
+            if (selectedPizza == null)
+                return TypedResults.NotFound(new { Message = "Pizza not found" });
+
+            var topping = await toppingRepository.GetById(toppingId);
+
+            if (topping == null)
+                return TypedResults.NotFound(new { Message = "Topping not found" });
+
+            selectedPizza.Toppings ??= new List<Topping>();
+            selectedPizza.Toppings.Add(topping);
+
+            await pizzaRepository.Update(selectedPizza);
+            return TypedResults.Ok(selectedPizza);
+        }
+
+        public static async Task<IResult> AddToppingToOrder(
+            IRepository<OrderTopping> orderToppingRepository,
+            IRepository<Order> orderRepository,
+            IRepository<Topping> toppingRepository,
+            int orderId,
+            int toppingId)
+        {
+            var order = await orderRepository.GetById(orderId);
+            if (order == null)
+                return TypedResults.NotFound(new { Message = "Order not found" });
+
+            var topping = await toppingRepository.GetById(toppingId);
+            if (topping == null)
+                return TypedResults.NotFound(new { Message = "Topping not found" });
+
+            var orderTopping = new OrderTopping { OrderId = orderId, ToppingId = toppingId };
+            var createdOrderTopping = await orderToppingRepository.Insert(orderTopping);
+            return TypedResults.Ok(createdOrderTopping);
+        }
+
+        #endregion
+
     }
 }

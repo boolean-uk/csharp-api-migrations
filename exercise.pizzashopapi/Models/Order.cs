@@ -14,11 +14,15 @@ namespace exercise.pizzashopapi.Models
         [Column("customer_id")]
         public int CustomerId { get; set; }
 
+        public Customer customer { get; set; }
+
         [ForeignKey("pizza")]
         [Column("pizza_id")]
         public int PizzaId { get; set; }
 
-        public Customer customer { get; set; }
         public Pizza pizza { get; set; }
+
+        public List<OrderTopping>? OrderToppings { get; set; }
+
     }
 }

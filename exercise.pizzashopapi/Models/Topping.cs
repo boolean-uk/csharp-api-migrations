@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace exercise.pizzashopapi.Models
 {
-    [Table("pizza")]
-    public class Pizza
+    [Table("topping")]
+    public class Topping
     {
         [Key]
         [Column("id")]
@@ -15,6 +15,5 @@ namespace exercise.pizzashopapi.Models
 
         [Column("price")]
         public decimal Price { get; set; }
-        public List<Topping>? Toppings { get; set; }
     }
 }
