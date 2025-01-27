@@ -19,9 +19,7 @@ namespace exercise.pizzashopapi.Models
         public bool IsDelivered { get; set; } = false;
         [Column("price")]
         public decimal Price { get; set; }
-
         public List<Topping> Toppings { get; set; } = new List<Topping>();
-        
         public List<OrderToppings> OrderToppings { get; set; } = new List<OrderToppings>();
 
     }

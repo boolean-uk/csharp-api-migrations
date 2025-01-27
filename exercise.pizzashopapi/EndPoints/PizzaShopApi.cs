@@ -1,6 +1,7 @@
 ﻿using exercise.pizzashopapi.DTO;
 using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
+using exercise.pizzashopapi.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace exercise.pizzashopapi.EndPoints
@@ -52,12 +53,14 @@ namespace exercise.pizzashopapi.EndPoints
                 Pizza = o.Pizza.Name,
                 OrderedAt = o.OrderedAt,
                 Price = o.Price,
-                Stage = o.OrderedAt.GetPizzaStage().GetPizzaStageString()
+                Stage = o.OrderedAt.GetPizzaStage().GetPizzaStageString(),
+                EstimatedDelivery = DeliveryEngine.GetEstimatedDeliveryInMinutes(orders, o.Id)
             }));
         }
 
         private static async Task<IResult> GetOrdersByCustomerId(IRepository<Order> repository, int customerId)
         {
+        
             var orders = await repository.GetWithIncludes(o => o.Customer, o => o.Pizza);
             return TypedResults.Ok(orders.Where(o => o.CustomerId == customerId).Select(o => new OrderDto()
             {
@@ -65,13 +68,15 @@ namespace exercise.pizzashopapi.EndPoints
                 Pizza = o.Pizza.Name,
                 OrderedAt = o.OrderedAt,
                 Price = o.Price,
-                Stage = o.OrderedAt.GetPizzaStage().GetPizzaStageString()
+                Stage = o.OrderedAt.GetPizzaStage().GetPizzaStageString(),
+                EstimatedDelivery = DeliveryEngine.GetEstimatedDeliveryInMinutes(orders, o.Id)
             }));
         }
 
         private static async Task<IResult> CreateOrder(IRepository<Order> repository, IRepository<Pizza> pizzaRepository, IRepository<Topping> toppingRepository, CreateOrderDto orderDto)
         {
             var pizza = await pizzaRepository.GetById(orderDto.PizzaId);
+            var orders = await repository.Get();
             if (pizza == null)
             {
                 return TypedResults.NotFound();
@@ -103,6 +108,7 @@ namespace exercise.pizzashopapi.EndPoints
                 OrderedAt = pizzaWithIncludes.OrderedAt,
                 Price = pizzaWithIncludes.Price,
                 IsDelivered = pizzaWithIncludes.IsDelivered,
+                EstimatedDelivery = DeliveryEngine.GetEstimatedDeliveryInMinutes(orders, orderedPizza.Id),
                 Toppings = pizzaWithIncludes.Toppings.Select(t => new ToppingDto()
                 {
                     Name = t.Name,

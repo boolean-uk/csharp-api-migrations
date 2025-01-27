@@ -7,5 +7,6 @@
         public decimal Price { get; set; }
         public DateTime OrderedAt { get; set; }
         public string Stage { get; set; }
+        public int EstimatedDelivery { get; set; }
     }
 }

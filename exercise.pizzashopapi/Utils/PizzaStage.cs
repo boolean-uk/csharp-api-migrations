@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace exercise.pizzashopapi
+namespace exercise.pizzashopapi.Utils
 {
     public enum PizzaStage
     {
@@ -23,7 +23,7 @@ namespace exercise.pizzashopapi
             {
                 return PizzaStage.Baking;
             }
-            else if (elapsed.TotalMinutes < 27)
+            else if (elapsed.TotalMinutes < 25)
             {
                 return PizzaStage.Delivering;
             }

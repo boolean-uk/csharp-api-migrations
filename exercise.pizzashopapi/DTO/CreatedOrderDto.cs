@@ -8,6 +8,7 @@
         public decimal Price { get; set; }
         public bool IsDelivered { get; set; }
         public DateTime OrderedAt { get; set; }
+        public int EstimatedDelivery { get; set; }
 
     } }
 
