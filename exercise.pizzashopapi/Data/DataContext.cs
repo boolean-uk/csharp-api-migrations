@@ -40,9 +40,5 @@ public class DataContext : DbContext
     {
         optionsBuilder.UseNpgsql(_connectionString);
         optionsBuilder.LogTo(message => Debug.WriteLine(message));
-
-        //set primary of order?
-
-        //seed data?
     }
 }

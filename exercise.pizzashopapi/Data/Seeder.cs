@@ -12,12 +12,14 @@ namespace exercise.pizzashopapi.Data
                 {
                     db.Add(new Customer() { Id = 1, Name="Nigel" });
                     db.Add(new Customer() { Id = 2, Name = "Dave" });
+                    db.Add(new Customer() { Id = 3, Name = "Magnus" });
                     await db.SaveChangesAsync();
                 }
                 if(!db.Pizzas.Any())
                 {
-                    db.Add(new Pizza() { Id = 1, Name = "Cheese & Pineapple" });
-                    db.Add(new Pizza() { Id = 2, Name = "Vegan Cheese Tastic" });
+                    db.Add(new Pizza() { Id = 1, Name = "Cheese & Pineapple", Price = 9.99m });
+                    db.Add(new Pizza() { Id = 2, Name = "Vegan Cheese Tastic", Price = 12.99m });
+                    db.Add(new Pizza() { Id = 3, Name = "Mighty Meat", Price = 14.99m });
                     await db.SaveChangesAsync();
                 }
 
@@ -25,6 +27,7 @@ namespace exercise.pizzashopapi.Data
                 {
                     db.Add(new Order() { CustomerId = 1, PizzaId = 1, OrderDate = DateTime.Parse("2021-01-01").ToUniversalTime() });
                     db.Add(new Order() { CustomerId = 2, PizzaId = 2, OrderDate = DateTime.Parse("2021-01-01").ToUniversalTime() });
+                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, OrderDate = DateTime.Parse("2025-01-27").ToUniversalTime() });
                     await db.SaveChangesAsync();
                 }
             }
