@@ -12,6 +12,20 @@ namespace exercise.pizzashopapi.Data
             connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<OrderToppings>()
+                .HasKey(o => new { o.OrderId, o.ToppingsId });
+
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.Toppings)
+                .WithMany(t => t.Order)
+                .UsingEntity<OrderToppings>();
+
+
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
             optionsBuilder.UseNpgsql(connectionString);
@@ -24,5 +38,7 @@ namespace exercise.pizzashopapi.Data
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Toppings> Toppings { get; set; }
+        public DbSet<OrderToppings> OrderToppings { get; set; }
     }
 }
