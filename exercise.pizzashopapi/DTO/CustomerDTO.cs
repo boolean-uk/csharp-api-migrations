@@ -13,7 +13,7 @@ namespace exercise.pizzashopapi.DTO
         {
             Id = customer.Id;
             Name = customer.Name;
-            customer.Orders.ForEach(x => Orders.Add($"{x.pizzas}"));
+            customer.Orders.ForEach(x => Orders.Add($"{x.pizza}"));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace exercise.pizzashopapi.DTO
             Id = pizza.Id;  
             Name = pizza.Name;
             Price = pizza.Price;
-            pizza.Orders.ForEach(x => Orders.Add($"{x.pizzas} {x.customer}"));
+            pizza.Orders.ForEach(x => Orders.Add($"{x.pizza} {x.customer}"));
 
         }
     }

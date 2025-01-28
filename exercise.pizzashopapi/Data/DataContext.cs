@@ -6,7 +6,7 @@ namespace exercise.pizzashopapi.Data
     public class DataContext : DbContext
     {
         private string connectionString;
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+public DataContext() 
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString")!;
@@ -41,17 +41,19 @@ namespace exercise.pizzashopapi.Data
 
             modelBuilder.Entity<Pizza>()
                .HasMany(a => a.Orders)
-               .WithMany(a => a.pizzas);
-
+               .WithOne(a => a.pizza);
+               
 
             modelBuilder.Entity<Order>()
-               .HasMany(a => a.pizzas)
-               .WithMany(a => a.Orders);
+               .HasOne(a => a.pizza)
+               .WithMany(a => a.Orders)
+               .HasForeignKey(a => a.pizzaId);
 
 
             modelBuilder.Entity<Order>()
                .HasOne(a => a.customer)
-               .WithMany(a => a.Orders);
+               .WithMany(a => a.Orders)
+               .HasForeignKey(a => a.customerId);
 
             //seeding
 

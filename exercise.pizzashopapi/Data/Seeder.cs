@@ -21,9 +21,16 @@ namespace exercise.pizzashopapi.Data
                     await db.SaveChangesAsync();
 
                 }
+                if (!db.Orders.Any())
+                {
+                    db.Add(new Order() {  customerId=1, pizzaId=1 });
+                    db.Add(new Order() { customerId = 2, pizzaId = 2 });
+                    await db.SaveChangesAsync();
+
+                }
 
                 //order data
-                if(1==1)
+                if (1==1)
                 {
 
                     await db.SaveChangesAsync();

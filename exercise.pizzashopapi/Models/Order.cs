@@ -11,7 +11,11 @@ namespace exercise.pizzashopapi.Models
         public int Id { get; set; }
         [Column("Customer")]
         public Customer customer {get; set;}
-        [Column("Pizzas")]
-        public List<Pizza> pizzas {get; set;}
+        [Column("CustomerId")]
+        public int customerId { get; set;  }
+        [Column("PizzaId")]
+        public int pizzaId { get; set; }
+       [Column("Pizzas")]
+        public Pizza pizza {get; set;}
     }
 }

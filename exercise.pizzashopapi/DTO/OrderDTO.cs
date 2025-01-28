@@ -8,13 +8,13 @@ namespace exercise.pizzashopapi.DTO
         
         public int Id { get; set; }
         public string customer { get; set; }
-        public List<string> pizzas { get; set; } = new List<string>();
+        public string pizza { get; set; } = "";
 
         public OrderDTO(Order order) 
         {
             Id = order.Id;
             customer= order.customer.Name;
-            order.pizzas.ForEach(x=> pizzas.Add($"{x.Name} {x.Price}"));
+            pizza=$"{order.pizza.Name} {order.pizza.Price}";
         
         }
     }
