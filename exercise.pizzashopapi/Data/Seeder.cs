@@ -34,15 +34,18 @@ namespace exercise.pizzashopapi.Data
                 if(!db.Orders.Any())
                 {
                     db.Add(new Order() { CustomerId = 1, PizzaId = 1, OrderDate = DateTime.Parse("2021-01-01").ToUniversalTime() });
-                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, OrderDate = DateTime.Parse("2021-01-01").ToUniversalTime() });
-                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, OrderDate = DateTime.Parse("2025-01-27").ToUniversalTime() });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, OrderDate = DateTime.Parse("2021-01-01").ToUniversalTime(), Delivered = true });
+                    var order = db.Add(new Order() { CustomerId = 3, PizzaId = 3, OrderDate = DateTime.Parse("2025-01-27").ToUniversalTime() });
                     
                     await db.SaveChangesAsync();
                     
                     // Toppings for testing
-                    var order = db.Orders.Find(2);
-                    order.Toppings.Add(new Topping() { Id = 1, Name = "Bacon" });
-                    order.Toppings.Add(new Topping() { Id = 2, Name = "Mushrooms" });
+                    //var order = db.Orders.Find(2);
+                    order.Entity.Toppings = new List<Topping>
+                    {
+                        await db.Toppings.FindAsync(1),
+                        await db.Toppings.FindAsync(2)
+                    };
                     
                     await db.SaveChangesAsync();
                 }

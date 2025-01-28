@@ -15,6 +15,7 @@ namespace exercise.pizzashopapi.EndPoints
             ordergroup.MapGet("/{id}", GetOrder);
             ordergroup.MapGet("/customer/{id}", GetOrdersByCustomerId);
             ordergroup.MapPut("/{id}", UpdateOrder);
+            ordergroup.MapPost("/markDelivered/{id}", MarkOrderDelivered);
         }
 
         private static async Task<IResult> GetOrders(IRepository<Order> repository, IMapper mapper)
@@ -69,6 +70,19 @@ namespace exercise.pizzashopapi.EndPoints
             
             order.Toppings = validToppings.ToList();
             await orderRepository.Update(order);
+
+            return TypedResults.NoContent();
+        }
+        
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        private static async Task<IResult> MarkOrderDelivered(IRepository<Order> repository, int id)
+        {
+            var order = await repository.Get(o => o.Id == id);
+            if (order == null) return TypedResults.NotFound();
+            
+            order.Delivered = true;
+            await repository.Update(order);
 
             return TypedResults.NoContent();
         }
