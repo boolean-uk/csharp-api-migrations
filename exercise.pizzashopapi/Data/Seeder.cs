@@ -10,22 +10,43 @@ namespace exercise.pizzashopapi.Data
             {
                 if(!db.Customers.Any())
                 {
-                    db.Add(new Customer() { Name="Nigel" });
-                    db.Add(new Customer() { Name = "Dave" });
+                    db.Add(new Customer() { Id = 1, Name="Nigel" });
+                    db.Add(new Customer() { Id = 2, Name = "Dave" });
+                    db.Add(new Customer() { Id = 3, Name = "Magnus" });
                     await db.SaveChangesAsync();
                 }
                 if(!db.Pizzas.Any())
                 {
-                    db.Add(new Pizza() { Name = "Cheese & Pineapple" });
-                    db.Add(new Pizza() { Name = "Vegan Cheese Tastic" });
+                    db.Add(new Pizza() { Id = 1, Name = "Cheese & Pineapple", Price = 9.99m });
+                    db.Add(new Pizza() { Id = 2, Name = "Vegan Cheese Tastic", Price = 12.99m });
+                    db.Add(new Pizza() { Id = 3, Name = "Mighty Meat", Price = 14.99m });
                     await db.SaveChangesAsync();
-
+                }
+                
+                if (!db.Toppings.Any())
+                {
+                    db.Add(new Topping() { Id = 1, Name = "Bacon" });
+                    db.Add(new Topping() { Id = 2, Name = "Mushrooms" });
+                    db.Add(new Topping() { Id = 3, Name = "Olives" });
+                    await db.SaveChangesAsync();
                 }
 
-                //order data
-                if(1==1)
+                if(!db.Orders.Any())
                 {
-
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 1, OrderDate = DateTime.Parse("2021-01-01").ToUniversalTime() });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, OrderDate = DateTime.Parse("2021-01-01").ToUniversalTime(), Delivered = true });
+                    var order = db.Add(new Order() { CustomerId = 3, PizzaId = 3, OrderDate = DateTime.Parse("2025-01-27").ToUniversalTime() });
+                    
+                    await db.SaveChangesAsync();
+                    
+                    // Toppings for testing
+                    //var order = db.Orders.Find(2);
+                    order.Entity.Toppings = new List<Topping>
+                    {
+                        await db.Toppings.FindAsync(1),
+                        await db.Toppings.FindAsync(2)
+                    };
+                    
                     await db.SaveChangesAsync();
                 }
             }
