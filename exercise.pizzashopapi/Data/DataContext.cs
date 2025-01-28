@@ -17,6 +17,7 @@ public class DataContext : DbContext
     public DbSet<Pizza> Pizzas { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<Topping> Toppings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,6 +31,14 @@ public class DataContext : DbContext
             .HasOne(o => o.Pizza)
             .WithMany()
             .HasForeignKey(o => o.PizzaId);
+        modelBuilder.Entity<Order>()
+            .HasMany(o => o.Toppings)
+            .WithMany()
+            .UsingEntity<Dictionary<string, object>>(
+                "OrderToppings",
+                r => r.HasOne<Topping>().WithMany().HasForeignKey("ToppingId"),
+                l => l.HasOne<Order>().WithMany().HasForeignKey("OrderId")
+            );
         modelBuilder.Entity<Customer>()
             .HasKey(c => c.Id);
         modelBuilder.Entity<Pizza>()

@@ -30,4 +30,11 @@ public class Repository<T>(DataContext db) : IRepository<T> where T : class
 
         return await query.FirstOrDefaultAsync(predicate);
     }
+    
+    public async Task<T?> Update(T entity)
+    {
+        db.Set<T>().Update(entity);
+        await db.SaveChangesAsync();
+        return entity;
+    }
 }

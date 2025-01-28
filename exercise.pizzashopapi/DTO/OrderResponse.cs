@@ -9,4 +9,5 @@ public class OrderResponse
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public CustomerResponse? Customer { get; set; }
     public PizzaResponse Pizza { get; set; }
+    public IEnumerable<string> Toppings { get; set; } = new List<string>();
 }
