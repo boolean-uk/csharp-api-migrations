@@ -28,8 +28,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.ConfigurePizzaShopApi();
+app.ConfigureProductShopApi();
 
-app.SeedPizzaShopApi();
+app.SeedProductShopApi();
 
 app.Run();
