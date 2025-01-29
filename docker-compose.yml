@@ -1,0 +1,15 @@
+x services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: jostein
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pgdb
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:
+
