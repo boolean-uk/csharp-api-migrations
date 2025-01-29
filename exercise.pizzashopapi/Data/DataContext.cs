@@ -10,19 +10,35 @@ namespace exercise.pizzashopapi.Data
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
+            this.Database.EnsureCreated();
+
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrderToppings>()
+                .HasKey(ot => new { ot.OrderId, ot.ToppingId });
+
+            modelBuilder.Entity<OrderToppings>()
+                .HasOne(ot => ot.Order)
+                .WithMany()
+                .HasForeignKey(ot => ot.OrderId);
+
+            modelBuilder.Entity<OrderToppings>()
+                .HasOne(ot => ot.Topping)
+                .WithMany()
+                .HasForeignKey(ot => ot.ToppingId);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
             optionsBuilder.UseNpgsql(connectionString);
-
-            //set primary of order?
-
-            //seed data?
-
         }
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Topping> Toppings { get; set; }
+        public DbSet<OrderToppings> OrderToppings { get; set; }
     }
 }
