@@ -5,19 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace exercise.pizzashopapi.EndPoints
 {
-    public static class PizzaShopApi
+    public static class ProductShopApi
     {
-        public static void ConfigurePizzaShopApi(this WebApplication app)
+        public static void ConfigureProductShopApi(this WebApplication app)
         {
             var restaurant = app.MapGroup("/restaurant");
-            restaurant.MapGet("/pizzas", GetPizzas);
+            restaurant.MapGet("/products", GetProducts);
             restaurant.MapGet("/customers", GetCustomers);
         }
 
-        public static async Task<IResult> GetPizzas(IRepository repo)
+        public static async Task<IResult> GetProducts(IRepository repo)
         {
-            IEnumerable<Pizza>pizzas = await repo.GetPizzas();
-            return TypedResults.Ok(pizzas);
+            IEnumerable<Product>products = await repo.GetProducts();
+            return TypedResults.Ok(products);
         }
 
         public static async Task<IResult> GetCustomers(IRepository repo)
@@ -33,10 +33,11 @@ namespace exercise.pizzashopapi.EndPoints
                 foreach (Order order in await repo.GetOrdersByCustomer(customer.Id))
                 {
                     OrderSimplifiedDTO orderDTO = new OrderSimplifiedDTO();
-                    Pizza pizza = await repo.GetPizzaById(order.pizzaId);
+                    Product product = await repo.GetProductById(order.productId);
 
-                    orderDTO.pizzaname = pizza.Name;
-                    orderDTO.pizzatoppings = new List<OTDTO>();
+                    orderDTO.productname = product.Name;
+                    orderDTO.productType = product.Type;
+                    orderDTO.producttoppings = new List<OTDTO>();
 
                     if (order.toppings != null)
                     {
@@ -45,7 +46,7 @@ namespace exercise.pizzashopapi.EndPoints
                             Toppings top = await repo.GetToppingsById(toppings.ToppingId);
                             OTDTO OTD = new OTDTO();
                             OTD.name =  top.name;
-                            orderDTO.pizzatoppings.Add(OTD);
+                            orderDTO.producttoppings.Add(OTD);
                         }
 
 

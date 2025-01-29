@@ -11,7 +11,7 @@ Pizza Shop needs a very simple ordering system with just just 3 tables, Customer
 
 - Write all endpoints in the PizzaShopApi.cs
 - Use your initiative to create relevant endpoints such as GetOrders, GetOrdersByCustomerId, GetPizzas etc..
-- Use Dependency Injection to instance the DbContext Repository
+- Use Dependency Injection to instance the DbContext Retoppository
 - Inject the IRepository into the EndPoints in the PizzaShopApi
 - An order consists of 1 customer ordering 1 pizza.
 - Seed some data for the orders. Dave likes a Cheese & Pineapple pizza and Nigel likes Vegan ones.  

@@ -2,8 +2,9 @@
 {
     public class OrderSimplifiedDTO
     {
-        public string pizzaname { get; set; }
+        public string productname { get; set; }
+        public string productType { get; set; }
         
-        public List<OTDTO>pizzatoppings { get; set; }
+        public List<OTDTO>producttoppings { get; set; }
     }
 }

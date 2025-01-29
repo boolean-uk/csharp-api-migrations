@@ -29,14 +29,14 @@ namespace exercise.pizzashopapi.Data
         {
             modelBuilder.Entity<Order>().HasKey(x => x.orderId);
             modelBuilder.Entity<Customer>()
-        .HasMany(c => c.Orders)
-        .WithOne(o => o.Customer)
-        .HasForeignKey(o => o.customerId);
+            .HasMany(c => c.Orders)
+            .WithOne(o => o.Customer).
+            HasForeignKey(o => o.customerId);
 
             modelBuilder.Entity<Order>()
-                .HasOne(x => x.Pizza)
+                .HasOne(x => x.Product)
                 .WithMany()
-                .HasForeignKey(x => x.pizzaId); 
+                .HasForeignKey(x => x.productId); 
 
             modelBuilder.Entity<OrderToppings>()
                 .HasKey(ot => new { ot.OrderId, ot.ToppingId });
@@ -55,7 +55,7 @@ namespace exercise.pizzashopapi.Data
         
 
 
-        public DbSet<Pizza> Pizzas { get; set; }
+        public DbSet<Product> Products { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Toppings> Toppings { get; set; }

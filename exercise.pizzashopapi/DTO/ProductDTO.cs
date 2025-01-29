@@ -1,6 +1,6 @@
 ﻿namespace exercise.pizzashopapi.DTO
 {
-    public class PizzaDTO
+    public class ProductDTO
     {
         public int Id { get; set; }
         public int price { get; set; }

@@ -4,7 +4,7 @@ namespace exercise.pizzashopapi.Data
 {
     public static class Seeder
     {
-        public async static void SeedPizzaShopApi(this WebApplication app)
+        public async static void SeedProductShopApi(this WebApplication app)
         {
             using(var db = new DataContext())
             {
@@ -15,17 +15,19 @@ namespace exercise.pizzashopapi.Data
                     db.Add(new Customer() { Id = 3, Name = "Axel" });
                     await db.SaveChangesAsync();
                 }
-                if(!db.Pizzas.Any())
+                if(!db.Products.Any())
                 {
-                    db.Add(new Pizza()
+                    db.Add(new Product()
                     {
                         Id = 1,
+                        Type = "Pizza",
                         Name = "Cheese & Pineapple",
                         Price = 10,
                         
                     });
-                    db.Add(new Pizza() { Id = 2, Name = "Vegan Cheese Tastic" , Price = 20 });
-                    db.Add(new Pizza() { Id = 3, Name = "Kebab Pizza", Price = 15 });
+                    db.Add(new Product() { Id = 2, Type = "Pizza", Name = "Vegan Cheese Tastic" , Price = 20 });
+                    db.Add(new Product() { Id = 3, Type = "Pizza", Name = "Kebab Pizza", Price = 15 });
+                    db.Add(new Product() { Id = 4, Type = "Burger", Name = "Whopper Cheese", Price=15 });
                     await db.SaveChangesAsync();
 
                 }
@@ -52,6 +54,12 @@ namespace exercise.pizzashopapi.Data
                         id = 3,
                         cost = 15
                     });
+                    db.Add(new Toppings()
+                    {
+                        name = "BBQ sauce",
+                        id = 4,
+                        cost = 2
+                    });
 
 
                 }
@@ -61,7 +69,7 @@ namespace exercise.pizzashopapi.Data
                 {
                     db.Add(new Order()
                     {
-                        pizzaId = 1,
+                        productId = 1,
                         customerId = 2,
                         orderId = 1,
                         toppings = new List<OrderToppings>(){
@@ -78,7 +86,7 @@ namespace exercise.pizzashopapi.Data
 
                     db.Add(new Order()
                     {
-                        pizzaId = 3,
+                        productId = 3,
                         customerId = 3,
                         orderId = 2,
                         toppings = new List<OrderToppings>(){
@@ -95,20 +103,36 @@ namespace exercise.pizzashopapi.Data
 
                     db.Add(new Order()
                     {
-                        pizzaId = 2,
+                        productId = 2,
                         customerId = 1,
                         orderId = 3,
                         toppings = new List<OrderToppings>(){
                         new OrderToppings() {
-                            
+
                             ToppingId = 1
                         },
                         new OrderToppings() {
-                            
+
                             ToppingId = 2
                         }
                     }
                     });
+                        db.Add(new Order()
+                        {
+                            productId = 4,
+                            customerId = 1,
+                            orderId = 4,
+                            toppings = new List<OrderToppings>(){
+                        new OrderToppings() {
+
+                            ToppingId = 1
+                        },
+                        new OrderToppings() {
+
+                            ToppingId = 4
+                        }
+                    }
+                        });
 
 
                     await db.SaveChangesAsync();

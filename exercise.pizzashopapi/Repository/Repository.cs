@@ -19,9 +19,9 @@ namespace exercise.pizzashopapi.Repository
             return orders;
         }
 
-        public async Task<IEnumerable<Pizza>> GetPizzas()
+        public async Task<IEnumerable<Product>> GetProducts()
         {
-            return await _db.Pizzas.ToListAsync();
+            return await _db.Products.ToListAsync();
         }
 
         public async Task<IEnumerable<Customer>> GetCustomers()
@@ -58,9 +58,9 @@ namespace exercise.pizzashopapi.Repository
             return top;
         }
 
-        public async Task<Pizza> GetPizzaById(int id)
+        public async Task<Product> GetProductById(int id)
         {
-            return _db.Pizzas.Where(x => x.Id == id).FirstOrDefault()!;
+            return _db.Products.Where(x => x.Id == id).FirstOrDefault()!;
         }
 
         public async Task<Toppings> GetToppingsById(int id)
