@@ -21,6 +21,11 @@ namespace exercise.pizzashopapi.Data
                     await db.SaveChangesAsync();
 
                 }
+                if (!db.Orders.Any())
+                {
+
+                    await db.SaveChangesAsync();
+                }
 
                 //order data
                 if(1==1)
