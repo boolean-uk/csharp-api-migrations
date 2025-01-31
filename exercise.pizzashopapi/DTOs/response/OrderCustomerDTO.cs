@@ -4,5 +4,6 @@
     {
         public int PizzaId { get; set; }
         public string PizzaName { get; set; }
+        public string OrderStatus { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace exercise.pizzashopapi.Models
 {
+    [Table("customers")]
     public class Customer
     {
         public int Id { get; set; }

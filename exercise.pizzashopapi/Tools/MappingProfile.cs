@@ -16,6 +16,8 @@ namespace exercise.pizzashopapi.Tools
                 .ForMember(dest => dest.PizzaName, opt => opt.MapFrom(src => src.Pizza.Name))
                 .ForMember(dest => dest.PizzaPrice, opt => opt.MapFrom(src => src.Pizza.Price))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name));
+            CreateMap<Topping, ToppingDTO>();
+            CreateMap<OrderToppings, OrderToppingDTO>();
 
         }
     }

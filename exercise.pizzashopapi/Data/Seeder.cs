@@ -24,15 +24,22 @@ namespace exercise.pizzashopapi.Data
 
                 }
 
-                //order data
                 if(!db.Orders.Any())
                 {
-                    db.Add(new Order() { CustomerId = 1, PizzaId = 1 });
-                    db.Add(new Order() { CustomerId = 2, PizzaId = 2 });
-                    db.Add(new Order() { CustomerId = 3, PizzaId = 3 });
-                    db.Add(new Order() { CustomerId = 2, PizzaId = 1 });
-                    db.Add(new Order() { CustomerId = 1, PizzaId = 3 });
-                    db.Add(new Order() { CustomerId = 3, PizzaId = 3 });
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 1, CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc) });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 2, CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc) });
+                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc) });
+                    db.Add(new Order() { CustomerId = 2, PizzaId = 1, CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc) });
+                    db.Add(new Order() { CustomerId = 1, PizzaId = 3, CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc) });
+                    db.Add(new Order() { CustomerId = 3, PizzaId = 3, CreatedAt = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc) });
+                    await db.SaveChangesAsync();
+                }
+
+                if(!db.Toppings.Any())
+                {
+                    db.Add(new Topping() { Name = "Pepperoni" });
+                    db.Add(new Topping() { Name = "Ham" });
+                    db.Add(new Topping() { Name = "Chicken" });
                     await db.SaveChangesAsync();
                 }
             }

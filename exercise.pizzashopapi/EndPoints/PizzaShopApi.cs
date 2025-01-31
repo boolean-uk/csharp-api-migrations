@@ -31,7 +31,13 @@ namespace exercise.pizzashopapi.EndPoints
             var orderGroup = app.MapGroup("/orders");
             orderGroup.MapGet("/", GetAllOrders);
             orderGroup.MapGet("/{id}", GetOrder);
-            orderGroup.MapDelete("/{id}", DeleteOrder);           
+            orderGroup.MapDelete("/{id}", DeleteOrder);
+
+            var toppingGroup = app.MapGroup("/topping");
+            toppingGroup.MapGet("/", GetAllToppings);
+            toppingGroup.MapGet("/{id}", GetTopping);
+            toppingGroup.MapPost("/", CreateTopping);
+            toppingGroup.MapDelete("/{id}", DeleteTopping);
 
         }
 
@@ -194,7 +200,18 @@ namespace exercise.pizzashopapi.EndPoints
             {
                 return TypedResults.NotFound($"Order with ID {id} not found");
             }
-            return TypedResults.Ok(mapper.Map<OrderDTO>(order));
+            string status = "";
+            if (DateTime.Compare(order.CreatedAt, DateTime.Now) < 3) { status = "Preparing"; }
+            else if (DateTime.Compare(order.CreatedAt, DateTime.Now) < 12) { status = "Cooking"; }
+            else status = "Delivering";
+
+            OrderCustomerDTO ocDTO = new OrderCustomerDTO()
+            {
+                PizzaId = order.PizzaId,
+                PizzaName = order.Pizza.Name,
+                OrderStatus = status
+            };
+            return TypedResults.Ok(ocDTO);
         }
 
         private static async Task<IResult> GetAllOrders(IRepository<Order> repository, IMapper mapper) 
@@ -219,6 +236,48 @@ namespace exercise.pizzashopapi.EndPoints
 
             return TypedResults.Ok(mapper.Map<OrderDTO>(order));
         }
+
+        private static async Task<IResult> GetTopping(IRepository<Topping> repository, int id, IMapper mapper)
+        {
+            Topping topping = await repository.GetById(id);
+            if (topping == null)
+            {
+                return TypedResults.NotFound($"Topping with ID {id} not found");
+            }
+            return TypedResults.Ok(mapper.Map<ToppingDTO>(topping));
+        }
+
+        private static async Task<IResult> GetAllToppings(IRepository<Topping> repository, IMapper mapper)
+        {
+            var orders = await repository.GetAll();
+            return TypedResults.Ok(mapper.Map<List<ToppingDTO>>(orders));
+        }
+
+        private static async Task<IResult> DeleteTopping(IRepository<Topping> toppingRepository, IRepository<Order> orderRepository, int id, IMapper mapper)
+        {
+            Topping toppingToDelete = await toppingRepository.GetById(id);
+            if (toppingToDelete == null)
+            {
+                return TypedResults.NotFound($"Topping with ID {id} not found");
+            }
+            var toppingOrders = orderRepository.GetQueryable()
+               .Any(o => o.ToppingOrders.Any(o => o.ToppingId == id));
+            if(toppingOrders)
+            {
+                return TypedResults.BadRequest(TypedResults.BadRequest("Order(s) contains topping, could not delete"));
+            }
+            await toppingRepository.Delete(id);
+            return TypedResults.Ok(mapper.Map<ToppingDTO>(toppingToDelete));
+        }
+
+        private static async Task<IResult> CreateTopping(IRepository<Topping> repository, string payload, IMapper mapper)
+        {
+            Topping topping = new Topping(){ Name = payload };
+            var inserted = await repository.Insert(topping);
+            return TypedResults.Created($"https://localhost:7010/customer/{inserted.Id}",
+                new ToppingDTO { Name = inserted.Name });
+        }
+
 
 
     }
