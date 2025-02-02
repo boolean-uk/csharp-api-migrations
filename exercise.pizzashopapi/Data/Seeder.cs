@@ -1,15 +1,24 @@
 ﻿using exercise.pizzashopapi.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace exercise.pizzashopapi.Data
 {
     public static class Seeder
     {
+        private static readonly Random Random = new Random();
+        private static readonly List<string> OrderStatuses = new List<string>
+            {
+                "Preparing", "Baking", "Quality Check", "Out for Delivery", "Delivered"
+            };
+
         public async static void SeedPizzaShopApi(this WebApplication app)
         {
             using (var db = new DataContext())
             {
                 // Seed Customers
-                if(!db.Customers.Any())
+                if (!db.Customers.Any())
                 {
                     db.Add(new Customer() { Name = "Nigel" });
                     db.Add(new Customer() { Name = "Dave" });
@@ -17,7 +26,7 @@ namespace exercise.pizzashopapi.Data
                 }
 
                 // Seed Pizzas
-                if(!db.Pizzas.Any())
+                if (!db.Pizzas.Any())
                 {
                     db.Add(new Pizza() { Name = "Cheese & Pineapple", Price = 150 });
                     db.Add(new Pizza() { Name = "Vegan Cheese Tastic", Price = 120 });
@@ -25,7 +34,7 @@ namespace exercise.pizzashopapi.Data
                 }
 
                 // Seed Toppings
-                if(!db.Toppings.Any())
+                if (!db.Toppings.Any())
                 {
                     db.Add(new Toppings() { Type = "Cheese" });
                     db.Add(new Toppings() { Type = "Pineapple" });
@@ -33,7 +42,7 @@ namespace exercise.pizzashopapi.Data
                 }
 
                 // Seed Orders
-                if(!db.Orders.Any())
+                if (!db.Orders.Any())
                 {
                     db.Add(new Order()
                     {
@@ -41,7 +50,7 @@ namespace exercise.pizzashopapi.Data
                         CustomerId = 1,
                         PizzaId = 1,
                         OrderToppings = new List<OrderTopping> { new OrderTopping { ToppingId = 2 } },
-                        OrderStatus = {"Baking"}
+                        OrderStatus = OrderStatuses[Random.Next(OrderStatuses.Count)]
                     });
 
                     db.Add(new Order()
@@ -50,14 +59,14 @@ namespace exercise.pizzashopapi.Data
                         CustomerId = 2,
                         PizzaId = 2,
                         OrderToppings = new List<OrderTopping> { new OrderTopping { ToppingId = 1 } },
-                        OrderStatus = { "Preparing" }
+                        OrderStatus = OrderStatuses[Random.Next(OrderStatuses.Count)]
                     });
 
                     await db.SaveChangesAsync();
                 }
 
-                // Seed Order Toppings (Many-to-Many Relationship)
-                if(!db.OrderToppings.Any())
+
+                if (!db.OrderToppings.Any())
                 {
                     db.Add(new OrderTopping() { Id = 1, OrderId = 1, ToppingId = 1 });
                     db.Add(new OrderTopping() { Id = 2, OrderId = 2, ToppingId = 2 });

@@ -12,7 +12,6 @@ namespace exercise.pizzashopapi.Models
         [ForeignKey("customer")]
         public int CustomerId { get; set; }
 
-
         [Column("pizza_id")]
         [ForeignKey("pizza")]
         public int PizzaId { get; set; }
@@ -23,10 +22,6 @@ namespace exercise.pizzashopapi.Models
 
         public List<OrderTopping> OrderToppings { get; set; } = new List<OrderTopping>();
 
-        [NotMapped]
-        public List<string> OrderStatus { get; } = new List<string>
-        {
-            "Preparing", "Baking", "Quality Check", "Out for Delivery", "Delivered"
-        };
+        public string OrderStatus { get; set; }
     }
 }

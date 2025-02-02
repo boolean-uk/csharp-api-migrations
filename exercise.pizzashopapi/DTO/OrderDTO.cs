@@ -15,12 +15,6 @@ namespace exercise.pizzashopapi.DTO
 
         public PizzaNoListOrderDTO Pizza { get; set; }
 
-        //public List<OrderTopping> OrderToppings { get; set; } = new List<OrderTopping>();
-
-        [NotMapped]
-        public List<string> OrderStatus { get; } = new List<string>
-        {
-            "Preparing", "Baking", "Quality Check", "Out for Delivery", "Delivered"
-        };
+        public string OrderStatus { get; set; }
     }
 }

@@ -11,8 +11,8 @@ using exercise.pizzashopapi.Data;
 namespace exercise.pizzashopapi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250127110031_InititalCreate")]
-    partial class InititalCreate
+    [Migration("20250202213744_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,10 @@ namespace exercise.pizzashopapi.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer")
                         .HasColumnName("customer_id");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("PizzaId")
                         .HasColumnType("integer")

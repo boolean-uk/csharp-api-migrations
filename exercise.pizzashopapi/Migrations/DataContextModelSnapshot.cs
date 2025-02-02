@@ -50,6 +50,10 @@ namespace exercise.pizzashopapi.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("customer_id");
 
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("PizzaId")
                         .HasColumnType("integer")
                         .HasColumnName("pizza_id");

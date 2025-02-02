@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace exercise.pizzashopapi.Migrations
 {
     /// <inheritdoc />
-    public partial class InititalCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,7 +58,8 @@ namespace exercise.pizzashopapi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     customer_id = table.Column<int>(type: "integer", nullable: false),
-                    pizza_id = table.Column<int>(type: "integer", nullable: false)
+                    pizza_id = table.Column<int>(type: "integer", nullable: false),
+                    OrderStatus = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

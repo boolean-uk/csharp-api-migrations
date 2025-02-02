@@ -19,26 +19,26 @@ namespace workshop.wwwapi.Repository
         public async Task<T> Add(T entity)
         {
             _table.Add(entity);
-            _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
             return entity;
         }
 
         public async Task<T> Delete(object id)
         {
-            T existing = _table.Find(id);
+            T existing = await _table.FindAsync(id);
             _table.Remove(existing);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return existing;
         }
 
         public async Task<IEnumerable<T>> Get()
         {
-            return _table.ToList();
+            return await _table.ToListAsync();
         }
 
         public async Task<T> GetById(int id)
         {
-            return _table.Find(id);
+            return await _table.FindAsync(id);
         }
 
         public async Task<IEnumerable<T>> GetWithIncludes(params Expression<Func<T, object>>[] includes)
@@ -77,14 +77,14 @@ namespace workshop.wwwapi.Repository
 
         public async Task Save()
         {
-            _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
 
         public async Task<T> Update(T entity)
         {
             _table.Attach(entity);
             _db.Entry(entity).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return entity;
         }
 
