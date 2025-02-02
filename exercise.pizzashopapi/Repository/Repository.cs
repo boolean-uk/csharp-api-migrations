@@ -1,44 +1,65 @@
-﻿using exercise.pizzashopapi.Data;
+﻿using System.Linq.Expressions;
+using exercise.pizzashopapi.Data;
 using exercise.pizzashopapi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace exercise.pizzashopapi.Repository
 {
-    public class Repository : IRepository
+    public class Repository<T> : IRepository<T> where T : class
     {
+
+
         private DataContext _db;
+        private DbSet<T> _table = null;
+
         public Repository(DataContext db)
         {
             _db = db;
-        }
-        public async Task<IEnumerable<Order>> GetOrdersByCustomer(int id)
-        {
-            List<Order> orders = await _db.Orders.Include(a => a.customer).Include(b => b.pizza).ToListAsync();
-            var order = orders.FindAll(a => a.customerId == id);
-            return order;
-        }
-        public async Task<IEnumerable<Order>> GetOrders()
-        {
-            List<Order> orders = await _db.Orders.Include(a => a.customer).Include(b => b.pizza).ToListAsync();
-            return orders;
+            _table = _db.Set<T>();
         }
 
-        public async Task<IEnumerable<Pizza>> GetPizzas()
+        public IEnumerable<T> GetAll(params Expression<Func<T, object>>[] includeExpressions)
         {
-            List<Pizza> pizzas = await _db.Pizzas.ToListAsync();
-            return pizzas;
+            if (includeExpressions.Any())
+            {
+                var set = includeExpressions
+                    .Aggregate<Expression<Func<T, object>>, IQueryable<T>>
+                     (_table, (current, expression) => current.Include(expression));
+            }
+            return _table.ToList();
         }
 
-        public async Task<IEnumerable<Customer>> GetCustomers()
+        public IEnumerable<T> GetAll()
         {
-            List<Customer> customers = await _db.Customers.ToListAsync();
-            return customers;
+            return _table.ToList();
+        }
+        public T GetById(object id)
+        {
+            return _table.Find(id);
         }
 
-        public async Task<IEnumerable<Customer>> GetCustomer(int id)
+        public void Insert(T obj)
         {
-            List<Customer> customers = await _db.Customers.ToListAsync();
-            return customers.FindAll(x => x.Id == id);
+            _table.Add(obj);
         }
+        public void Update(T obj)
+        {
+            _table.Attach(obj);
+            _db.Entry(obj).State = EntityState.Modified;
+        }
+
+        public void Delete(object id)
+        {
+            T existing = _table.Find(id);
+            _table.Remove(existing);
+        }
+
+
+        public void Save()
+        {
+            _db.SaveChanges();
+        }
+        public DbSet<T> Table { get { return _table; } }
+
     }
 }

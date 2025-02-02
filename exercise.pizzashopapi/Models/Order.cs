@@ -10,12 +10,12 @@ namespace exercise.pizzashopapi.Models
         [Column("Id")]
         public int Id { get; set; }
         [Column("Customer")]
-        public Customer customer {get; set;}
+        public virtual Customer customer {get; set;}
         [Column("CustomerId")]
         public int customerId { get; set;  }
         [Column("PizzaId")]
         public int pizzaId { get; set; }
        [Column("Pizzas")]
-        public Pizza pizza {get; set;}
+        public virtual Pizza pizza {get; set;}
     }
 }

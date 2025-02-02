@@ -12,7 +12,7 @@ namespace exercise.pizzashopapi.Models
         [Column("Name")]
         public string Name { get; set; }
         [Column("Orders")]
-        public List<Order> Orders { get; set; } = new List<Order>();
+        public virtual List<Order> Orders { get; set; } = new List<Order>();
         
     }
 }

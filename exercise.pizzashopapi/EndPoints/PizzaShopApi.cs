@@ -20,44 +20,45 @@ namespace exercise.pizzashopapi.EndPoints
 
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetOrdersByCustomer(IRepository repo, int customerId)
+        public static async Task<IResult> GetOrdersByCustomer(IRepository<Customer> repo, int customerId)
         {
-            var orders = await repo.GetOrdersByCustomer(customerId);
+            Customer customer =  repo.GetById(customerId);
+            var orders = customer.Orders.ToList();
             //make it into DTO 
             List<OrderDTO> orderDTOs = new List<OrderDTO>();
             orders.ToList().ForEach(x => orderDTOs.Add(new OrderDTO(x)));
             return TypedResults.Ok(orderDTOs);
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetOrders(IRepository repo)
+        public static async Task<IResult> GetOrders(IRepository<Order> repo)
         {
-            var orders = await repo.GetOrders();
+            var orders = repo.GetAll();
             //make it into DTO 
             List<OrderDTO> orderDTOs = new List<OrderDTO>();
             orders.ToList().ForEach(x => orderDTOs.Add(new OrderDTO(x)));
             return TypedResults.Ok(orderDTOs);
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetPizzas(IRepository repo)
+        public static async Task<IResult> GetPizzas(IRepository<Pizza> repo)
         {
-            var pizzas = await repo.GetPizzas();
+            var pizzas = repo.GetAll();
             List<PizzaDTO> pizzaDTOs = new List<PizzaDTO>();
             pizzas.ToList().ForEach(x => pizzaDTOs.Add(new PizzaDTO(x)));
             return TypedResults.Ok(pizzaDTOs);
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetCustomers(IRepository repo)
+        public static async Task<IResult> GetCustomers(IRepository<Customer> repo)
         {
-            var customers = await repo.GetCustomers();
+            var customers = repo.GetAll();
             List<CustomerDTO> customerDTOs = new List<CustomerDTO>();   
             customers.ToList().ForEach( x => customerDTOs.Add(new CustomerDTO(x)));
             return TypedResults.Ok(customerDTOs);
         }
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetCustomer(IRepository repo ,int id)
+        public static async Task<IResult> GetCustomer(IRepository<Customer> repo ,int id)
         {
-            var customer = await repo.GetCustomer(id);
-            return TypedResults.Ok(new CustomerDTO(customer.First()));
+            var customer = repo.GetById(id);
+            return TypedResults.Ok(new CustomerDTO(customer));
         }
 
     }

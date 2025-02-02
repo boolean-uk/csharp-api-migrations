@@ -16,7 +16,7 @@ public DataContext()
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(connectionString);
-
+            optionsBuilder.UseLazyLoadingProxies();
 
             //set primary of order?
 
@@ -56,6 +56,7 @@ public DataContext()
                .HasForeignKey(a => a.customerId);
 
             //seeding
+
 
         }
 

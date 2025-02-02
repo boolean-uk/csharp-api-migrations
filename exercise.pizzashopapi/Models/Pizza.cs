@@ -13,7 +13,8 @@ namespace exercise.pizzashopapi.Models
         public string Name { get; set; }
         [Column("Price")]
         public decimal Price { get; set; }
+        
         [NotMapped]
-        public List<Order> Orders { get; set; } = new List<Order>();
+        public virtual List<Order> Orders { get; set; } = new List<Order>();
     }
 }
