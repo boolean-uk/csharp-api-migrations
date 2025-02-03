@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 namespace exercise.pizzashopapi.Models
 {
     [Table("Customer")]
-    [PrimaryKey("Id")]
+    [PrimaryKey("customerId")]
     public class Customer
     {
-        [Column("Id")]
-        public int Id { get; set; }
+        [Column("customerId")]
+        public int customerId { get; set; }
         [Column("Name")]
         public string Name { get; set; }
         [Column("Orders")]

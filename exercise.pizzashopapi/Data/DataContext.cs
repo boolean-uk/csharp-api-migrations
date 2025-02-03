@@ -1,4 +1,5 @@
-﻿using exercise.pizzashopapi.Models;
+﻿using api_cinema_challenge.Models;
+using exercise.pizzashopapi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace exercise.pizzashopapi.Data
@@ -27,17 +28,22 @@ public DataContext()
         {
             //defining primary keys
             modelBuilder.Entity<Customer>()
-                .HasKey(a => a.Id);
+                .HasKey(a => a.customerId);
             modelBuilder.Entity<Pizza>()
-                .HasKey(a => a.Id);
+                .HasKey(a => a.pizzaId);
             modelBuilder.Entity<Order>()
-                .HasKey(a => a.Id);
+                .HasKey(a => a.orderId);
+            modelBuilder.Entity<Topping>()
+                .HasKey(a => a.toppingId);
+            modelBuilder.Entity<OrderToppings>()
+                .HasKey(a => a.orderToppingId);
+
 
             //defining relations
             modelBuilder.Entity<Customer>()
                 .HasMany(a => a.Orders)
                 .WithOne(a => a.customer)
-                .HasForeignKey(a => a.Id);
+                .HasForeignKey(a => a.customerId);
 
             modelBuilder.Entity<Pizza>()
                .HasMany(a => a.Orders)
@@ -55,6 +61,25 @@ public DataContext()
                .WithMany(a => a.Orders)
                .HasForeignKey(a => a.customerId);
 
+            modelBuilder.Entity<Order>()
+               .HasMany(a => a.OrderToppings)
+               .WithOne(a => a.order);
+               
+
+            modelBuilder.Entity<OrderToppings>()
+             .HasOne(a => a.order)
+             .WithMany(a => a.OrderToppings)
+             .HasForeignKey(a => a.orderId);
+
+            modelBuilder.Entity<OrderToppings>()
+             .HasOne(a => a.topping)
+             .WithMany(a => a.orderToppings)
+             .HasForeignKey(a => a.toppingId);
+
+            modelBuilder.Entity<Topping>()
+             .HasMany(a => a.orderToppings)
+             .WithOne(a => a.topping);
+            
             //seeding
 
 
@@ -64,5 +89,8 @@ public DataContext()
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderToppings> OrderToppings { get; set; }
+        public DbSet<Topping> Toppings { get; set; }
+
     }
 }
