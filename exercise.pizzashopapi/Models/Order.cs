@@ -11,14 +11,16 @@ namespace exercise.pizzashopapi.Models
         [Column("orderId")]
         public int orderId { get; set; }
         [Column("Customer")]
-        public virtual Customer customer {get; set;}
+        public virtual Customer customer { get; set; }
         [Column("CustomerId")]
-        public int customerId { get; set;  }
+        public int customerId { get; set; }
         [Column("PizzaId")]
         public int pizzaId { get; set; }
-       [Column("Pizzas")]
-        public virtual Pizza pizza {get; set;}
+        [Column("Pizzas")]
+        public virtual Pizza pizza { get; set; }
         [NotMapped]
         public virtual List<OrderToppings> OrderToppings { get; set; }
+        [Column("status")]
+        public string status {  get; set; }
     }
 }

@@ -24,8 +24,8 @@ namespace exercise.pizzashopapi.Data
                 }
                 if (!db.Orders.Any())
                 {
-                    db.Add(new Order() {  customerId=1, pizzaId=1 });
-                    db.Add(new Order() { customerId = 2, pizzaId = 2 });
+                    db.Add(new Order() {  customerId=1, pizzaId=1 , status="On the road"});
+                    db.Add(new Order() { customerId = 2, pizzaId = 2 , status="prepearing"});
                     await db.SaveChangesAsync();
 
                 }

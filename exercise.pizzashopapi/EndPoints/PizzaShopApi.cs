@@ -16,9 +16,28 @@ namespace exercise.pizzashopapi.EndPoints
             pizzaGroup.MapGet("/GetPizzas", GetPizzas);
             pizzaGroup.MapGet("/Customers", GetCustomers);
             pizzaGroup.MapGet("/Customer", GetCustomer);
+            pizzaGroup.MapPut("/Order/status", SetOrderStatus);
 
 
         }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public static async Task<IResult> SetOrderStatus(IRepository<Order> repo, int orderId, string status)
+        {
+            try
+            {
+                Order order = repo.GetById(orderId);
+                order.status = status;
+                repo.Save();
+                return TypedResults.Ok();
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest(ex);
+            }
+        }
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         public static async Task<IResult> GetOrdersByCustomer(IRepository<Customer> repo, int customerId)
         {
