@@ -1,4 +1,5 @@
-﻿using exercise.pizzashopapi.Models;
+﻿using api_cinema_challenge.Models;
+using exercise.pizzashopapi.Models;
 
 namespace exercise.pizzashopapi.Data
 {
@@ -21,9 +22,32 @@ namespace exercise.pizzashopapi.Data
                     await db.SaveChangesAsync();
 
                 }
+                if (!db.Orders.Any())
+                {
+                    db.Add(new Order() {  customerId=1, pizzaId=1 , status="On the road"});
+                    db.Add(new Order() { customerId = 2, pizzaId = 2 , status="prepearing"});
+                    await db.SaveChangesAsync();
+
+                }
+                if (!db.Toppings.Any())
+                {
+                    db.Add(new Topping() { topping = "galic sauce" });
+                    db.Add(new Topping() { topping = "fish" });
+                    await db.SaveChangesAsync();
+
+                }
+                if (!db.OrderToppings.Any())
+                {
+                    db.Add(new OrderToppings() { orderId=1, toppingId=1 });
+                    db.Add(new OrderToppings() { orderId = 2, toppingId = 2 });
+                    await db.SaveChangesAsync();
+
+                }
+
+
 
                 //order data
-                if(1==1)
+                if (1==1)
                 {
 
                     await db.SaveChangesAsync();
