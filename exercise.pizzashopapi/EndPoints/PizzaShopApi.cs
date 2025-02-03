@@ -1,4 +1,6 @@
-﻿using exercise.pizzashopapi.DTO;
+﻿using api_cinema_challenge.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using exercise.pizzashopapi.DTO;
 using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -10,17 +12,70 @@ namespace exercise.pizzashopapi.EndPoints
         public static void ConfigurePizzaShopApi(this WebApplication app)
         {
             var pizzaGroup = app.MapGroup("pizzashop");
-
+            
+            //gets
             pizzaGroup.MapGet("/GetOrdersByCustomer", GetOrdersByCustomer);
             pizzaGroup.MapGet("/Orders", GetOrders);
             pizzaGroup.MapGet("/GetPizzas", GetPizzas);
             pizzaGroup.MapGet("/Customers", GetCustomers);
             pizzaGroup.MapGet("/Customer", GetCustomer);
+            //sets
             pizzaGroup.MapPut("/Order/status", SetOrderStatus);
-
+            //creates
+            pizzaGroup.MapPost("/neworder", CreateOrder);
+            pizzaGroup.MapPost("/newcustomer", CreateCustomer);
+            pizzaGroup.MapPost("/newpizza", CreatePizza);
 
         }
 
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public static async Task<IResult> CreateOrder(IRepository<Order> repo, int customerId, int pizzaId, string status )
+        {
+            try
+            {
+                Order order = new Order { status = status , customerId= customerId, pizzaId=pizzaId};
+                repo.Insert(order);
+                repo.Save();
+                return TypedResults.Ok();
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest(ex);
+            }
+        }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public static async Task<IResult> CreatePizza(IRepository<Pizza> repo, decimal price, string name)
+        {
+            try
+            {
+                Pizza pizza = new Pizza { Price=price, Name=name};
+                repo.Insert(pizza);
+                repo.Save();
+                return TypedResults.Ok();
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest(ex);
+            }
+        }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public static async Task<IResult> CreateCustomer(IRepository<Customer> repo, string name)
+        {
+            try
+            {
+                Customer customer = new Customer { Name=name               };
+                repo.Insert(customer);
+                repo.Save();
+                return TypedResults.Ok();
+            }
+            catch (Exception ex)
+            {
+                return TypedResults.BadRequest(ex);
+            }
+        }
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public static async Task<IResult> SetOrderStatus(IRepository<Order> repo, int orderId, string status)
