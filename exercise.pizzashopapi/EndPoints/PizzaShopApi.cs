@@ -1,6 +1,10 @@
-﻿using exercise.pizzashopapi.DTO;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using exercise.pizzashopapi.DTO;
 using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace exercise.pizzashopapi.EndPoints
@@ -42,10 +46,14 @@ namespace exercise.pizzashopapi.EndPoints
             return TypedResults.Ok(result.GetDTO());
         }
 
-        public static async Task<IResult> AddCustomer(IRepository repo, Customer customer)
+        public static async Task<IResult> AddCustomer(IRepository repo, CustomerDTOPost customer)
         {
-            var result = await repo.AddCustomer(customer);
-            return TypedResults.Ok(result.GetDTO());
+            Customer customer1 = new Customer
+            {
+                Name = customer.Name,
+            };
+            await repo.AddCustomer(customer1);
+            return TypedResults.Ok(customer1);
         }
 
         public static async Task<IResult> GetDeliveryDrivers(IRepository repo)
@@ -59,10 +67,15 @@ namespace exercise.pizzashopapi.EndPoints
             var result = await repo.GetDeliveryDriver(id);
             return TypedResults.Ok(result.ToDTO());
         }
-        public static async Task<IResult> AddDeliveryDriver(IRepository repo, DeliveryDriver deliveryDriver)
+        public static async Task<IResult> AddDeliveryDriver(IRepository repo, DeliveryDriverPost deliveryDriver)
         {
-            var result = await repo.AddDeliveryDriver(deliveryDriver);
-            return TypedResults.Ok(result.ToDTO());
+            DeliveryDriver driver = new DeliveryDriver
+            {
+                Name = deliveryDriver.Name
+            };
+
+            await repo.AddDeliveryDriver(driver);
+            return TypedResults.Ok(driver);
         }
 
         public static async Task<IResult> GetOrders(IRepository repo)
@@ -83,10 +96,16 @@ namespace exercise.pizzashopapi.EndPoints
 
             return TypedResults.Ok(result.Select(c => c.ToGetDto()));
         }
-        public static async Task<IResult> AddOrder(IRepository repo, Order order)
+        public static async Task<IResult> AddOrder(IRepository repo, OrderDTOPost order)
         {
-            var result = await repo.AddOrder(order);
-            return TypedResults.Ok(result.ToGetDto());
+            Order order1 = new Order
+            {
+                CustomerId = order.CustomerId,
+                PizzaId = order.PizzaId,
+                DeliveryDriverId = order.DeliveryDriverId
+            };
+            await repo.AddOrder(order1);
+            return TypedResults.Ok(order1);
         }
 
         public static async Task<IResult> GetPizzas(IRepository repo)
@@ -102,8 +121,8 @@ namespace exercise.pizzashopapi.EndPoints
                 Name = model.Name,
                 Price = model.Price
             };
-            var result = await repo.AddPizza(pizza);
-            return TypedResults.Ok(result);
+            await repo.AddPizza(pizza);
+            return TypedResults.Ok(pizza);
         }
 
         public static async Task<IResult> GetToppings(IRepository repo)
@@ -118,8 +137,8 @@ namespace exercise.pizzashopapi.EndPoints
             {
                 Name = model.Name
             };
-            var result = await repo.AddTopping(topping);
-            return TypedResults.Ok(result);
+            await repo.AddTopping(topping);
+            return TypedResults.Ok(topping);
         }
     }
 }

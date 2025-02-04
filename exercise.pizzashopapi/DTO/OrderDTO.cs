@@ -17,6 +17,12 @@ namespace exercise.pizzashopapi.DTO
         public int DeliveryDriverId { get; set; }
         public DeliveryDriverDTO DeliveryDriver { get; set; }
     }
+    public class OrderDTOPost
+    {
+        public int CustomerId { get; set; }
+        public int PizzaId { get; set; }
+        public int DeliveryDriverId { get; set; }
+    }
     public class OrderWithoutCustomer
     {
         public int Id { get; set; }

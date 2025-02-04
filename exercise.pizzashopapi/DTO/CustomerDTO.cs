@@ -7,6 +7,10 @@ namespace exercise.pizzashopapi.DTO
         public int Id { get; set; }
         public string Name { get; set; }
     }
+    public class CustomerDTOPost
+    {
+        public string Name { get; set; }
+    }
     public class CustomerDTOBig
     {
         public int Id { get; set; }
