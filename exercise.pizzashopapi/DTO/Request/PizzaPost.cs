@@ -3,17 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace exercise.pizzashopapi.Models
 {
-    [Table("pizzas")]
-    public class Pizza
+    public class PizzaPost
     {
-        [Key]
-        [Column("id")]
-        public int Id { get; set; }
-        [Required]
-        [Column("name")]
         public string Name { get; set; }
-        [Required]
-        [Column("prize")]
         public decimal Price { get; set; }
     }
 }
