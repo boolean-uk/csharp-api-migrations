@@ -10,6 +10,6 @@ namespace exercise.pizzashopapi.Repository
         Task<T> Update(T entity);
         Task<T> Delete(object id);
         Task Save();
-        Task<IQueryable<T>> GetWithIncludes(params Expression<Func<T, object>>[] includes);
+        IQueryable<T> GetWithIncludes(params Expression<Func<T, object>>[] includes);
     }
 }

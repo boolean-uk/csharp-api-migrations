@@ -1,8 +1,7 @@
-﻿using System.Configuration;
-using AutoMapper;
-using exercise.pizzashopapi.Models;
+﻿using exercise.pizzashopapi.Models;
 using exercise.pizzashopapi.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace exercise.pizzashopapi.EndPoints
 {
@@ -35,7 +34,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         // Pizza
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetPizzas(IRepository<Pizza> pizzaRepo, IMapper mapper)
+        public static async Task<IResult> GetPizzas(IRepository<Pizza> pizzaRepo)
         {
             var pizzas = await pizzaRepo.Get();
 
@@ -50,7 +49,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> GetPizzaById(IRepository<Pizza> pizzaRepo, int id, IMapper mapper)
+        public static async Task<IResult> GetPizzaById(IRepository<Pizza> pizzaRepo, int id)
         {
             var pizzas = await pizzaRepo.Get();
             var pizza = pizzas.FirstOrDefault(p => p.Id == id);
@@ -68,7 +67,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> CreatePizza(IRepository<Pizza> pizzaRepo, PizzaPost model, IMapper mapper)
+        public static async Task<IResult> CreatePizza(IRepository<Pizza> pizzaRepo, PizzaPost model)
         {
             if (string.IsNullOrWhiteSpace(model.Name) ||
                 model.Price == null ) return Results.BadRequest("Pizza's input was formatted wrong.");
@@ -92,7 +91,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> UpdatePizza(IRepository<Pizza> pizzaRepo, int id, PizzaPut model, IMapper mapper)
+        public static async Task<IResult> UpdatePizza(IRepository<Pizza> pizzaRepo, int id, PizzaPut model)
         {
             if (string.IsNullOrWhiteSpace(model.Name) ||
                 model.Price == null) return Results.BadRequest("Pizza's input was formatted wrong.");
@@ -116,12 +115,12 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> DeletePizza(IRepository<Pizza> pizzaRepo, int id, IMapper mapper)
+        public static async Task<IResult> DeletePizza(IRepository<Pizza> pizzaRepo, int id)
         {
             var pizza = await pizzaRepo.GetById(id);
             if (pizza == null) return Results.NotFound("Pizza not found");
 
-            pizza = await pizzaRepo.Delete(pizza);
+            await pizzaRepo.Delete(id);
 
             var result = new PizzaDTO
             {
@@ -139,9 +138,10 @@ namespace exercise.pizzashopapi.EndPoints
 
         // Customer
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetCustomers(IRepository<Customer> customerRepo, IRepository<Order> orderRepo, IMapper mapper)
+        public static async Task<IResult> GetCustomers(IRepository<Customer> customerRepo, IRepository<Order> orderRepo)
         {
-            var customers = await customerRepo.GetWithIncludes(c => c.Orders);
+            var customerQuery = customerRepo.GetWithIncludes(c => c.Orders);
+            var customers = await customerQuery.Include(c => c.Orders).ThenInclude(o => o.Pizza).ToListAsync();
 
             var result = customers.Select(c => new CustomerDTO
             {
@@ -158,9 +158,10 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> GetCustomerById(IRepository<Customer> customerRepo, IRepository<Order> orderRepo, int id, IMapper mapper)
+        public static async Task<IResult> GetCustomerById(IRepository<Customer> customerRepo, IRepository<Order> orderRepo, int id)
         {
-            var customers = await customerRepo.GetWithIncludes(c => c.Orders);
+            var customerQuery = customerRepo.GetWithIncludes(c => c.Orders);
+            var customers = await customerQuery.Include(c => c.Orders).ThenInclude(o => o.Pizza).ToListAsync();
             var customer = customers.FirstOrDefault(c => c.Id == id);
 
             if (customer == null) return TypedResults.NotFound($"No customer found for id {id}");
@@ -180,7 +181,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> CreateCustomer(IRepository<Customer> customerRepo, CustomerPost model, IMapper mapper)
+        public static async Task<IResult> CreateCustomer(IRepository<Customer> customerRepo, CustomerPost model)
         {
             if (string.IsNullOrWhiteSpace(model.Name)) return Results.BadRequest("Customer's input was formatted wrong.");
 
@@ -190,6 +191,10 @@ namespace exercise.pizzashopapi.EndPoints
             };
 
             customer = await customerRepo.Insert(customer);
+
+            var customerQuery = customerRepo.GetWithIncludes(c => c.Orders);
+            var customers = await customerQuery.Include(c => c.Orders).ThenInclude(o => o.Pizza).ToListAsync();
+            customer = customers.FirstOrDefault(c => c.Id == customer.Id);
 
             var result = new CustomerDTO
             {
@@ -206,15 +211,18 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> UpdateCustomer(IRepository<Customer> customerRepo, int id, CustomerPut model, IMapper mapper)
+        public static async Task<IResult> UpdateCustomer(IRepository<Customer> customerRepo, int id, CustomerPut model)
         {
             if (string.IsNullOrWhiteSpace(model.Name)) return Results.BadRequest("Customer's input was formatted wrong.");
 
-            var customer = await customerRepo.GetById(id);
+            var customerQuery = customerRepo.GetWithIncludes(c => c.Orders);
+            var customers = await customerQuery.Include(c => c.Orders).ThenInclude(o => o.Pizza).ToListAsync();
+            var customer = customers.FirstOrDefault(c => c.Id == id);
             if (customer == null) return Results.NotFound("Customer not found");
             if (model.Name != null) customer.Name = model.Name;
 
-            customer = await customerRepo.Update(customer);
+            await customerRepo.Update(customer);
+
 
             var result = new CustomerDTO
             {
@@ -231,12 +239,14 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> DeleteCustomer(IRepository<Customer> customerRepo, int id, IMapper mapper)
+        public static async Task<IResult> DeleteCustomer(IRepository<Customer> customerRepo, int id)
         {
-            var customer = await customerRepo.GetById(id);
+            var customerQuery = customerRepo.GetWithIncludes(c => c.Orders);
+            var customers = await customerQuery.Include(c => c.Orders).ThenInclude(o => o.Pizza).ToListAsync();
+            var customer = customers.FirstOrDefault(c => c.Id == id);
             if (customer == null) return Results.NotFound("Customer not found");
 
-            customer = await customerRepo.Delete(customer);
+            await customerRepo.Delete(id);
 
             var result = new CustomerDTO
             {
@@ -256,11 +266,11 @@ namespace exercise.pizzashopapi.EndPoints
 
 
 
-        // Customer
+        // Orders
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public static async Task<IResult> GetOrders(IRepository<Order> orderRepo, IMapper mapper)
+        public static async Task<IResult> GetOrders(IRepository<Order> orderRepo)
         {
-            var orders = await orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
+            var orders = orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
 
             var result = orders.Select(o => new OrderDTO
             {
@@ -274,9 +284,9 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> GetOrderById(IRepository<Order> orderRepo, int id, IMapper mapper)
+        public static async Task<IResult> GetOrderById(IRepository<Order> orderRepo, int id)
         {
-            var orders = await orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
+            var orders = orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
             var order = orders.FirstOrDefault(c => c.Id == id);
 
             if (order == null) return TypedResults.NotFound($"No order found for id {id}");
@@ -293,9 +303,9 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> GetOrderByCustomer(IRepository<Order> orderRepo, int id, IMapper mapper)
+        public static async Task<IResult> GetOrderByCustomer(IRepository<Order> orderRepo, int id)
         {
-            var orders = await orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
+            var orders = orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
 
             var result = orders.Where(o => o.CustomerId == id).Select(o => new OrderDTO
             {
@@ -310,7 +320,7 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> CreateOrder(IRepository<Order> orderRepo, OrderPost model, IMapper mapper)
+        public static async Task<IResult> CreateOrder(IRepository<Order> orderRepo, OrderPost model)
         {
             if (model.CustomerId == null ||
                 model.PizzaId == null) return Results.BadRequest("Order's input was formatted wrong.");
@@ -322,6 +332,8 @@ namespace exercise.pizzashopapi.EndPoints
             };
 
             order = await orderRepo.Insert(order);
+            var orders = orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
+            order = orders.FirstOrDefault(c => c.Id == order.Id);
 
             var result = new OrderDTO
             {
@@ -335,12 +347,12 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public static async Task<IResult> UpdateOrder(IRepository<Order> orderRepo, int id, OrderPut model, IMapper mapper)
+        public static async Task<IResult> UpdateOrder(IRepository<Order> orderRepo, int id, OrderPut model)
         {
             if (model.CustomerId == null ||
                 model.PizzaId == null) return Results.BadRequest("Order's input was formatted wrong.");
 
-            var orders = await orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
+            var orders = orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
             var order = orders.FirstOrDefault(c => c.Id == id);
 
             if (order == null) return TypedResults.NotFound($"No order found for id {id}");
@@ -348,7 +360,10 @@ namespace exercise.pizzashopapi.EndPoints
             if (model.CustomerId != null) order.CustomerId = (int)model.CustomerId;
             if (model.PizzaId != null) order.PizzaId = (int)model.PizzaId;
 
-            order = await orderRepo.Update(order);
+            await orderRepo.Update(order);
+
+            orders = orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
+            order = orders.FirstOrDefault(c => c.Id == id);
 
             var result = new OrderDTO
             {
@@ -362,14 +377,14 @@ namespace exercise.pizzashopapi.EndPoints
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public static async Task<IResult> DeleteOrder(IRepository<Order> orderRepo, int id, IMapper mapper)
+        public static async Task<IResult> DeleteOrder(IRepository<Order> orderRepo, int id)
         {
-            var orders = await orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
+            var orders = orderRepo.GetWithIncludes(o => o.Pizza, o => o.Customer);
             var order = orders.FirstOrDefault(c => c.Id == id);
 
             if (order == null) return TypedResults.NotFound($"No order found for id {id}");
 
-            order = await orderRepo.Delete(order);
+            await orderRepo.Delete(id);
 
             var result = new OrderDTO
             {

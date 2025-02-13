@@ -9,17 +9,11 @@ namespace exercise.pizzashopapi.Data
         public DataContext()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString");
-
+            connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnectionString")!;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
             optionsBuilder.UseNpgsql(connectionString);
-
-            //set primary of order?
-
-            //seed data?
-
         }
         public DbSet<Pizza> Pizzas { get; set; }
         public DbSet<Customer> Customers { get; set; }

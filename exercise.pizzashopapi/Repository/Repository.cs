@@ -47,7 +47,7 @@ namespace exercise.pizzashopapi.Repository
         {
             return _table.Find(id);
         }
-        public async Task<IQueryable<T>> GetWithIncludes(params Expression<Func<T, object>>[] includes)
+        public IQueryable<T> GetWithIncludes(params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _table;
             foreach (var include in includes)
